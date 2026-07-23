@@ -524,10 +524,20 @@
     });
   }
 
+  function registerServiceWorker() {
+    if (!("serviceWorker" in navigator)) return;
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch((error) => {
+        console.warn("Service worker registration failed:", error);
+      });
+    });
+  }
+
   function init() {
     try {
       refreshCards();
       bindEvents();
+      registerServiceWorker();
       goTo("home");
     } catch (error) {
       console.error("Init failed:", error);

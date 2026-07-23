@@ -4,13 +4,17 @@ A local web app for studying German vocabulary with flip cards, difficulty ratin
 
 ## Open on Android
 
-Published build (refresh after updates):
+Use this link (full 83-word deck):
 
-- https://cdn.jsdelivr.net/gh/nicolasmpicard-gif/cursorRepo@gh-pages/index.html
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/4682c3b/index.html
 
-Optional: in Chrome on Android, use **Add to Home screen** to install Wortkarte like an app.
+Backup CDN mirror:
 
-For a cleaner permanent URL (`https://nicolasmpicard-gif.github.io/cursorRepo/`), enable **GitHub Pages** on this repo with source branch `gh-pages` / root.
+https://cdn.jsdelivr.net/gh/nicolasmpicard-gif/cursorRepo@gh-pages/index.html
+
+In Chrome on Android, use **Add to Home screen** to install Wortkarte like an app.
+
+For a permanent `github.io` URL, enable **GitHub Pages** on this repo with source branch `gh-pages` / root.
 
 ## Run locally
 

@@ -3,6 +3,7 @@
 
   const STORAGE_KEY = "wortkarte.progress.v1";
   const DELETED_KEY = "wortkarte.deleted.v1";
+  const CUSTOM_KEY = "wortkarte.custom.v1";
   const STATUS_ORDER = ["forgot", "difficult", "easy", "instant"];
   const STATUS_LABELS = {
     forgot: "Forgot",
@@ -20,6 +21,7 @@
     flipped: false,
     selectedIds: new Set(),
     lastError: null,
+    browseNotice: "",
   };
 
   const els = {
@@ -54,26 +56,63 @@
     localStorage.setItem(DELETED_KEY, JSON.stringify([...deletedSet]));
   }
 
+  function loadCustomWords() {
+    const custom = safeParse(localStorage.getItem(CUSTOM_KEY), []);
+    return Array.isArray(custom) ? custom : [];
+  }
+
+  function saveCustomWords(words) {
+    localStorage.setItem(CUSTOM_KEY, JSON.stringify(words));
+  }
+
+  function slugify(text) {
+    return String(text)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ß/g, "ss")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 60) || `word-${Date.now()}`;
+  }
+
+  function normalizeWord(word, fallbackId) {
+    if (!word || typeof word !== "object") return null;
+    const german = String(word.german || word.de || word.front || "").trim();
+    const english = String(word.english || word.en || word.back || word.definition || "").trim();
+    if (!german || !english) return null;
+    const id = String(word.id || fallbackId || slugify(german));
+    return {
+      id,
+      german,
+      english,
+      exampleDe: String(word.exampleDe || word.example_de || word.example || german).trim(),
+      exampleEn: String(word.exampleEn || word.example_en || english).trim(),
+      custom: Boolean(word.custom || fallbackId),
+    };
+  }
+
   function normalizeSeedWords() {
     const seeds = Array.isArray(window.SEED_WORDS) ? window.SEED_WORDS : [];
-    return seeds
-      .filter((word) => word && typeof word === "object" && word.id && word.german)
-      .map((word) => ({
-        id: String(word.id),
-        german: String(word.german),
-        english: String(word.english || ""),
-        exampleDe: String(word.exampleDe || word.german),
-        exampleEn: String(word.exampleEn || word.english || ""),
-      }));
+    return seeds.map((word) => normalizeWord(word)).filter(Boolean);
   }
 
   function buildCards() {
     const progress = loadProgress();
     const deleted = loadDeleted();
     const seeds = normalizeSeedWords();
+    const custom = loadCustomWords()
+      .map((word) => normalizeWord({ ...word, custom: true }))
+      .filter(Boolean);
 
-    return seeds
-      .filter((word) => !deleted.has(word.id))
+    const byId = new Map();
+    [...seeds, ...custom].forEach((word) => {
+      if (deleted.has(word.id)) return;
+      // Custom entries can override seed entries with the same id.
+      byId.set(word.id, word);
+    });
+
+    return [...byId.values()]
       .map((word) => {
         const saved = progress[word.id] || {};
         const status = STATUS_ORDER.includes(saved.status) ? saved.status : null;
@@ -100,18 +139,89 @@
     refreshCards();
   }
 
+  function upsertCustomWords(entries) {
+    const custom = loadCustomWords();
+    const byId = new Map(custom.map((word) => [word.id, word]));
+    const normalizedEntries = [];
+    let added = 0;
+    let updated = 0;
+
+    entries.forEach((entry) => {
+      const normalized = normalizeWord({ ...entry, custom: true });
+      if (!normalized) return;
+      normalizedEntries.push(normalized);
+      if (byId.has(normalized.id)) updated += 1;
+      else added += 1;
+      byId.set(normalized.id, normalized);
+    });
+
+    saveCustomWords([...byId.values()]);
+
+    // If a word was previously deleted, importing it again restores it.
+    const deleted = loadDeleted();
+    let restored = 0;
+    normalizedEntries.forEach((entry) => {
+      if (deleted.has(entry.id)) {
+        deleted.delete(entry.id);
+        restored += 1;
+      }
+    });
+    if (restored) saveDeleted(deleted);
+
+    refreshCards();
+    return { added, updated, restored };
+  }
+
   function deleteCards(ids) {
     if (!ids.length) return;
     const deleted = loadDeleted();
     const progress = loadProgress();
+    const custom = loadCustomWords();
+    const customIds = new Set(custom.map((word) => word.id));
+
     ids.forEach((id) => {
+      if (customIds.has(id)) {
+        // Drop custom words entirely.
+        return;
+      }
       deleted.add(id);
       delete progress[id];
     });
+
+    saveCustomWords(custom.filter((word) => !ids.includes(word.id)));
     saveDeleted(deleted);
     saveProgress(progress);
     ids.forEach((id) => state.selectedIds.delete(id));
     refreshCards();
+  }
+
+  function parseImportText(raw) {
+    const text = String(raw || "").trim();
+    if (!text) return [];
+
+    // JSON array or { words: [...] }
+    if (text.startsWith("[") || text.startsWith("{")) {
+      const parsed = safeParse(text, null);
+      const list = Array.isArray(parsed)
+        ? parsed
+        : Array.isArray(parsed && parsed.words)
+          ? parsed.words
+          : [];
+      return list.map((item) => normalizeWord(item)).filter(Boolean);
+    }
+
+    return text
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith("#"))
+      .map((line) => {
+        const parts = line.split(/\s+[–—\-:]\s+|\t+/);
+        if (parts.length < 2) return null;
+        const german = parts[0].trim();
+        const english = parts.slice(1).join(" - ").trim();
+        return normalizeWord({ german, english, custom: true });
+      })
+      .filter(Boolean);
   }
 
   function shuffle(items) {
@@ -280,6 +390,10 @@
 
   function renderBrowse() {
     const selectedCount = state.selectedIds.size;
+    const notice = state.browseNotice
+      ? `<p class="browse-notice" role="status">${escapeHtml(state.browseNotice)}</p>`
+      : "";
+
     const rows = state.cards
       .map((card, index) => {
         const checked = state.selectedIds.has(card.id) ? "checked" : "";
@@ -305,22 +419,14 @@
       })
       .join("");
 
-    if (!state.cards.length) {
-      return `
-        <section class="panel empty-state">
-          <h2>No words in Browse</h2>
-          <p>All cards have been deleted. Refresh the page after clearing site data to restore the seed vocabulary.</p>
-        </section>
-      `;
-    }
-
     return `
       <section class="panel browse-shell">
         <div class="browse-toolbar">
           <p class="meta-text">${state.cards.length} words · alphabetical</p>
           <div class="browse-toolbar-actions">
+            <button type="button" class="btn btn-secondary" data-action="export-words">Export</button>
             <button type="button" class="btn btn-secondary" data-action="select-all">
-              ${selectedCount === state.cards.length ? "Clear selection" : "Select all"}
+              ${state.cards.length && selectedCount === state.cards.length ? "Clear selection" : "Select all"}
             </button>
             <button
               type="button"
@@ -332,7 +438,45 @@
             </button>
           </div>
         </div>
-        <ul class="word-list">${rows}</ul>
+
+        ${notice}
+
+        <details class="import-panel" open>
+          <summary>Restore / add words</summary>
+          <p class="import-help">
+            Paste your older list (one per line as <code>German – English</code>), or add a single word below.
+          </p>
+          <label class="field-label" for="import-text">Import list</label>
+          <textarea
+            id="import-text"
+            class="import-text"
+            rows="6"
+            placeholder="sich freuen – to be glad&#10;die Gelegenheit – opportunity&#10;abhängen von – to depend on"
+          ></textarea>
+          <div class="cta-row import-actions">
+            <button type="button" class="btn btn-primary" data-action="import-words">Import into deck</button>
+          </div>
+
+          <div class="add-grid">
+            <label class="field-label" for="add-german">German</label>
+            <input id="add-german" class="field-input" type="text" autocomplete="off">
+            <label class="field-label" for="add-english">English</label>
+            <input id="add-english" class="field-input" type="text" autocomplete="off">
+            <label class="field-label" for="add-example-de">Sample sentence (DE)</label>
+            <input id="add-example-de" class="field-input" type="text" autocomplete="off">
+            <label class="field-label" for="add-example-en">Sample sentence (EN)</label>
+            <input id="add-example-en" class="field-input" type="text" autocomplete="off">
+          </div>
+          <div class="cta-row import-actions">
+            <button type="button" class="btn btn-secondary" data-action="add-word">Add word</button>
+          </div>
+        </details>
+
+        ${
+          state.cards.length
+            ? `<ul class="word-list">${rows}</ul>`
+            : `<div class="empty-state"><h2>No words yet</h2><p>Import your previous list above to restore the full deck.</p></div>`
+        }
       </section>
     `;
   }
@@ -478,6 +622,63 @@
         );
         if (!confirmed) return;
         deleteCards(ids);
+        state.browseNotice = `Deleted ${ids.length} word${ids.length === 1 ? "" : "s"}.`;
+        render();
+        break;
+      }
+      case "import-words": {
+        const area = document.getElementById("import-text");
+        const entries = parseImportText(area ? area.value : "");
+        if (!entries.length) {
+          state.browseNotice = "No words found. Use lines like: Wort – meaning";
+          render();
+          return;
+        }
+        const result = upsertCustomWords(entries);
+        state.browseNotice = `Imported ${entries.length}: ${result.added} new, ${result.updated} updated.`;
+        render();
+        break;
+      }
+      case "add-word": {
+        const german = document.getElementById("add-german");
+        const english = document.getElementById("add-english");
+        const exampleDe = document.getElementById("add-example-de");
+        const exampleEn = document.getElementById("add-example-en");
+        const entry = normalizeWord({
+          german: german ? german.value : "",
+          english: english ? english.value : "",
+          exampleDe: exampleDe ? exampleDe.value : "",
+          exampleEn: exampleEn ? exampleEn.value : "",
+          custom: true,
+        });
+        if (!entry) {
+          state.browseNotice = "Add both a German word and an English meaning.";
+          render();
+          return;
+        }
+        if (!entry.exampleDe) entry.exampleDe = entry.german;
+        if (!entry.exampleEn) entry.exampleEn = entry.english;
+        upsertCustomWords([entry]);
+        state.browseNotice = `Added “${entry.german}”.`;
+        render();
+        break;
+      }
+      case "export-words": {
+        const payload = state.cards.map(({ id, german, english, exampleDe, exampleEn }) => ({
+          id,
+          german,
+          english,
+          exampleDe,
+          exampleEn,
+        }));
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "wortkarte-words.json";
+        link.click();
+        URL.revokeObjectURL(url);
+        state.browseNotice = `Exported ${payload.length} words.`;
         render();
         break;
       }

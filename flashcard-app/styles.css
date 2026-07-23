@@ -385,11 +385,70 @@ button {
   max-width: 28rem;
 }
 
-.browse-toolbar-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
+.browse-notice {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(61, 122, 95, 0.12);
+  color: var(--pine-deep);
+  font-weight: 600;
+}
+
+.import-panel {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 252, 247, 0.8);
+  padding: 0.85rem 1rem 1rem;
+}
+
+.import-panel summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--pine-deep);
+}
+
+.import-help {
+  margin: 0.65rem 0 0.85rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.import-help code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+}
+
+.field-label {
+  display: block;
+  margin: 0.55rem 0 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.field-input,
+.import-text {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.import-text {
+  resize: vertical;
+  min-height: 7rem;
+}
+
+.add-grid {
+  margin-top: 0.75rem;
+}
+
+.import-actions {
+  justify-content: flex-start;
+  margin-top: 0.75rem;
 }
 
 .word-list {

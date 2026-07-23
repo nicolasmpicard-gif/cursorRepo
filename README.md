@@ -5,7 +5,7 @@ Local learning apps for this workspace.
 ## Wortkarte (German flashcards)
 
 **Open on Android / phone:**  
-https://cdn.jsdelivr.net/gh/nicolasmpicard-gif/cursorRepo@gh-pages/index.html
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/4682c3b/index.html
 
 Or run locally:
 

@@ -11,12 +11,13 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 
 from linkedin_jd_bot.pipeline import ExtractionError, extract_job
+from linkedin_jd_bot.company_enrich import maybe_enrich_job
 from linkedin_jd_bot.urls import is_linkedin_job_url, looks_like_url
 
 app = typer.Typer(
     add_completion=False,
     no_args_is_help=False,
-    help="Paste-first LinkedIn JD extractor bot.",
+    help="LinkedIn JD extractor bot with optional company-careers enrichment.",
 )
 console = Console()
 
@@ -84,6 +85,11 @@ def main(
     out: Optional[Path] = typer.Option(
         None, "--out", "-o", help="Write result to a file"
     ),
+    enrich: bool = typer.Option(
+        False,
+        "--enrich",
+        help="After LinkedIn extract, try employer ATS (Workable/Greenhouse/Lever)",
+    ),
 ) -> None:
     """Extract a job description from a URL or pasted text."""
     if ctx.invoked_subcommand is not None:
@@ -98,7 +104,11 @@ def main(
             storage_state=str(storage_state) if storage_state else None,
             headless=not headed,
             html_file=is_html,
+            enrich=False,
         )
+        enrich_note = ""
+        if enrich:
+            job, enrich_note = maybe_enrich_job(job)
     except ExtractionError as exc:
         console.print(f"[red]Error:[/red] {exc}")
         raise typer.Exit(code=1) from exc
@@ -109,6 +119,11 @@ def main(
     payload = job.model_dump(mode="json")
     text = "\n".join(job.summary_lines())
     rendered = json.dumps(payload, indent=2) if json_out else text
+
+    if enrich and job.source.value == "company":
+        console.print("[green]Enriched from company careers / ATS[/green]")
+    elif enrich and enrich_note:
+        console.print(f"[yellow]Enrichment:[/yellow] {enrich_note}")
 
     if out:
         out.write_text(rendered + "\n", encoding="utf-8")
@@ -124,6 +139,7 @@ def main(
 def interactive(
     browser: bool = typer.Option(False, "--browser"),
     storage_state: Optional[Path] = typer.Option(None, "--storage-state"),
+    enrich: bool = typer.Option(False, "--enrich"),
 ) -> None:
     """Simple REPL bot: keep feeding URLs or pastes."""
     console.print(
@@ -160,6 +176,10 @@ def interactive(
                 use_browser=browser,
                 storage_state=str(storage_state) if storage_state else None,
             )
+            if enrich:
+                job, note = maybe_enrich_job(job)
+                if job.source.value != "company" and note:
+                    console.print(f"[yellow]enrichment:[/yellow] {note}")
         except ExtractionError as exc:
             console.print(f"[yellow]bot:[/yellow] {exc}")
             continue

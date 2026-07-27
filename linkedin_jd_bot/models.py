@@ -10,6 +10,7 @@ class SourceKind(str, Enum):
     PASTE = "paste"
     HTML = "html"
     FETCH = "fetch"
+    COMPANY = "company"
 
 
 class JobDescription(BaseModel):
@@ -22,6 +23,7 @@ class JobDescription(BaseModel):
     seniority: Optional[str] = None
     description: str = Field(..., min_length=1)
     url: Optional[HttpUrl] = None
+    linkedin_url: Optional[HttpUrl] = None
     source: SourceKind = SourceKind.PASTE
     raw_length: int = 0
 
@@ -39,6 +41,8 @@ class JobDescription(BaseModel):
             lines.append(f"Seniority: {self.seniority}")
         if self.url:
             lines.append(f"URL: {self.url}")
+        if self.linkedin_url:
+            lines.append(f"LinkedIn: {self.linkedin_url}")
         lines.append(f"Source: {self.source.value}")
         lines.append("")
         lines.append(self.description)

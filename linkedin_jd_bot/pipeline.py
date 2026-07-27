@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 from linkedin_jd_bot.cleaner import clean_text, guess_title_company_from_paste
+from linkedin_jd_bot.company_enrich import maybe_enrich_job
 from linkedin_jd_bot.extractor import parse_linkedin_html
 from linkedin_jd_bot.fetcher import fetch_job_html
 from linkedin_jd_bot.models import JobDescription, SourceKind
@@ -67,6 +68,7 @@ def extract_from_html(
         seniority=parsed.get("seniority"),
         description=description,
         url=canonical or url,
+        linkedin_url=canonical if canonical else None,
         source=source,
         raw_length=len(description),
     )
@@ -79,19 +81,19 @@ def extract_job(
     storage_state: Optional[str] = None,
     headless: bool = True,
     html_file: bool = False,
+    enrich: bool = False,
 ) -> JobDescription:
     """
     Main entry: accept a LinkedIn URL, pasted JD text, or HTML document.
-    Paste-first: if input is not a URL, treat as text.
+    When enrich=True, try to replace LinkedIn text with the employer ATS JD.
     """
     value = input_value.strip()
     if not value:
         raise ExtractionError("Empty input")
 
     if html_file or (value.lstrip().startswith("<") and "</" in value):
-        return extract_from_html(value, source=SourceKind.HTML)
-
-    if looks_like_url(value):
+        job = extract_from_html(value, source=SourceKind.HTML)
+    elif looks_like_url(value):
         if not is_linkedin_job_url(value):
             raise ExtractionError("URL does not look like a LinkedIn job posting")
         result = fetch_job_html(
@@ -110,10 +112,14 @@ def extract_job(
                 "As a fallback, save the page as HTML (`jd-bot -f page.html`) "
                 "or paste the JD text."
             )
-        return extract_from_html(
+        job = extract_from_html(
             result.html,
             url=result.url,
             source=SourceKind.FETCH,
         )
+    else:
+        job = extract_from_text(value)
 
-    return extract_from_text(value)
+    if enrich:
+        job, _note = maybe_enrich_job(job)
+    return job

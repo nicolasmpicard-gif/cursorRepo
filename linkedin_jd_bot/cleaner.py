@@ -23,6 +23,9 @@ NOISE_PATTERNS = [
 WHITESPACE_RE = re.compile(r"[ \t]+\n")
 MULTI_BLANK_RE = re.compile(r"\n{3,}")
 BULLET_RE = re.compile(r"^[ \t]*[•●▪◦‣]\s*", re.MULTILINE)
+# LinkedIn guest HTML often glues the next list item onto the previous word.
+GLUED_LIST_RE = re.compile(r"([a-z]:)([A-Z])")
+GLUED_CAMEL_RE = re.compile(r"([a-z])([A-Z][a-z])")
 
 
 def clean_text(text: str) -> str:
@@ -31,6 +34,8 @@ def clean_text(text: str) -> str:
     cleaned = BULLET_RE.sub("- ", cleaned)
     for pattern in NOISE_PATTERNS:
         cleaned = pattern.sub("", cleaned)
+    cleaned = GLUED_LIST_RE.sub(r"\1\n- \2", cleaned)
+    cleaned = GLUED_CAMEL_RE.sub(r"\1\n- \2", cleaned)
     cleaned = WHITESPACE_RE.sub("\n", cleaned)
     cleaned = MULTI_BLANK_RE.sub("\n\n", cleaned)
     return cleaned.strip()

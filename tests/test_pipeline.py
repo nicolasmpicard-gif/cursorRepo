@@ -67,3 +67,28 @@ def test_extract_job_html_detection() -> None:
     job = extract_job(html)
     assert job.title == "Senior Backend Engineer"
     assert "Postgres" in job.description
+
+
+def test_extract_guest_ops_manager_html() -> None:
+    html = (Path(__file__).parent / "fixtures" / "guest_ops_manager.html").read_text(
+        encoding="utf-8"
+    )
+    job = extract_from_html(html, url="https://www.linkedin.com/jobs/view/4434551058")
+    assert job.title == "Operations Manager"
+    assert "SR2" in (job.company or "")
+    assert job.location == "Berlin, Germany"
+    assert "Operations Manager" in job.description
+    assert "renewable energy" in job.description.lower()
+    # Mid-word anti-scrape tags should be repaired
+    assert "doing:" in job.description.lower() or "What you'll be doing" in job.description
+
+
+def test_extract_guest_product_manager_html() -> None:
+    html = (
+        Path(__file__).parent / "fixtures" / "guest_product_manager.html"
+    ).read_text(encoding="utf-8")
+    job = extract_from_html(html, url="https://www.linkedin.com/jobs/view/4435971172")
+    assert "Product Manager" in (job.title or "")
+    assert job.company == "Shiftmove"
+    assert "fleet" in job.description.lower()
+    assert job.employment_type == "Full-time"

@@ -104,10 +104,11 @@ def extract_job(
             detail = result.message or "login wall, anti-bot, or missing job page"
             raise ExtractionError(
                 f"LinkedIn fetch failed ({detail}). "
-                "Paste the job description text, save the page as HTML and use "
-                "`jd-bot -f page.html`, or retry with "
-                "`--browser --storage-state path/to/linkedin.json` after exporting "
-                "a logged-in Playwright storage state."
+                "Retry with `--browser`, or `--browser --storage-state path/to/linkedin.json` "
+                "after exporting a logged-in session via "
+                "`python scripts/save_linkedin_session.py`. "
+                "As a fallback, save the page as HTML (`jd-bot -f page.html`) "
+                "or paste the JD text."
             )
         return extract_from_html(
             result.html,

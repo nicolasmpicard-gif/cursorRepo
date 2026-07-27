@@ -4,12 +4,12 @@ Paste-first bot that extracts clean job description text from LinkedIn JDs.
 
 ## Approach
 
-1. **Paste text** (recommended) — most reliable; no LinkedIn blocking  
-2. **HTML file** — save page HTML and extract structured fields  
-3. **URL fetch** — tries a plain HTTP fetch; usually hits LinkedIn's login wall  
-4. **Optional Playwright** — fetch with a logged-in browser session (`--browser --storage-state`)
+1. **LinkedIn job URL** — fetches via LinkedIn's public guest job endpoint first (`/jobs-guest/jobs/api/jobPosting/{id}`), then falls back to the normal job page  
+2. **Paste text** — always works if a URL fetch fails  
+3. **HTML file** — save page HTML and extract structured fields  
+4. **Optional Playwright** — browser fetch / logged-in session (`--browser --storage-state`)
 
-Scraping LinkedIn remotely is fragile and may violate LinkedIn's terms. Prefer paste or a session you control.
+LinkedIn can still block or change endpoints. Guest fetch works for many public postings without login.
 
 ## Install
 

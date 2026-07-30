@@ -72,6 +72,16 @@ print(job.title, job.company)
 print(job.description)
 ```
 
+## JD Ranker
+
+Score JDs with the Nic-specific rubric:
+
+```bash
+python3 jd_ranker.py ~/jds/
+```
+
+See `RUBRIC.md` for scoring discipline (funding verification, Comp≠Fit, product-team definition, location-neutral scoring). Metadata should include verified `funding_stage`, and preferably `employees` + `last_raise_date`.
+
 ## Tests
 
 ```bash

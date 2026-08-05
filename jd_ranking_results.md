@@ -1,137 +1,136 @@
 # JD Ranking Results — active top 5 only
-_Date: 2026-08-03_
+_Date: 2026-08-05_
 
-**Batch scored:** Malt, Palo Alto Networks, Deepki, carbmee, Enpal (metrify), Arrive, Climatiq.
+**Batch scored:** Consultport, Packmatic, Cint, Grundfos, 4flow.
 
-**Chart movers:** Enpal (86) and Climatiq (84) enter top 5. Searoutes and Splitero drop out. Hard-DQ skips: Palo Alto, Deepki, Arrive (German fluency mandatory).
+**Chart movers:** Cint (90) and Packmatic (85) enter top 5. brighter AI and Kleinanzeigen drop out. Enpal stays #2; Climatiq slides to #4.
 
 #    Score   Act            Company — Title
 ------------------------------------------------------------------------------------------
-1    86      🟢 apply_now    Enpal / metrify — Product Manager
-2    84      🟢 apply_now    Climatiq — Senior Product Manager, Data and API
-3    80      🟡 apply_soon   Executive Integrity client — PM — Risk & Compliance
-4    78      🟡 apply_soon   brighter AI — Product Manager
-5    74      🟡 apply_soon   Kleinanzeigen — Senior PM — PRO Performance
+1    90      🟢 apply_now    Cint — Senior Product Manager, Exchange
+2    86      🟢 apply_now    Enpal / metrify — Product Manager
+3    85      🟢 apply_now    Packmatic — Product Owner – B2B SaaS
+4    84      🟢 apply_now    Climatiq — Senior Product Manager, Data and API
+5    80      🟡 apply_soon   Executive Integrity client — PM — Risk & Compliance
 
 ---
 ## New batch — scored
 
-### 1. Enpal / metrify — Product Manager (f/m/x) — **86** ✅ TOP 5
-Link: https://www.linkedin.com/jobs/view/4442599771/
-**Final**: 86/100 (base 73 + recency +10 + funding +8 + applicants −5)
-Fit: 74/100  |  Competitiveness: 72/100
-**Action**: 🟢 APPLY_NOW  |  **CV**: Climate / energy-platform framing  |  🅱️ Series D+ unicorn  |  👥 Enpal ~thousands; metrify product unit
-_posted ~7d ago, no prior contact, 112 applicants — high competition_
+### 1. Cint — Senior Product Manager, Exchange — **90** ✅ TOP 5 (#1)
+Link: https://www.linkedin.com/jobs/view/4431679465/
+**Final**: 90/100 (base 72 + recency +10 + funding +8 + applicants 0)
+Fit: 74/100  |  Competitiveness: 70/100
+**Action**: 🟢 APPLY_NOW  |  **CV**: Platform / marketplace-PM framing  |  💰 Nasdaq Stockholm (public)  |  👥 large global product org
+_posted ~1d ago, no prior contact, 98 applicants — moderate competition_
 
-**Autopilot:** Likely — defined ownership of Customer Data Model + billing/pricing engine; mature parent; metrify has Head of Product + PM peers.
+**Autopilot:** Likely — mature public ResTech platform; Senior PM owns a defined Exchange / Demand domain with R&D partners, not a blank-page founding seat.
 
-> Strongest structural fit in the batch: bounded internal platform PM at a funded climate unicorn.
-
-**✅ Fit highlights:**
-- Existing product org (Head of Product + PM peers on metrify)
-- Scoped platform products (identity model, billing/pricing) that can stabilize
-- Climate / energy-transition mission without founding-chaos JD language
-- German optional (plus only) — no hard language DQ
-- Hybrid working model + structured unicorn environment
-
-**⭐ Bonus flags:**
-- Regulatory domain (MaKo / EDIFACT) adjacent to compliance PM experience
-- Internal-platform users (Ops, Finance, Customer Care) — product-ops friendly
-
-**⚠️ Concerns:**
-- High applicant volume (−5)
-- Smart-metering / German energy-market domain is a learning curve vs ESG SaaS
-- “Growth” collaboration mention is mild, not a speedboat model
-
----
-
-### 2. Climatiq — Senior Product Manager, Data and API — **84** ✅ TOP 5
-Link: https://www.linkedin.com/jobs/view/4447530425/
-**Final**: 84/100 (base 69 + recency +10 + funding +5 + applicants 0)
-Fit: 58/100  |  Competitiveness: 80/100
-**Action**: 🟢 APPLY_NOW  |  **CV**: Climate / API-platform framing  |  🅰️ Series A (€10M, Jun 2025)  |  👥 ~43
-_posted ~2d ago, no prior contact, 62 applicants — moderate competition_
-
-**Autopilot:** Mixed — Data + API is a defined product area with existing portfolio, but ~43-person Series A, reports to CEO, and JD flags “fast-paced, ambiguous startup.”
-
-> Excellent climate-comp competitiveness; fit held down by stage/CEO-report ambiguity — still clears top 5.
+> Best structural container in this batch: real SPM title, established product org, remote-first EU/UK, public-company maturity.
 
 **✅ Fit highlights:**
-- Direct B2B climate SaaS / carbon intelligence match
-- Named Data + API ownership (not blank-page “all of product”)
-- Partners with CTO and product/engineering leads — not solo-founder PM vacuum
-- Fresh Series A (not stale seed)
-- Berlin HQ, remote-friendly EU team
+- Existing product team at a listed company (GapFish/Lucid acquisitions → multi-product org)
+- Scoped ownership inside Exchange / Demand services
+- Remote-first; English-only; no German gate
+- Sustainable pace signals (Loved Workplace recognition; not “chaos/speedboat” language)
 
 **⭐ Bonus flags:**
-- API / data-integration PM experience is a major plus in JD
-- B Corp; climate mission
-- Equity + L&D stipend
+- API + UI product lifecycle experience valued
+- LLM / modern-stack curiosity is a plus in JD
+- Global remote collaboration (CET overlap with US)
 
 **⚠️ Concerns:**
-- Reports to CEO at ~43 people → ownership can expand beyond the stated box
-- Explicit ambiguity / speed language (−fit vs Enpal-style bounded platform)
-- Deep LCA / carbon-methodology partnership expected
+- ResTech / survey marketplace is not climate/ESG — Comp without Nic’s domain boosters
+- Strategic “own the vision” SPM work still means stakeholder complexity
+- Moderate applicant volume (~98)
 
 ---
 
-### 3. carbmee — Solution Engineer (Climate-Tech) — **60** (not top 5)
-Link: https://www.linkedin.com/jobs/view/4440455061/
-**Final**: 60/100 (base 45 + recency +10 + funding +5)
-Fit: 38/100  |  Competitiveness: 52/100
-**Action**: 🟠 APPLY_IF_TIME  |  **CV**: Implementation / climate framing  |  🅰️ Series A (€20M, Dec 2024)  |  👥 ~70
-_posted ~7d ago, 78 applicants_
+### 2. Packmatic — Product Owner (m/f/d) – B2B SaaS — **85** ✅ TOP 5 (#3)
+Link: https://www.linkedin.com/jobs/view/4447346302/
+**Final**: 85/100 (base 65 + recency +10 + funding +5 + applicants +5)
+Fit: 62/100  |  Competitiveness: 68/100
+**Action**: 🟢 APPLY_NOW  |  **CV**: Regulatory / packaging-compliance framing  |  🅰️ Series A (€15M, Jan 2024)  |  👥 ~75
+_posted today, no prior contact, <25 applicants — low competition_
 
-**Autopilot:** Possible for implementation playbooks, but this is **not a PM role** (ERP/data onboarding SE with Python/SQL/SAP).
+**Autopilot:** Plausible — PO owns delivery cycles, stories, quality bar, and packaging-compliance roadmap with a named Product Leadership Team; role exists to add process to fast growth.
 
-> Climate + implementation adjacency helps Comp; wrong function keeps Fit low.
+> Strong Comp from PPWR/EPR/EUDR + supply-chain/sustainability adjacency; Fit solid but Series A “growing fast” and PO (vs PM) title keep it under Cint/Enpal.
 
-**⚠️ Concerns:** Hands-on data engineering lean; career step sideways from PM.
+**✅ Fit highlights:**
+- Explicit Product Leadership Team (not solo PO)
+- Role mandate is structure/control (cycles, quality, clarity) — matches Nic’s preferred container
+- German optional; hybrid Berlin
+- Regulatory packaging compliance = ESG/reg-tech adjacency
 
----
+**⭐ Bonus flags:**
+- Fresh post + low applicants
+- AI automation as a bonus skill
+- Sustainability / circular-economy interest called out
 
-### 4. Malt — Enterprise Solutions Consultant — **52** (not top 5)
-Link: https://www.linkedin.com/jobs/view/4440232540/
-**Final**: 52/100 (base 33 + recency +6 + funding +8 + applicants +5)
-Fit: 28/100  |  Competitiveness: 38/100
-**Action**: ⚪ SKIP  |  French marketplace, Series C/D-scale (~600+)
-_posted ~14d ago, <25 applicants_
-
-**Why skip:** Pure enterprise pre-sales / quota / RFP engine — not product. German “advantage” only (not DQ), but function mismatch dominates.
-
----
-
-### 5. Deepki — Senior Solutions Engineer — **53** ⛔ HARD DQ
-Link: https://www.linkedin.com/jobs/view/4431691250/
-**Final**: 53/100 (base capped 30 + recency +10 + funding +8 + applicants +5)
-Fit: 18/100  |  Competitiveness: 42/100
-**Action**: ⛔ SKIP — **German fluency mandatory**
-_Series C ESG/real-estate SaaS; climate-adjacent mission cannot override language DQ._
+**⚠️ Concerns:**
+- Title is Product Owner / delivery backbone — more junior framing (“first experience”) than Nic’s ~10y SPM level
+- Series A ~75 people still carries growth/ambiguity risk
+- Last raise Jan 2024 (no newer round verified) — watch maturity, not a hard penalty
 
 ---
 
-### 6. Arrive — Program Manager — **42** ⛔ HARD DQ
-Link: https://www.linkedin.com/jobs/view/4442059936/
-**Final**: 42/100 (base 24 + recency +10 + funding +8)
-Fit: 15/100  |  Competitiveness: 32/100
-**Action**: ⛔ SKIP — **German C1 / native required**; contract P&L program role, not PM.
+### 3. 4flow — Manager Solution Design (d/f/m) — **74** (not top 5; ties Kleinanzeigen on score)
+Link: https://www.linkedin.com/jobs/view/4448300767/
+**Final**: 74/100 (base 51 + recency +10 + funding +8 + applicants +5)
+Fit: 42/100  |  Competitiveness: 60/100
+**Action**: 🟠 APPLY_IF_TIME  |  **CV**: Supply-chain / AI-solutions framing  |  💰 private mature (~1,500) 
+_posted ~1d ago, <25 applicants_
+
+**Autopilot:** Unlikely as a stabilizing product seat — perpetual tech/AI innovation roadmap across ops, team leadership, external partners.
+
+> Supply-chain Comp boost helps; wrong function (solutions/innovation manager, not PM) keeps Fit ~42 — does not displace Kleinanzeigen on the chart.
+
+**⚠️ Concerns:** Not a product role; continuous innovation ownership; 5y tech-deploy + 2y people-lead bar.
 
 ---
 
-### 7. Palo Alto Networks — Solutions Consultant — **32** ⛔ HARD DQ
-Link: https://www.linkedin.com/jobs/view/4356221494/
-**Final**: 32/100 (base 18 + recency +6 + funding +8)
-Fit: 12/100  |  Competitiveness: 25/100
-**Action**: ⛔ SKIP — **High-level German required**; cybersecurity pre-sales SE.
+### 4. Grundfos — Lead Product Specialist — **68** (not top 5)
+Link: https://www.linkedin.com/jobs/view/4439300883/
+**Final**: 68/100 (base 55 + recency +10 + funding +8 + applicants −5)
+Fit: 54/100  |  Competitiveness: 56/100
+**Action**: 🟠 APPLY_IF_TIME  |  **CV**: Product-ops / digital-enablement framing  |  💰 industrial profitable
+_posted ~4d ago, 123 applicants — high competition_
+
+**Autopilot:** Likely for a specialist lane (launch readiness, adoption, governance) at a mature industrial digital org — but career track is Product Specialist / enablement, not PM.
+
+> Stable container, weaker Comp (no climate/marketplace/PM title), high applicants.
 
 ---
 
+### 5. Consultport — Product Manager (PLG) — **59** (not top 5)
+Link: https://www.linkedin.com/jobs/view/4445878834/
+**Final**: 59/100 (base 49 + recency +10 + funding 0 + applicants 0)
+Fit: 40/100  |  Competitiveness: 58/100
+**Action**: ⚪ SKIP / low priority  |  **CV**: Marketplace PLG framing  |  ❓ unfunded / bootstrapped  |  👥 ~51–100
+_posted ~1d ago, 79 applicants_
+
+**Autopilot:** Unlikely — “scaling hard,” “ships faster,” PLG ownership of activation/expansion is perpetual growth work; funding unverified (Tracxn: unfunded).
+
+> Marketplace + AI-daily Comp is decent; Fit cut by pace, onsite Berlin, and unclear product-peer depth.
+
+---
+
+## Prior top roles still on / near chart
+| Score | Role | Status |
+|------:|------|--------|
+| 86 | Enpal / metrify — PM | #2 active |
+| 84 | Climatiq — Sr PM Data/API | #4 active |
+| 80 | Executive Integrity — PM Risk & Compliance | #5 active |
+| 78 | brighter AI — PM | dropped from top 5 |
+| 74 | Kleinanzeigen — Senior PM PRO Performance | dropped (tied with 4flow on score; keep as watch) |
+
+---
 ## Active top 5 (updated)
-1. **86** — Enpal / metrify — Product Manager — https://www.linkedin.com/jobs/view/4442599771/
-2. **84** — Climatiq — Senior Product Manager, Data and API — https://www.linkedin.com/jobs/view/4447530425/
-3. **80** — Executive Integrity client — PM — Risk & Compliance — https://www.linkedin.com/jobs/view/4444935648/
-4. **78** — brighter AI — Product Manager — https://www.linkedin.com/jobs/view/4441816577/
-5. **74** — Kleinanzeigen — Senior PM — PRO Performance — https://www.linkedin.com/jobs/view/4436747586/
+1. **90** — Cint — Senior Product Manager, Exchange — https://www.linkedin.com/jobs/view/4431679465/
+2. **86** — Enpal / metrify — Product Manager — https://www.linkedin.com/jobs/view/4442599771/
+3. **85** — Packmatic — Product Owner – B2B SaaS — https://www.linkedin.com/jobs/view/4447346302/
+4. **84** — Climatiq — Senior Product Manager, Data and API — https://www.linkedin.com/jobs/view/4447530425/
+5. **80** — Executive Integrity client — PM — Risk & Compliance — https://www.linkedin.com/jobs/view/4444935648/
 
-**Dropped from chart:** Searoutes (72), Splitero (64).
+**Dropped from chart:** brighter AI (78), Kleinanzeigen (74).
 **Still excluded:** Hack The Box, Tibber (applied).

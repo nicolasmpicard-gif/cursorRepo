@@ -123,6 +123,68 @@ Combined from your strongest points + upgrades. Use as spoken bullet notes.
 
 ---
 
+# Part 1b — SE-specific questions already answered (polished)
+
+---
+
+## 9) How do you partner with sales / AEs day to day?
+
+- Treat AEs as partners with limited time: make every SE touch high-leverage
+- Pre-call: get business context, MEDDICC basics, success metrics, and when SE should intervene
+- On-call: SE owns technical discovery + Gap→Bridge→Prove demo; AE owns commercial narrative
+- Post-call: send recap, risks, recommended next step (pilot scope / success criteria)
+- Between deals: light enablement (FAQ, objection blurbs, short battlecards) so AEs can self-serve common questions
+- Intake hygiene: ask AEs for structured requests (customer, pain, deadline, decision stage) so work is actionable
+- Prioritize by close date, deal size/ARR, strategic logo, and champion strength — not whoever pings loudest
+- Avoid sounding anti-AE; frame as “protect AE time + accelerate real deals”
+
+---
+
+## 10) Describe a technical win that helped a deal or customer outcome
+
+- OpenSC / Nespresso: data-quality issues were taking ~3 days to detect
+- My contribution: helped design/build a solution performance dashboard for faster issue detection
+- Technical result: detection time cut from ~3 days to under 24 hours
+- Customer outcome: higher-quality data at greater volume → more reliable supply-chain insights for Nespresso teams
+- Why it mattered commercially: stronger trust in the platform’s operational reliability and program value
+- SE framing: technical fix → customer decision confidence / retention / expansion narrative
+- Strengthen live if possible: name your exact role (specs, logic with data scientist, rollout) + any renewal/expansion link
+
+---
+
+## 11) Tell me about a demo or training you delivered — how did you prepare?
+
+- AstroFinance: demoed Asset Exchange to potential investors
+- Prep:
+  - Built target investor persona (jobs-to-be-done + pain points)
+  - Designed 2–3 useful user flows tied to those pains
+  - Rehearsed timing, pacing, pauses, and likely follow-up questions
+  - Prepared PDF backup if live environment failed
+  - Reviewed core + add-on pricing in case commercial questions came up
+- Delivery structure to emphasize in interview: Gap → Bridge → Prove
+  - Gap: restate investor pain in their words
+  - Bridge: 1–2 platform capabilities only
+  - Prove: live click-path + clear next step
+- Outcome to add live: what happened after (follow-up, interest, pilot, or first-client momentum)
+
+---
+
+## 12) A time a prospect asked for something your product couldn’t do
+
+- IntegrityNext: clients asked for supplier tracking/communication capabilities not in product
+- Old PM reflex (keep light): logged requests, tallied frequency, fed prioritized backlog, updated AEs on status
+- SE-ready version of the same story:
+  - Recreate why-behind-why (what business outcome they need)
+  - Check native options / workaround / export / integration path
+  - Be honest: no roadmap promises I don’t own
+  - Offer alternative path with tradeoffs so deal/adoption can continue
+  - Route structured feedback to Product with frequency + impact
+  - Follow up with AE + customer so they feel heard
+- Result framing: protected trust, kept conversation moving, and turned ask into product insight instead of a dead end
+- Framework to name: LASER (Listen, Acknowledge, Seek why, Evidence/workaround, Advance next step)
+
+---
+
 # Part 2 — All scenario prompts + steps (1-sentence descriptors)
 
 ---

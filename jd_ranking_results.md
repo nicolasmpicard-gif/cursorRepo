@@ -1,17 +1,17 @@
 # JD Ranking Results — active top 5 only
 _Date: 2026-08-11_
 
-**Rubric update:** Non-PM titles no longer lose Fit points — Nic applies across role types. Comp = skill/domain match to the posted role; Fit = autopilot, pace, team structure, language gates, maturity.
-
-**Kept from prior chart:** Enpal (86), 4flow (rescored to 92 on career-page JD — German now optional, PM/solution-design explicitly valued).
+**Applied (removed from active chart):** 4flow (92), Enpal/metrify (86), Trackunit (81).
+**Dismissed:** PANELY (81) — German JD / B2 likely insufficient.
+**Still excluded:** Hack The Box, Tibber (applied earlier).
 
 #    Score   Act            Company — Title
 ------------------------------------------------------------------------------------------
-1    92      🟢 apply_now    4flow — Manager Solution Design
-2    86      🟢 apply_now    Enpal / metrify — Product Manager
-3    81      🟢 apply_now    Trackunit — Product Manager, Contractor Pod
-4    81      🟢 apply_now    PANELY — Product Owner Artificial Intelligence
-5    80      🟢 apply_now    Kardex — Project Manager (m/w/d) International
+1    80      🟢 apply_now    Kardex — Project Manager (m/w/d) International
+2    77      🟡 apply_soon   Personio — Sr Systems PM, GTM / Lead-to-Order
+3    74      🟠 apply_if_time Kleinanzeigen — Senior PM — PRO Performance (watch)
+4    72      🟠 apply_if_time Searoutes — Product Strategist (watch)
+5    70      —              _slot open — send next batch_
 
 ---
 ## Top 5 detail
@@ -69,12 +69,9 @@ Fit: 70 | Comp: 64
 | **23** | smalt — Venture Development Manager | https://www.linkedin.com/jobs/view/4440641933/ | ⛔ **Native German non-negotiable** + MBB/PE ops bar |
 
 ---
-## Active top 5 (updated)
-1. **92** — 4flow — Manager Solution Design — https://karriere.4flow.de/offer/manager-solution-design-d-f-m/e3ea9eca-9d26-4990-8e47-688b6336d880
-2. **86** — Enpal / metrify — Product Manager — https://www.linkedin.com/jobs/view/4442599771/
-3. **81** — Trackunit — Product Manager, Contractor Pod — https://www.linkedin.com/jobs/view/4450346612/
-4. **81** — PANELY — Product Owner Artificial Intelligence — https://www.linkedin.com/jobs/view/4447320245/
-5. **80** — Kardex — Project Manager International — https://www.linkedin.com/jobs/view/4431255472/
+## Active apply list (post-applications)
+1. **80** — Kardex — Project Manager International — https://www.linkedin.com/jobs/view/4431255472/
+2. **77** — Personio — Sr Systems PM GTM — https://www.linkedin.com/jobs/view/4438728686/
 
-**Dropped from prior chart (not in this keep-list):** Cint, Packmatic, Climatiq, Executive Integrity.
-**Still excluded:** Hack The Box, Tibber (applied).
+**Applied & removed:** 4flow, Enpal/metrify, Trackunit (+ HTB, Tibber).
+**Dismissed:** PANELY (German).

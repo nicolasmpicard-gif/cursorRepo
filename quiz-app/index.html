@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Exam Quiz</h1>
+      <p class="subtitle">Practice one question at a time</p>
+    </header>
+
+    <main id="quiz-screen" class="card">
+      <div class="meta">
+        <span id="topic-tag" class="tag"></span>
+        <span id="progress" class="progress"></span>
+      </div>
+
+      <h2 id="question-text" class="question"></h2>
+
+      <div id="options" class="options" role="radiogroup" aria-labelledby="question-text"></div>
+
+      <div id="feedback" class="feedback hidden" aria-live="polite">
+        <p id="result-label" class="result-label"></p>
+        <p id="explanation" class="explanation"></p>
+      </div>
+
+      <div class="actions">
+        <button id="next-btn" class="btn primary hidden" type="button">Next question</button>
+      </div>
+    </main>
+
+    <main id="results-screen" class="card hidden">
+      <h2>Quiz complete</h2>
+      <p id="score-summary" class="score-summary"></p>
+      <p id="score-detail" class="score-detail"></p>
+      <button id="restart-btn" class="btn primary" type="button">Try again</button>
+    </main>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

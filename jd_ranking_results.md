@@ -9,18 +9,18 @@ Combined: LinkedIn batches + EU Remote Jobs + leftovers.
 1    92      🟢 apply_now    Awin Global — Product & Technology Operations Manager
 2    92      🟢 apply_now    Remote — Product Manager, Contractor Management
 3    91      🟢 apply_now    Coach-Hub — Customer Success Manager (French speaking)
-4    91      🟢 apply_now    Filigran — Senior Product Manager, OpenCRQ
-5    90      🟢 apply_now    Cint — Senior Product Manager, Exchange
+4    90      🟢 apply_now    Cint — Senior Product Manager, Exchange
+5    85      🟢 apply_now    Packmatic — Product Owner B2B SaaS
 
 ---
 ## Active pool — full ranking (#6+)
 
 | # | Score | Company — Role | Link |
 |---|------:|---|---|
-| 6 | **85** | Packmatic — Product Owner B2B SaaS | https://www.linkedin.com/jobs/view/4447346302/ |
-| 7 | **84** | LivePerson — Sr PM, Agent Experience | https://www.linkedin.com/jobs/view/4444189442/ |
-| 8 | **84** | Climatiq — Sr PM, Data & API | https://www.linkedin.com/jobs/view/4447530425/ |
-| 9 | **82** | Executive Integrity client — PM Risk & Compliance | https://www.linkedin.com/jobs/view/4444935648/ |
+| 6 | **84** | LivePerson — Sr PM, Agent Experience | https://www.linkedin.com/jobs/view/4444189442/ |
+| 7 | **84** | Climatiq — Sr PM, Data & API | https://www.linkedin.com/jobs/view/4447530425/ |
+| 8 | **82** | Executive Integrity client — PM Risk & Compliance | https://www.linkedin.com/jobs/view/4444935648/ |
+| 9 | **81** | Filigran — Sr PM OpenCRQ _(revised down — see note)_ | https://euremotejobs.com/job/senior-product-manager-opencrq/ |
 | 10 | **80** | Kardex — Project Manager International | https://www.linkedin.com/jobs/view/4431255472/ |
 | 11 | **80** | brighter AI — Product Manager | https://www.linkedin.com/jobs/view/4441816577/ |
 | 12 | **78** | Insider One — Solutions Consultant DACH | https://euremotejobs.com/job/solutions-consultant-dach/ |
@@ -37,8 +37,10 @@ Combined: LinkedIn batches + EU Remote Jobs + leftovers.
 1. **92** — Awin — https://www.linkedin.com/jobs/view/4440459909/
 2. **92** — Remote — https://euremotejobs.com/job/product-manager-contractor-management/
 3. **91** — Coach-Hub — https://www.linkedin.com/jobs/view/4449026041/
-4. **91** — Filigran — https://euremotejobs.com/job/senior-product-manager-opencrq/
-5. **90** — Cint — https://www.linkedin.com/jobs/view/4431679465/
+4. **90** — Cint — https://www.linkedin.com/jobs/view/4431679465/
+5. **85** — Packmatic — https://www.linkedin.com/jobs/view/4447346302/
+
+**Filigran correction:** JD requires credible cyber attack/defense domain; “pure compliance background is not sufficient.” Comp revised 78→58; **final 91→81** (not top 5).
 
 ---
 ## Applied (off chart)

@@ -1,63 +1,52 @@
-# JD Ranking Results — holistic (all batches)
-_Date: 2026-08-12_
+# JD Ranking Results — active top 5 only
+_Date: 2026-08-13_
 
-Combined: LinkedIn batches + EU Remote Jobs + leftovers.  
-**Excluded from active chart:** Applied (4flow, Enpal, Trackunit, HTB, Tibber) · Dismissed (PANELY) · Hard-DQ (German gates, domain gates).
+**Applied (off chart forever):** Awin, Remote, LivePerson, Cint, Packmatic, Climatiq, Searoutes, 4flow, Enpal/metrify, Trackunit, Hack The Box, Tibber.  
+**Skipped:** Coach-Hub (pure CSM — not interested).  
+**Dismissed / DQ:** PANELY (German JD), Riverty (German C1), Match on Monday (German native), Personio Payroll (German native), smalt (native German).
 
 #    Score   Act            Company — Title
 ------------------------------------------------------------------------------------------
-1    92      🟢 apply_now    Awin Global — Product & Technology Operations Manager
-2    92      🟢 apply_now    Remote — Product Manager, Contractor Management
-3    91      🟢 apply_now    Coach-Hub — Customer Success Manager (French speaking)
-4    90      🟢 apply_now    Cint — Senior Product Manager, Exchange
-5    85      🟢 apply_now    Packmatic — Product Owner B2B SaaS
-
----
-## Active pool — full ranking (#6+)
-
-| # | Score | Company — Role | Link |
-|---|------:|---|---|
-| 6 | **84** | LivePerson — Sr PM, Agent Experience | https://www.linkedin.com/jobs/view/4444189442/ |
-| 7 | **84** | Climatiq — Sr PM, Data & API | https://www.linkedin.com/jobs/view/4447530425/ |
-| 8 | **82** | Executive Integrity client — PM Risk & Compliance | https://www.linkedin.com/jobs/view/4444935648/ |
-| 9 | **81** | Filigran — Sr PM OpenCRQ _(revised down — see note)_ | https://euremotejobs.com/job/senior-product-manager-opencrq/ |
-| 10 | **80** | Kardex — Project Manager International | https://www.linkedin.com/jobs/view/4431255472/ |
-| 11 | **80** | brighter AI — Product Manager | https://www.linkedin.com/jobs/view/4441816577/ |
-| 12 | **78** | Insider One — Solutions Consultant DACH | https://euremotejobs.com/job/solutions-consultant-dach/ |
-| 13 | **78** | voize — AI Enablement Manager | https://www.linkedin.com/jobs/view/4452645341/ |
-| 14 | **77** | Nash — Solutions Engineer | https://euremotejobs.com/job/solutions-engineer-3/ |
-| 15 | **77** | Personio — Sr Systems PM, GTM | https://www.linkedin.com/jobs/view/4438728686/ |
-| 16 | **77** | Kleinanzeigen — Senior PM PRO Performance | https://www.linkedin.com/jobs/view/4436747586/ |
-| 17 | **67** | Searoutes — Product Strategist | https://www.linkedin.com/jobs/view/4446813789/ |
-| 18 | **53** | Scaleo — Product Manager (iGaming) | https://euremotejobs.com/job/product-manager-21/ |
+1    82      🟢 apply_now    Executive Integrity client — PM — Risk & Compliance
+2    81      🟡 apply_soon   Filigran — Senior Product Manager, OpenCRQ
+3    80      🟢 apply_now    Kardex — Project Manager International
+4    80      🟡 apply_soon   brighter AI — Product Manager
+5    78      🟡 apply_soon   Insider One — Solutions Consultant DACH
 
 ---
 ## Top 5 links
 
-1. **92** — Awin — https://www.linkedin.com/jobs/view/4440459909/
-2. **92** — Remote — https://euremotejobs.com/job/product-manager-contractor-management/
-3. **91** — Coach-Hub — https://www.linkedin.com/jobs/view/4449026041/
-4. **90** — Cint — https://www.linkedin.com/jobs/view/4431679465/
-5. **85** — Packmatic — https://www.linkedin.com/jobs/view/4447346302/
-
-**Filigran correction:** JD requires credible cyber attack/defense domain; “pure compliance background is not sufficient.” Comp revised 78→58; **final 91→81** (not top 5).
+1. **82** — Executive Integrity — PM Risk & Compliance — https://www.linkedin.com/jobs/view/4444935648/
+2. **81** — Filigran — Sr PM OpenCRQ — https://euremotejobs.com/job/senior-product-manager-opencrq/
+3. **80** — Kardex — PM International — https://www.linkedin.com/jobs/view/4431255472/
+4. **80** — brighter AI — Product Manager — https://www.linkedin.com/jobs/view/4441816577/
+5. **78** — Insider One — Solutions Consultant DACH — https://euremotejobs.com/job/solutions-consultant-dach/
 
 ---
-## Applied (off chart)
-| Score | Role | Link |
-|------:|---|---|
-| 92 | 4flow — Manager Solution Design | https://karriere.4flow.de/offer/manager-solution-design-d-f-m/e3ea9eca-9d26-4990-8e47-688b6336d880 |
-| 86 | Enpal/metrify — PM | https://www.linkedin.com/jobs/view/4442599771/ |
-| 81 | Trackunit — PM Contractor Pod | https://www.linkedin.com/jobs/view/4450346612/ |
+## Active pool (#6+)
 
-Also applied: Hack The Box, Tibber.
+| # | Score | Company — Role | Link |
+|---|------:|---|---|
+| 6 | **78** | voize — AI Enablement Manager | https://www.linkedin.com/jobs/view/4452645341/ |
+| 7 | **77** | Nash — Solutions Engineer | https://euremotejobs.com/job/solutions-engineer-3/ |
+| 8 | **77** | Personio — Sr Systems PM, GTM | https://www.linkedin.com/jobs/view/4438728686/ |
+| 9 | **77** | Kleinanzeigen — Senior PM PRO Performance | https://www.linkedin.com/jobs/view/4436747586/ |
+| 10 | **53** | Scaleo — Product Manager (iGaming) | https://euremotejobs.com/job/product-manager-21/ |
+
+**Note:** Filigran stays on the chart at 81 with revised Comp (cyber attack/defense required — compliance alone is not enough). Only apply if you can show real cyber/risk-quant exposure.
 
 ---
-## Dismissed / hard-DQ
-| Score | Role | Why |
-|------:|---|---|
-| 81 | PANELY — PO AI | Dismissed — German JD |
-| 53 | Riverty — Product Ops | German C1 required |
-| 45 | Match on Monday — Sr PO | German native required |
-| 43 | Personio — SPM Payroll | German native required |
-| 23 | smalt — Venture Dev Manager | Native German required |
+## Applied (tracking)
+| Score | Role |
+|------:|---|
+| 92 | Awin — Product & Tech Ops Manager |
+| 92 | Remote — PM Contractor Management |
+| 92 | 4flow — Manager Solution Design |
+| 90 | Cint — Sr PM Exchange |
+| 86 | Enpal/metrify — PM |
+| 85 | Packmatic — PO B2B SaaS |
+| 84 | LivePerson — Sr PM Agent Experience |
+| 84 | Climatiq — Sr PM Data & API |
+| 81 | Trackunit — PM Contractor Pod |
+| 67 | Searoutes — Product Strategist |
+| — | Hack The Box, Tibber |

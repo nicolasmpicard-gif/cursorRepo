@@ -1,7 +1,7 @@
 {
-  "name": "Wortkarte — Blank Deck",
+  "name": "Wortkarte — Class Decks",
   "short_name": "Wortkarte",
-  "description": "A blank German flashcard deck you can fill with your own words.",
+  "description": "Free classroom flashcards — each student builds their own word bank.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

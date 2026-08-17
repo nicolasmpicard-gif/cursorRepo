@@ -7,9 +7,10 @@ Local learning apps for this workspace.
 **Personal deck (83 words):**  
 https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/index.html
 
-**Blank shareable deck (no seed words):**  
+**Blank / classroom deck (classmates build their own banks):**  
 https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/share/index.html
 
+Each classmate creates a named profile; words stay on their device for free (no login).
 Or run locally:
 
 ```bash

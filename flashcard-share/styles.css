@@ -385,13 +385,87 @@ button {
   max-width: 28rem;
 }
 
-.browse-notice {
-  margin: 0;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  background: rgba(61, 122, 95, 0.12);
+.classroom-home {
+  text-align: center;
+}
+
+.profile-create {
+  width: min(100%, 28rem);
+  margin: 0.5rem auto 0;
+  text-align: left;
+}
+
+.profile-create-row {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.profile-create-row .field-input {
+  flex: 1 1 12rem;
+}
+
+.profile-list-wrap {
+  width: min(100%, 28rem);
+  margin: 1.25rem auto 0;
+  text-align: left;
+}
+
+.profile-heading {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
   color: var(--pine-deep);
-  font-weight: 600;
+}
+
+.profile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.profile-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 0.35rem;
+}
+
+.profile-item.is-active {
+  border-color: var(--moss);
+  background: rgba(231, 239, 233, 0.9);
+}
+
+.profile-select {
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  display: grid;
+  gap: 0.1rem;
+  color: inherit;
+  width: 100%;
+}
+
+.profile-name {
+  font-weight: 700;
+  color: var(--pine-deep);
+}
+
+.profile-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.profile-delete {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.85rem;
 }
 
 .import-panel {

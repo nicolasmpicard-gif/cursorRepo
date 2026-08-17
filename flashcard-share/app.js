@@ -1,10 +1,12 @@
 (() => {
   "use strict";
 
-  // Separate storage so this blank share copy never mixes with your personal deck.
-  const STORAGE_KEY = "wortkarte.share.progress.v1";
-  const DELETED_KEY = "wortkarte.share.deleted.v1";
-  const CUSTOM_KEY = "wortkarte.share.custom.v1";
+  // Classroom share copy: each student profile keeps an isolated word bank in localStorage.
+  // Free to host statically — no server or accounts required.
+  const STORE_KEY = "wortkarte.classroom.v1";
+  const LEGACY_PROGRESS = "wortkarte.share.progress.v1";
+  const LEGACY_DELETED = "wortkarte.share.deleted.v1";
+  const LEGACY_CUSTOM = "wortkarte.share.custom.v1";
   const STATUS_ORDER = ["forgot", "difficult", "easy", "instant"];
   const STATUS_LABELS = {
     forgot: "Forgot",
@@ -23,6 +25,7 @@
     selectedIds: new Set(),
     lastError: null,
     browseNotice: "",
+    homeNotice: "",
   };
 
   const els = {
@@ -40,30 +43,143 @@
     }
   }
 
+  function emptyProfileData() {
+    return { progress: {}, deleted: [], custom: [] };
+  }
+
+  function loadStore() {
+    const store = safeParse(localStorage.getItem(STORE_KEY), null);
+    if (store && typeof store === "object" && store.profiles && typeof store.profiles === "object") {
+      return {
+        activeProfileId: store.activeProfileId || null,
+        profiles: store.profiles,
+      };
+    }
+
+    // Migrate older single-deck share storage into one default profile if present.
+    const legacyCustom = safeParse(localStorage.getItem(LEGACY_CUSTOM), []);
+    const legacyProgress = safeParse(localStorage.getItem(LEGACY_PROGRESS), {});
+    const legacyDeleted = safeParse(localStorage.getItem(LEGACY_DELETED), []);
+    const hasLegacy =
+      (Array.isArray(legacyCustom) && legacyCustom.length) ||
+      (legacyProgress && Object.keys(legacyProgress).length) ||
+      (Array.isArray(legacyDeleted) && legacyDeleted.length);
+
+    if (hasLegacy) {
+      const id = `profile-${Date.now()}`;
+      const migrated = {
+        activeProfileId: id,
+        profiles: {
+          [id]: {
+            id,
+            name: "My deck",
+            createdAt: Date.now(),
+            progress: legacyProgress && typeof legacyProgress === "object" ? legacyProgress : {},
+            deleted: Array.isArray(legacyDeleted) ? legacyDeleted : [],
+            custom: Array.isArray(legacyCustom) ? legacyCustom : [],
+          },
+        },
+      };
+      saveStore(migrated);
+      return migrated;
+    }
+
+    return { activeProfileId: null, profiles: {} };
+  }
+
+  function saveStore(store) {
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
+  }
+
+  function listProfiles() {
+    const store = loadStore();
+    return Object.values(store.profiles).sort((a, b) =>
+      String(a.name).localeCompare(String(b.name), undefined, { sensitivity: "base" })
+    );
+  }
+
+  function getActiveProfile() {
+    const store = loadStore();
+    if (!store.activeProfileId) return null;
+    return store.profiles[store.activeProfileId] || null;
+  }
+
+  function setActiveProfile(profileId) {
+    const store = loadStore();
+    if (!store.profiles[profileId]) return false;
+    store.activeProfileId = profileId;
+    saveStore(store);
+    return true;
+  }
+
+  function createProfile(name) {
+    const trimmed = String(name || "").trim().slice(0, 40);
+    if (!trimmed) return null;
+    const store = loadStore();
+    const id = `profile-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    store.profiles[id] = {
+      id,
+      name: trimmed,
+      createdAt: Date.now(),
+      ...emptyProfileData(),
+    };
+    store.activeProfileId = id;
+    saveStore(store);
+    return store.profiles[id];
+  }
+
+  function deleteProfile(profileId) {
+    const store = loadStore();
+    if (!store.profiles[profileId]) return;
+    delete store.profiles[profileId];
+    if (store.activeProfileId === profileId) {
+      const remaining = Object.keys(store.profiles);
+      store.activeProfileId = remaining[0] || null;
+    }
+    saveStore(store);
+  }
+
+  function updateActiveProfile(mutator) {
+    const store = loadStore();
+    const profile = store.profiles[store.activeProfileId];
+    if (!profile) return null;
+    mutator(profile);
+    saveStore(store);
+    return profile;
+  }
+
   function loadProgress() {
-    return safeParse(localStorage.getItem(STORAGE_KEY), {});
+    const profile = getActiveProfile();
+    return profile && profile.progress && typeof profile.progress === "object" ? profile.progress : {};
   }
 
   function saveProgress(progress) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    updateActiveProfile((profile) => {
+      profile.progress = progress;
+    });
   }
 
   function loadDeleted() {
-    const deleted = safeParse(localStorage.getItem(DELETED_KEY), []);
-    return new Set(Array.isArray(deleted) ? deleted : []);
+    const profile = getActiveProfile();
+    const deleted = profile && Array.isArray(profile.deleted) ? profile.deleted : [];
+    return new Set(deleted);
   }
 
   function saveDeleted(deletedSet) {
-    localStorage.setItem(DELETED_KEY, JSON.stringify([...deletedSet]));
+    updateActiveProfile((profile) => {
+      profile.deleted = [...deletedSet];
+    });
   }
 
   function loadCustomWords() {
-    const custom = safeParse(localStorage.getItem(CUSTOM_KEY), []);
-    return Array.isArray(custom) ? custom : [];
+    const profile = getActiveProfile();
+    return profile && Array.isArray(profile.custom) ? profile.custom : [];
   }
 
   function saveCustomWords(words) {
-    localStorage.setItem(CUSTOM_KEY, JSON.stringify(words));
+    updateActiveProfile((profile) => {
+      profile.custom = words;
+    });
   }
 
   function slugify(text) {
@@ -297,16 +413,68 @@
   }
 
   function renderHome() {
+    const profiles = listProfiles();
+    const active = getActiveProfile();
+    const notice = state.homeNotice
+      ? `<p class="browse-notice" role="status">${escapeHtml(state.homeNotice)}</p>`
+      : "";
+
+    const profileCards = profiles
+      .map((profile) => {
+        const count = Array.isArray(profile.custom) ? profile.custom.length : 0;
+        const isActive = active && active.id === profile.id;
+        return `
+          <li class="profile-item ${isActive ? "is-active" : ""}">
+            <button type="button" class="profile-select" data-action="select-profile" data-id="${escapeHtml(profile.id)}">
+              <span class="profile-name">${escapeHtml(profile.name)}</span>
+              <span class="profile-meta">${count} word${count === 1 ? "" : "s"}${isActive ? " · active" : ""}</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-ghost profile-delete"
+              data-action="delete-profile"
+              data-id="${escapeHtml(profile.id)}"
+              aria-label="Delete profile ${escapeHtml(profile.name)}"
+            >Delete</button>
+          </li>
+        `;
+      })
+      .join("");
+
     return `
-      <section class="panel hero">
+      <section class="panel hero classroom-home">
         <h1 class="hero-brand">Wortkarte</h1>
         <p class="hero-lead">
-          A blank flashcard deck. Add your own words in Browse, then study with Forgot / Difficult / Easy / Instant.
+          Free classroom flashcards. Each classmate creates a profile and builds their own word bank on this device — no login needed.
         </p>
-        <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-action="go-browse">Add words</button>
-          <button type="button" class="btn btn-secondary" data-action="go-study">Start studying</button>
+        ${notice}
+
+        <div class="profile-create">
+          <label class="field-label" for="profile-name">Your name</label>
+          <div class="profile-create-row">
+            <input id="profile-name" class="field-input" type="text" maxlength="40" placeholder="e.g. Alex" autocomplete="nickname">
+            <button type="button" class="btn btn-primary" data-action="create-profile">Create my deck</button>
+          </div>
         </div>
+
+        ${
+          profiles.length
+            ? `
+          <div class="profile-list-wrap">
+            <h2 class="profile-heading">Choose a deck</h2>
+            <ul class="profile-list">${profileCards}</ul>
+          </div>
+          ${
+            active
+              ? `<div class="cta-row">
+                  <button type="button" class="btn btn-primary" data-action="go-browse">Add words</button>
+                  <button type="button" class="btn btn-secondary" data-action="go-study">Start studying</button>
+                </div>`
+              : ""
+          }
+        `
+            : `<p class="hint">Tip: on a personal phone, one profile is enough. On a shared computer, each student should create their own.</p>`
+        }
       </section>
     `;
   }
@@ -423,7 +591,7 @@
     return `
       <section class="panel browse-shell">
         <div class="browse-toolbar">
-          <p class="meta-text">${state.cards.length} words · alphabetical</p>
+          <p class="meta-text">${state.cards.length} words · ${escapeHtml((getActiveProfile() && getActiveProfile().name) || "deck")} · alphabetical</p>
           <div class="browse-toolbar-actions">
             <button type="button" class="btn btn-secondary" data-action="export-words">Export</button>
             <button type="button" class="btn btn-secondary" data-action="select-all">
@@ -520,6 +688,13 @@
     state.view = view;
     state.lastError = null;
 
+    if ((view === "study" || view === "browse") && !getActiveProfile()) {
+      state.homeNotice = "Create or select a profile first.";
+      state.view = "home";
+      render();
+      return;
+    }
+
     if (view === "study") {
       // Always rebuild a safe queue when entering Study to avoid stale indices.
       startStudySession();
@@ -573,6 +748,7 @@
   function onAction(action, target) {
     switch (action) {
       case "go-home":
+        state.homeNotice = "";
         goTo("home");
         break;
       case "go-study":
@@ -581,6 +757,47 @@
       case "go-browse":
         goTo("browse");
         break;
+      case "create-profile": {
+        const input = document.getElementById("profile-name");
+        const profile = createProfile(input ? input.value : "");
+        if (!profile) {
+          state.homeNotice = "Enter a name to create your deck.";
+          render();
+          return;
+        }
+        state.homeNotice = `Welcome, ${profile.name}. Add words to start building your bank.`;
+        state.selectedIds.clear();
+        refreshCards();
+        goTo("browse");
+        break;
+      }
+      case "select-profile": {
+        const id = target.dataset.id;
+        if (!id || !setActiveProfile(id)) return;
+        state.selectedIds.clear();
+        state.homeNotice = "";
+        refreshCards();
+        const active = getActiveProfile();
+        state.homeNotice = active ? `Switched to ${active.name}.` : "";
+        goTo("home");
+        break;
+      }
+      case "delete-profile": {
+        const id = target.dataset.id;
+        const store = loadStore();
+        const profile = store.profiles[id];
+        if (!profile) return;
+        const confirmed = window.confirm(
+          `Delete deck “${profile.name}” and all of its words on this device?`
+        );
+        if (!confirmed) return;
+        deleteProfile(id);
+        state.selectedIds.clear();
+        state.homeNotice = `Deleted “${profile.name}”.`;
+        refreshCards();
+        goTo("home");
+        break;
+      }
       case "restart-study":
         startStudySession();
         render();

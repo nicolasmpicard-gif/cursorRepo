@@ -1,5 +1,5 @@
 /* Offline-capable cache for the blank shareable Wortkarte copy. */
-const CACHE = "wortkarte-share-v1";
+const CACHE = "wortkarte-share-v2";
 const ASSETS = [
   "./",
   "./index.html",

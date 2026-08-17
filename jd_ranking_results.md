@@ -2,24 +2,24 @@
 _Date: 2026-08-17_
 
 **Applied (off chart):** Awin, Remote, LivePerson, Cint, Packmatic, Climatiq, Searoutes, 4flow, Enpal/metrify, Trackunit, Hack The Box, Tibber.  
-**Skipped:** Coach-Hub (CSM).  
-**DQ / leave out:** PANELY (German JD), Riverty, Match on Monday, Personio Payroll, smalt, Kardex (Engineering degree), Haystack partner PM (fluent German required).
+**Skipped:** Coach-Hub (CSM), Filigran (cyber attack/defense required), Executive Integrity (too junior / €45k).  
+**DQ / leave out:** PANELY, Riverty, Match on Monday, Personio Payroll, smalt, Kardex, Haystack (German), everydays GmbH (German JD).
 
 #    Score   Company — Role
 ------------------------------------------------------------------------------------------
-1    84      Mistral — Product Manager, Vibe
-2    82      Executive Integrity — Product Manager — Risk & Compliance
-3    81      Filigran — Senior Product Manager, OpenCRQ
-4    80      brighter AI — Product Manager
-5    79      Everstream Analytics — Senior Product Manager (Supply Chain Risk)
+1    91      JetBrains — Senior Product Manager (Business Applications Development)
+2    84      Mistral — Product Manager, Vibe
+3    80      brighter AI — Product Manager
+4    79      Everstream Analytics — Senior Product Manager (Supply Chain Risk)
+5    79      Rydoo — Product Manager
 
 ---
 ## Top 5 links
-1. **84** — Mistral — Product Manager, Vibe — https://www.linkedin.com/jobs/view/4455304023/
-2. **82** — Executive Integrity — PM Risk & Compliance — https://www.linkedin.com/jobs/view/4444935648/
-3. **81** — Filigran — Sr PM OpenCRQ — https://euremotejobs.com/job/senior-product-manager-opencrq/
-4. **80** — brighter AI — Product Manager — https://www.linkedin.com/jobs/view/4441816577/
-5. **79** — Everstream Analytics — Sr PM — https://euremotejobs.com/job/senior-product-manager-m-f-d/
+1. **91** — JetBrains — SPM BAD — https://www.linkedin.com/jobs/view/4450165403/
+2. **84** — Mistral — Product Manager, Vibe — https://www.linkedin.com/jobs/view/4455304023/
+3. **80** — brighter AI — Product Manager — https://www.linkedin.com/jobs/view/4441816577/
+4. **79** — Everstream Analytics — Sr PM — https://euremotejobs.com/job/senior-product-manager-m-f-d/
+5. **79** — Rydoo — Product Manager — https://www.linkedin.com/jobs/view/4451546061/
 
 ---
 ## Did not make top 5

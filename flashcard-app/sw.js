@@ -1,5 +1,5 @@
 /* Offline-capable cache for Wortkarte on phones and desktops. */
-const CACHE = "wortkarte-v5";
+const CACHE = "wortkarte-v6";
 const ASSETS = [
   "./",
   "./index.html",

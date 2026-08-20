@@ -28,7 +28,7 @@ Working title for a planning-brief product. Structure follows [Planio’s lean P
 
 **Assumptions.**
 
-- Users have (or can paste) tier-1 names, spend, and a rough criticality tag; they often lack mass, PCF, and origin.
+- Users have (or can paste) tier-1 names, spend, and a 1–5 criticality rating (or unknown); they often lack mass, PCF, and origin.
 - Tier-1 legal entities are the right primary object in this vertical (unlike agri traders).
 - Material class (Warengruppe) can be inferred well enough to pick a lever class; user corrects chips.
 - Users will be wrong about tier-2 names; the product must not depend on them.
@@ -60,9 +60,9 @@ Working title for a planning-brief product. Structure follows [Planio’s lean P
 
 `Budget + gap + T1 spend/criticality` → `At-a-glance split (in-chain / outside-chain)` → `Optional review of inferred upstream on top nodes` → `Actions by instrument` → `Fund / park / reject` → `Locked brief`
 
-**Look and feel (intent, not mockups).** One working screen is the allocation view: two bands, nodes as rows, criticality + confidence chips, no true/false supplier grid. Brief export should read as a Vorstand/Einkauf memo (allocation, assumptions, open questions), not as a carbon app. Screen-by-screen journey: `scopebrief/user-journey-screens.md`.
+**Look and feel (intent, not mockups).** One working screen is the allocation view: left = T1 rows with in-chain actions; right = residual outside-chain *actions* (not a second supplier list). Criticality is 1–5 stars or unknown. Brief export should read as a Vorstand/Einkauf memo. Screen-by-screen journey and the in/out-chain rule: `scopebrief/user-journey-screens.md`.
 
-**Glossary the UI must use consistently.** *Inventory / THG-Bilanz* = official gross GHG account. *In-chain / target-relevant* = can count toward the Scope 3 number if measured (including *enabling* spend like a PCF, which does not move tonnes this year). *Outside-chain / BVCM* = contribution/credits; never netted off Scope 3. *Criticality* = production must-have; a filter, not a budget bucket. *Reputation* = PR; out of v1.
+**Glossary the UI must use consistently.** *Inventory / THG-Bilanz* = official gross GHG account. *In-chain* = the *action* changes something already in the boundary and is booked as activity/PCF, not as a credit (including *enabling* spend like a PCF). *Outside-chain / BVCM* = credit retirement or unlinked contribution; never netted off Scope 3. *Criticality* = 1–5 production substitutability (5 = cannot substitute) or unknown; a filter on in-chain *moves*, not a budget bucket and not the in/out test. *Reputation* = PR; out of v1.
 
 ---
 
@@ -70,9 +70,9 @@ Working title for a planning-brief product. Structure follows [Planio’s lean P
 
 **Functionality (must ship).** Intake of budget + T1 table; two-column engine that never describes a low-confidence or no-PCF node as tonnes already reduced without an explicit user override flagged as assumption; partitioned action list; fund/park/reject; brief export. Inference of material class for common DE manufacturing categories (steel, aluminium, plastics, electronics, chemicals, logistics) with user correction.
 
-**Usability.** First allocation visible without completing upstream review. Criticality is a tag, not a homework “segment the portfolio” step. Unknown is a valid state.
+**Usability.** First allocation visible without completing upstream review. Criticality is 1–5 stars or unknown, not a homework “segment the portfolio” step. Unknown is a valid state.
 
-**Reliability.** Deterministic: same inputs → same bucket labels. No silent promotion of residual/BVCM into inventory language. If target gap is missing, UI states that ranking is leverage-only.
+**Reliability.** Same action + same instrument type → same column via the boundary test. Stars and confidence never flip in-chain ↔ outside-chain. No silent promotion of residual/BVCM into inventory language. If target gap is missing, UI states that ranking is leverage-only.
 
 **Performance.** Paste/upload of ~50–200 suppliers returns the first allocation without a “come back tomorrow” wait for a full graph.
 

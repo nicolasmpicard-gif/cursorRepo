@@ -43,9 +43,9 @@
 
 ### Products & services (v1)
 
-- Intake: climate budget + year, optional target gap, tier-1 name / spend / criticality
+- Intake: climate budget + year, optional target gap, tier-1 name / spend / criticality (1–5 stars or unknown)
 - Inferred Warengruppe / material class and origin (user corrects chips; not a required form)
-- At-a-glance allocation across two instrument columns: **in-chain | outside-chain (BVCM)**; criticality and confidence as row attributes, not euro piles
+- At-a-glance allocation across two instrument columns: **in-chain | outside-chain (BVCM)** — column is a boundary test on the *action*, not a supplier score; criticality stars and confidence are attributes, not euro piles
 - Ranked actions **partitioned by claim type**, each with a one-line chain of logic
 - Fund / park / reject + editable € and year
 - Exportable planning brief (PDF/link) for Einkauf / CFO — no marketplace lock-in

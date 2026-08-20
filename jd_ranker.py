@@ -90,6 +90,8 @@ Nicolas Picard — French-American, based in Berlin (EU/US work auth).
 - Web3 / tokenized real-world assets (AstroFinance — aerospace assets on Algorand)
 - Community platform management and growth (we are village / BuddyBoss)
 - Implementation management and solutions consulting (OpenSC, Oracle)
+- Public-sector / government proposal development (Asia Foundation — grant proposals)
+- Pre-sales technical proposal contribution (Oracle Utilities)
 - Product ops: KPI dashboards, Jira/Notion/Airtable, Agile/Kanban
 - Data tools: SQL, Amazon QuickSight, Google Sheets modeling
 - Design/discovery: Figma, Miro, AI-assisted prototyping

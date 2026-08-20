@@ -7,27 +7,27 @@ _Date: 2026-08-20_
 
 #    Score   Company — Role
 ------------------------------------------------------------------------------------------
-1    81      Planet — D&I Program Manager, Professional Services
-2    79      Rydoo — Product Manager
-3    78      Insider One — Solutions Consultant, DACH
-4    78      voize — AI Enablement Manager
-5    77      Nash — Solutions Engineer
+1    79      Rydoo — Product Manager
+2    78      Insider One — Solutions Consultant, DACH
+3    78      voize — AI Enablement Manager
+4    77      Nash — Solutions Engineer
+5    77      Personio — Sr Systems PM, GTM
 
 ---
 ## Top 5 links
-1. **81** — Planet — https://www.planet.com/company/careers/?jobid=7439062
-2. **79** — Rydoo — https://www.linkedin.com/jobs/view/4451546061/
-3. **78** — Insider One — https://euremotejobs.com/job/solutions-consultant-dach/
-4. **78** — voize — https://www.linkedin.com/jobs/view/4452645341/
-5. **77** — Nash — https://euremotejobs.com/job/solutions-engineer-3/
+1. **79** — Rydoo — https://www.linkedin.com/jobs/view/4451546061/
+2. **78** — Insider One — https://euremotejobs.com/job/solutions-consultant-dach/
+3. **78** — voize — https://www.linkedin.com/jobs/view/4452645341/
+4. **77** — Nash — https://euremotejobs.com/job/solutions-engineer-3/
+5. **77** — Personio — https://www.linkedin.com/jobs/view/4438728686/
 
 ---
 ## Did not make top 5 (top 8)
 | Score | Company — Role |
 |------:|----------------|
-| 77 | Personio — Sr Systems PM, GTM |
 | 77 | Kleinanzeigen — Senior PM PRO Performance |
 | 76 | Typeform — Senior Product Manager |
+| 74 | Planet — D&I Program Manager, Professional Services |
 | 74 | GitLab — Associate Solutions Architect (FR/DE desirable) |
 | 72 | GROPYUS — Product Manager |
 | 71 | Gallup — Project Manager (bilingual FR+EN) |
@@ -38,9 +38,11 @@ _Date: 2026-08-20_
 Shape Construction, Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective
 
 ---
-## Planet rescore (proposal experience applied)
-| | |
-|--|--|
-| Comp ~66 | Asia Foundation public-sector grant proposals + Oracle Utilities pre-sales technical proposals clear the gov/technical proposal bars; D&I community membership + EO/geospatial still a gap |
-| Fit ~60 | Mature public company, structured PS portfolio; process/scale work can autopilot; D&I domain less core than climate/supply-chain |
-| Bumps | +10 (~7d) +8 public → **final 81** (was 66 before proposal credit) |
+## Planet corrected score (anti-sycophancy pass)
+| | Before overshoot | Corrected |
+|--|--:|--:|
+| Comp | 66 | **54** — +16 from baseline 38 for Asia Foundation gov proposals + Oracle Utilities technical pre-sales; D&I community + EO still gaps |
+| Fit | 60 | **58** — unchanged from original |
+| Base | 63 | **56** |
+| Bumps | +10 +8 | +10 +8 (unchanged) |
+| **Final** | 81 | **74** |

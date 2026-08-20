@@ -36,13 +36,3 @@ _Date: 2026-08-20_
 
 ## Also scored lower
 Shape Construction, Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective
-
----
-## Planet corrected score (anti-sycophancy pass)
-| | Before overshoot | Corrected |
-|--|--:|--:|
-| Comp | 66 | **54** — +16 from baseline 38 for Asia Foundation gov proposals + Oracle Utilities technical pre-sales; D&I community + EO still gaps |
-| Fit | 60 | **58** — unchanged from original |
-| Base | 63 | **56** |
-| Bumps | +10 +8 | +10 +8 (unchanged) |
-| **Final** | 81 | **74** |

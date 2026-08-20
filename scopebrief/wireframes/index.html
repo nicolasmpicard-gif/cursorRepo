@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scopebrief v1 — wireframes</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #5c5c5c;
+      --line: #2a2a2a;
+      --paper: #f4f1ea;
+      --card: #fffdf8;
+      --dash: #9a9a9a;
+      --in: #1f5c45;
+      --in-bg: #e7f2ec;
+      --out: #6b3a12;
+      --out-bg: #f6ebe1;
+      --warn: #7a5b00;
+      --star: #c4a035;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.45 "IBM Plex Sans", "Helvetica Neue", sans-serif;
+      color: var(--ink);
+      background: #d8d4cb;
+    }
+    .app {
+      max-width: 1180px;
+      margin: 24px auto 64px;
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      min-height: 820px;
+      box-shadow: 8px 8px 0 rgba(0,0,0,.12);
+    }
+    header.top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 2px dashed var(--dash);
+      background: #ece8df;
+    }
+    .brand { font-weight: 700; letter-spacing: .04em; }
+    .brand span { font-weight: 400; color: var(--muted); }
+    .wf-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      border: 1px solid var(--ink);
+      padding: 2px 8px;
+    }
+    .stepper {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--ink);
+    }
+    .stepper button {
+      flex: 1;
+      background: transparent;
+      border: 0;
+      border-right: 1px solid var(--ink);
+      padding: 12px 8px;
+      cursor: pointer;
+      font: inherit;
+      color: var(--muted);
+    }
+    .stepper button:last-child { border-right: 0; }
+    .stepper button.on {
+      background: var(--ink);
+      color: var(--paper);
+      font-weight: 600;
+    }
+    .screen { display: none; padding: 24px 28px 36px; }
+    .screen.on { display: block; }
+    h1 { font-size: 22px; margin: 0 0 6px; }
+    .lede { color: var(--muted); margin: 0 0 22px; max-width: 720px; }
+    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+    .field { margin-bottom: 16px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid var(--ink);
+      background: var(--card);
+      font: inherit;
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .note {
+      border: 1.5px dashed var(--dash);
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0 20px;
+    }
+    .note.warn { border-color: var(--warn); color: var(--warn); background: #fff8e6; }
+    .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+    button.btn {
+      background: var(--card);
+      border: 1.5px solid var(--ink);
+      padding: 8px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+    button.btn.primary { background: var(--ink); color: var(--paper); }
+    button.btn:disabled { opacity: .4; cursor: not-allowed; }
+    table { width: 100%; border-collapse: collapse; background: var(--card); }
+    th, td { border: 1px solid var(--ink); padding: 8px 10px; text-align: left; vertical-align: middle; }
+    th { background: #ece8df; font-size: 12px; }
+    .chip {
+      display: inline-block;
+      border: 1px solid var(--ink);
+      padding: 1px 8px;
+      font-size: 12px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .stars { letter-spacing: 1px; color: var(--star); cursor: pointer; user-select: none; white-space: nowrap; }
+    .stars .u { color: var(--muted); }
+    .meta { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+    .split-head {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .kpi {
+      border: 1.5px solid var(--ink);
+      padding: 10px 12px;
+      background: var(--card);
+    }
+    .kpi b { display: block; font-size: 18px; }
+    .kpi span { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .cols { display: grid; grid-template-columns: 1.4fr .8fr; gap: 14px; }
+    .col h2 {
+      margin: 0;
+      font-size: 13px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--ink);
+      border-bottom: 0;
+    }
+    .col.in h2 { background: var(--in-bg); color: var(--in); }
+    .col.out h2 { background: var(--out-bg); color: var(--out); }
+    .stack { border: 1.5px solid var(--ink); background: var(--card); }
+    .card {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--ink);
+      cursor: pointer;
+    }
+    .card:last-child { border-bottom: 0; }
+    .card:hover { background: #f7f4ee; }
+    .card .why { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .amt { float: right; font-weight: 700; }
+    .badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      border: 1px solid currentColor;
+      padding: 0 5px;
+      margin-left: 6px;
+    }
+    .drawer-root { position: relative; }
+    .drawer {
+      display: none;
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: min(420px, 92vw);
+      background: var(--paper);
+      border-left: 2px solid var(--ink);
+      box-shadow: -8px 0 0 rgba(0,0,0,.08);
+      padding: 18px;
+      z-index: 20;
+      overflow: auto;
+    }
+    .drawer.on { display: block; }
+    .scrim {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.25);
+      z-index: 15;
+    }
+    .scrim.on { display: block; }
+    .act {
+      border: 1.5px solid var(--ink);
+      padding: 12px;
+      margin-bottom: 10px;
+      background: var(--card);
+    }
+    .act .rule { font-size: 12px; color: var(--muted); margin: 6px 0; }
+    .btns { display: flex; gap: 6px; margin-top: 8px; }
+    .btns button.on-fund { background: var(--in); color: #fff; border-color: var(--in); }
+    .btns button.on-park { background: #555; color: #fff; }
+    .btns button.on-rej { background: #fff; color: #888; text-decoration: line-through; }
+    .upstream {
+      display: none;
+      margin-top: 8px;
+      padding: 8px;
+      border: 1.5px dashed var(--dash);
+      font-size: 12px;
+    }
+    .upstream.on { display: block; }
+    .brief {
+      border: 1.5px solid var(--ink);
+      background: var(--card);
+      padding: 20px 24px;
+    }
+    .brief h2 { font-size: 16px; margin: 0 0 10px; }
+    .quote {
+      font-size: 15px;
+      border-left: 3px solid var(--ink);
+      padding-left: 12px;
+      margin: 12px 0 18px;
+    }
+    footer.ann {
+      padding: 10px 16px 16px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px dashed var(--dash);
+    }
+    .ann b { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">SCOPEBRIEF <span>v1 planning brief</span></div>
+      <div class="wf-tag">Wireframe · not a purchase · DE manufacturing</div>
+    </header>
+    <nav class="stepper" id="stepper">
+      <button class="on" data-s="1">1 · Set the job</button>
+      <button data-s="2">2 · Load suppliers</button>
+      <button data-s="3">3 · The split</button>
+      <button data-s="4">4 · The brief</button>
+    </nav>
+
+    <!-- SCREEN 1 -->
+    <section class="screen on" id="s1">
+      <h1>Allocate this year’s climate budget against your Scope 3 target</h1>
+      <p class="lede">We will split this € into work that can count toward the target vs contribution that will not. This is a plan for Einkauf/CFO, not a checkout.</p>
+      <div class="row">
+        <div class="field">
+          <label>Climate budget (€) *</label>
+          <input id="budget" value="500000" />
+        </div>
+        <div class="field">
+          <label>Budget year *</label>
+          <input id="year" value="2026" />
+        </div>
+        <div class="field">
+          <label>Scope 3 target gap (optional)</label>
+          <input id="gap" placeholder="e.g. 12000 tCO2e still to cut" value="12000 tCO2e by 2030" />
+        </div>
+      </div>
+      <div class="note" id="gapNote">Gap entered — later screens can talk about direction toward the target. Tonnes stay ranges, not booked reductions.</div>
+      <div class="actions">
+        <button class="btn primary" data-go="2">Continue to suppliers →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2 -->
+    <section class="screen" id="s2">
+      <h1>Load tier-1 suppliers</h1>
+      <p class="lede">Paste the list you already have. Material class is inferred — correct a chip if it’s wrong. Do not enter tier-2 names. Stars are production substitutability, not a climate score. Default is unknown (?).</p>
+      <p class="meta">12 suppliers in file · <b>5 = 80% of spend</b> shown · long tail collapsed · CSV/SAP extract</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Tier-1 supplier</th>
+            <th>Spend 2025</th>
+            <th>Material (inferred)</th>
+            <th>Origin</th>
+            <th>Criticality</th>
+            <th>PCF on file?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Salzgitter Mannesmann</td>
+            <td>€4.20m</td>
+            <td><span class="chip">steel</span></td>
+            <td><span class="chip">DE</span></td>
+            <td class="stars" data-v="5" title="Cannot substitute">★★★★★</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Müller Präzision GmbH</td>
+            <td>€1.10m</td>
+            <td><span class="chip">steel</span></td>
+            <td><span class="chip">DE</span></td>
+            <td class="stars" data-v="5">★★★★★</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Hydro Aluminium</td>
+            <td>€2.80m</td>
+            <td><span class="chip">aluminium</span></td>
+            <td><span class="chip">NO</span></td>
+            <td class="stars" data-v="4">★★★★☆</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>BASF SE</td>
+            <td>€0.90m</td>
+            <td><span class="chip">chemicals</span></td>
+            <td><span class="chip">DE</span></td>
+            <td class="stars" data-v="3">★★★☆☆</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>DHL Freight</td>
+            <td>€0.40m</td>
+            <td><span class="chip">logistics</span></td>
+            <td><span class="chip">EU</span></td>
+            <td class="stars" data-v="2">★★☆☆☆</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Schubert Elektronik Handel</td>
+            <td>€0.60m</td>
+            <td><span class="chip">electronics</span></td>
+            <td><span class="chip">?</span></td>
+            <td class="stars u" data-v="0">? unknown</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="meta" style="margin-top:10px">Click stars to cycle  ? → 1 → … → 5. Optional columns (volume, PCF) are not required to continue.</p>
+      <div class="actions">
+        <button class="btn" data-go="1">← Back</button>
+        <button class="btn primary" data-go="3">See the split →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 3 -->
+    <section class="screen" id="s3">
+      <h1>The split</h1>
+      <p class="lede">Actions are pre-sorted. You are not asked accounting questions. Left = tier-1 rows with in-chain work. Right = residual contribution (not a second supplier list). Click a row to fund / park / reject.</p>
+      <div class="split-head">
+        <div class="kpi"><span>Budget 2026</span><b>€500k</b></div>
+        <div class="kpi" style="background:var(--in-bg)"><span>In-chain (can count)</span><b>€340k</b></div>
+        <div class="kpi" style="background:var(--out-bg)"><span>Outside-chain (will not)</span><b>€120k</b></div>
+        <div class="kpi"><span>Unallocated</span><b>€40k</b></div>
+      </div>
+      <div class="note warn">Gap is 12 kt by 2030 — this in-chain package is in the right direction. Tonnes are ranges, not a booked reduction. Low-confidence rows are enabling only.</div>
+      <div class="cols">
+        <div class="col in">
+          <h2>In-chain — can count toward the target</h2>
+          <div class="stack">
+            <div class="card" data-open="mueller">
+              <span class="amt">€80k</span>
+              <b>Müller Präzision GmbH</b> <span class="badge">★★★★★</span> <span class="badge">conf. low</span>
+              <div class="why">In-chain because it changes machined steel you already buy. No PCF → enabling only (do not book tonnes). Stars block “switch supplier.”</div>
+              <button class="btn" style="margin-top:8px;font-size:12px" data-up="mueller-up" onclick="event.stopPropagation()">Probable upstream ▾</button>
+              <div class="upstream" id="mueller-up">
+                Likely bar / melt on a coal-heavy grid · confidence 40–70%. Not a company name.
+                <div class="btns">
+                  <button class="btn">Looks right</button>
+                  <button class="btn">Looks wrong</button>
+                  <button class="btn">I don’t know</button>
+                </div>
+              </div>
+            </div>
+            <div class="card" data-open="salzgitter">
+              <span class="amt">€140k</span>
+              <b>Salzgitter Mannesmann</b> <span class="badge">★★★★★</span> <span class="badge">conf. med</span>
+              <div class="why">In-chain: documented lower-carbon grade on existing PO, booked as PCF not as a credit.</div>
+            </div>
+            <div class="card" data-open="hydro">
+              <span class="amt">€70k</span>
+              <b>Hydro Aluminium</b> <span class="badge">★★★★</span> <span class="badge">conf. high</span>
+              <div class="why">In-chain: PCF already on file — premium for lower-carbon billet can be described as a reduction range.</div>
+            </div>
+            <div class="card">
+              <span class="amt">€50k</span>
+              <b>DHL Freight</b> <span class="badge">★★</span> <span class="badge">conf. med</span>
+              <div class="why">In-chain: contracted inbound lane (air → rail / HVO). Booked as cat. 4 activity data.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col out">
+          <h2>Outside-chain — will not count</h2>
+          <div class="stack">
+            <div class="card" data-open="bvcm">
+              <span class="amt">€120k</span>
+              <b>Residual contribution 2026</b> <span class="badge">BVCM</span>
+              <div class="why">Outside-chain because the instrument is credit retirement for the gap in-chain will not close this year. Disclose separately. Do not net off Scope 3. Not tied to a supplier row.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-go="2">← Back</button>
+        <button class="btn primary" data-go="4">Lock into brief →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 4 -->
+    <section class="screen" id="s4">
+      <h1>The brief</h1>
+      <p class="lede">Decision record for Einkauf / CFO. This is not an order and not a credit purchase.</p>
+      <article class="brief">
+        <h2>Climate budget allocation 2026 — planning brief</h2>
+        <p class="meta">Scopebrief v1 · Maschinenbau example · 18 Aug 2026</p>
+        <p class="quote">Of <b>€500k</b>, <b>€340k</b> is in-chain work that can count toward the target (of which €80k is enabling data this year, €260k is potential reductions). <b>€120k</b> is residual contribution outside the value chain and will not be claimed as Scope 3. <b>€40k</b> unallocated.</p>
+        <table>
+          <thead><tr><th>State</th><th>Action</th><th>Column</th><th>€</th></tr></thead>
+          <tbody>
+            <tr><td>Fund</td><td>PCF from Müller Präzision (enabling)</td><td>In-chain</td><td>80k</td></tr>
+            <tr><td>Fund</td><td>Lower-carbon grade · Salzgitter</td><td>In-chain</td><td>140k</td></tr>
+            <tr><td>Fund</td><td>Low-carbon billet premium · Hydro</td><td>In-chain</td><td>70k</td></tr>
+            <tr><td>Park</td><td>Process-heat measure · Salzgitter (wait for energy data)</td><td>In-chain</td><td>0</td></tr>
+            <tr><td>Fund</td><td>High-integrity credits for residual gap</td><td>Outside-chain</td><td>120k</td></tr>
+            <tr><td>Reject</td><td>Inset credits from the same mill as the PCF cut</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p class="meta" style="margin-top:14px"><b>Open questions for Einkauf</b> — Can we pay a grade premium at Salzgitter without breaking the Rahmenvertrag? Müller is ★★★★★: dual-source is your ticket, not this budget.</p>
+        <p class="meta"><b>Assumptions</b> — Material class inferred from name/NACE. Müller upstream unknown (don’t know). No T2 legal names used. Hydro PCF treated as usable. Credits never netted off inventory.</p>
+      </article>
+      <div class="actions">
+        <button class="btn" data-go="3">← Adjust split</button>
+        <button class="btn">Export PDF</button>
+        <button class="btn primary">Lock plan · copy link</button>
+      </div>
+    </section>
+
+    <footer class="ann">
+      <b>Annotations.</b> Screen 3 is the product. Stars ≠ column. Confidence ≠ column. The three boundary questions are internal — the user only sees the why line. Reputation/PR is not on any screen.
+    </footer>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer"></aside>
+
+  <script>
+    const go = (n) => {
+      document.querySelectorAll(".screen").forEach((s) => s.classList.remove("on"));
+      document.getElementById("s" + n).classList.add("on");
+      document.querySelectorAll(".stepper button").forEach((b) => {
+        b.classList.toggle("on", b.dataset.s === String(n));
+      });
+      window.scrollTo(0, 0);
+    };
+    document.getElementById("stepper").addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (b) go(b.dataset.s);
+    });
+    document.querySelectorAll("[data-go]").forEach((b) => {
+      b.addEventListener("click", () => go(b.dataset.go));
+    });
+
+    const gap = document.getElementById("gap");
+    const gapNote = document.getElementById("gapNote");
+    const syncGap = () => {
+      if (gap.value.trim()) {
+        gapNote.className = "note";
+        gapNote.textContent = "Gap entered — later screens can talk about direction toward the target. Tonnes stay ranges, not booked reductions.";
+      } else {
+        gapNote.className = "note warn";
+        gapNote.textContent = "Without a gap, we rank leverage only. We will not say you are “on track.”";
+      }
+    };
+    gap.addEventListener("input", syncGap);
+
+    document.querySelectorAll(".stars").forEach((el) => {
+      el.addEventListener("click", () => {
+        let v = Number(el.dataset.v || 0);
+        v = v >= 5 ? 0 : v + 1;
+        el.dataset.v = v;
+        if (v === 0) {
+          el.classList.add("u");
+          el.textContent = "? unknown";
+        } else {
+          el.classList.remove("u");
+          el.textContent = "★".repeat(v) + "☆".repeat(5 - v);
+        }
+      });
+    });
+
+    const drawers = {
+      mueller: `
+        <p class="meta">Drawer 3a · T1 row · in-chain actions only</p>
+        <h1 style="font-size:18px">Müller Präzision GmbH</h1>
+        <p class="why">This supplier is in your value chain. The drawer only shows in-chain actions. Residual credits live on the right-hand line, not here.</p>
+        <div class="act">
+          <b>Pay for a product carbon footprint</b>
+          <div class="rule">Why in-chain: changes how we measure parts we already buy (PCF), not a credit. Enabling — does not move the inventory this year.</div>
+          <div>Suggested €80k · tCO2e n/a · time: 6–12 months · conf. low</div>
+          <div class="rule">What would have to be true: mill / shop returns an auditable PCF; Einkauf can put it in the next data cycle.</div>
+          <div class="btns">
+            <button class="btn primary" data-st="fund">Fund</button>
+            <button class="btn" data-st="park">Park</button>
+            <button class="btn" data-st="rej">Reject</button>
+          </div>
+        </div>
+        <div class="act">
+          <b>Switch to an alternate machine shop</b>
+          <div class="rule">Blocked as a default: criticality ★★★★★. Stars do not move this to outside-chain; they only block switching.</div>
+          <div class="btns"><button class="btn" disabled>Not suggested</button></div>
+        </div>
+        <p class="meta">Override column only with a flagged assumption (not shown as a quiz).</p>
+      `,
+      salzgitter: `
+        <p class="meta">Drawer 3a · in-chain</p>
+        <h1 style="font-size:18px">Salzgitter Mannesmann</h1>
+        <div class="act">
+          <b>Documented lower-carbon steel grade on existing PO</b>
+          <div class="rule">Why in-chain: booked as updated PCF / EF on purchased steel, not as a retired credit.</div>
+          <div>Suggested €140k · 800–1,400 tCO2e range · 12–24 months · conf. med</div>
+          <div class="btns">
+            <button class="btn primary" data-st="fund">Fund</button>
+            <button class="btn" data-st="park">Park</button>
+            <button class="btn" data-st="rej">Reject</button>
+          </div>
+        </div>
+        <div class="act">
+          <b>Supplier process-heat measure, taken through their PCF</b>
+          <div class="rule">In-chain but park: energy data not in yet. Right idea, not this cycle.</div>
+          <div class="btns">
+            <button class="btn" data-st="fund">Fund</button>
+            <button class="btn primary" data-st="park">Park</button>
+            <button class="btn" data-st="rej">Reject</button>
+          </div>
+        </div>
+      `,
+      hydro: `
+        <p class="meta">Drawer 3a · in-chain · PCF on file</p>
+        <h1 style="font-size:18px">Hydro Aluminium</h1>
+        <div class="act">
+          <b>Premium for lower-carbon billet</b>
+          <div class="rule">Why in-chain: existing T1 contract + existing PCF. May be described as a reduction range.</div>
+          <div>Suggested €70k · 400–700 tCO2e range · conf. high</div>
+          <div class="btns">
+            <button class="btn primary" data-st="fund">Fund</button>
+            <button class="btn" data-st="park">Park</button>
+            <button class="btn" data-st="rej">Reject</button>
+          </div>
+        </div>
+      `,
+      bvcm: `
+        <p class="meta">Drawer 3a · residual line · outside-chain actions only</p>
+        <h1 style="font-size:18px">Residual contribution 2026</h1>
+        <p class="why">Not a supplier. This is leftover budget after in-chain suggestions, for the gap those actions will not close this year.</p>
+        <div class="act">
+          <b>High-integrity credit retirement (BVCM)</b>
+          <div class="rule">Why outside-chain: instrument is a credit you would retire and disclose separately. Will not count toward the Scope 3 target. Do not net off the THG-Bilanz.</div>
+          <div>Suggested €120k · contribution only · conf. n/a for inventory</div>
+          <div class="btns">
+            <button class="btn primary" data-st="fund">Fund</button>
+            <button class="btn" data-st="park">Park</button>
+            <button class="btn" data-st="rej">Reject</button>
+          </div>
+        </div>
+        <div class="act">
+          <b>Buy “inset credits” from the same mill as the Salzgitter grade switch</b>
+          <div class="rule">Rejected by default: double-count lock. v1 already placed the PCF change in-chain.</div>
+          <div class="btns"><button class="btn" data-st="rej">Reject</button></div>
+        </div>
+      `
+    };
+
+    const drawer = document.getElementById("drawer");
+    const scrim = document.getElementById("scrim");
+    const openDrawer = (key) => {
+      drawer.innerHTML = `<button class="btn" id="closeD">Close</button>` + (drawers[key] || "<p>No drawer.</p>");
+      drawer.classList.add("on");
+      scrim.classList.add("on");
+      document.getElementById("closeD").onclick = closeDrawer;
+      drawer.querySelectorAll("[data-st]").forEach((b) => {
+        b.addEventListener("click", () => {
+          b.parentElement.querySelectorAll("button").forEach((x) => x.classList.remove("on-fund","on-park","on-rej","primary"));
+          b.classList.add(b.dataset.st === "fund" ? "on-fund" : b.dataset.st === "park" ? "on-park" : "on-rej");
+        });
+      });
+    };
+    const closeDrawer = () => {
+      drawer.classList.remove("on");
+      scrim.classList.remove("on");
+    };
+    scrim.addEventListener("click", closeDrawer);
+    document.getElementById("s3").addEventListener("click", (e) => {
+      const up = e.target.closest("[data-up]");
+      if (up) {
+        document.getElementById(up.dataset.up).classList.toggle("on");
+        return;
+      }
+      const card = e.target.closest("[data-open]");
+      if (card) openDrawer(card.dataset.open);
+    });
+  </script>
+</body>
+</html>

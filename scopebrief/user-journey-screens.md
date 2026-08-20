@@ -91,6 +91,8 @@ One session. Sustainability manager at a German manufacturer. Output is a **plan
 
 This is a **boundary test on each ACTION**, not a score on the supplier, and not a function of stars or tonnes.
 
+**The user is not asked these questions.** They are the product’s internal rule. The user sees the action already in a column plus a one-line why, and may override only as a flagged assumption.
+
 A **supplier is always in the value chain** (they are already in Scope 3 purchased goods). What changes columns is **what you would spend money on**.
 
 ### The rule (apply in order, stop at first yes)

@@ -2,7 +2,7 @@
 
 **Product:** a planning brief for allocating a limited climate budget across a manufacturing supply chain  
 **Primary customer:** sustainability manager at a German manufacturer  
-**v1 job:** produce a defensible split of € into *claimable abatement / risk & reputation / residual BVCM*  
+**v1 job:** produce a defensible split of € into *in-chain (can count toward the Scope 3 target)* vs *outside-chain / BVCM (will not)* — reputation/PR is not a budget line  
 **Not v1:** marketplace, credit purchase, or a full carbon-accounting system
 
 ---
@@ -30,9 +30,9 @@
 
 ### Gains
 
-- A one-page split they can read aloud: “€A can move inventory, €B is risk/data at must-have suppliers, €C is residual contribution and will not be claimed as Scope 3”
+- A one-page split they can read aloud: “€A is in-chain (some of it only enabling data this year); €C is residual contribution and will not be claimed as Scope 3”
 - Faster alignment with Einkauf (criticality + spend, not only CO2)
-- Honest uncertainty: low-confidence nodes stay out of the claimable column
+- Honest uncertainty: low-confidence nodes can still get *enabling* in-chain spend (e.g. PCF); they cannot be described as tonnes already moved
 - Material-class inference (steel, Al, plastics, electronics) without a data-collection project
 - A decision record: fund / park / reject, with assumptions visible
 - Time back: first useful brief in one session from a supplier spend list
@@ -45,7 +45,7 @@
 
 - Intake: climate budget + year, optional target gap, tier-1 name / spend / criticality
 - Inferred Warengruppe / material class and origin (user corrects chips; not a required form)
-- At-a-glance allocation across three buckets: **claimable | risk & reputation | residual BVCM**
+- At-a-glance allocation across two instrument columns: **in-chain | outside-chain (BVCM)**; criticality and confidence as row attributes, not euro piles
 - Ranked actions **partitioned by claim type**, each with a one-line chain of logic
 - Fund / park / reject + editable € and year
 - Exportable planning brief (PDF/link) for Einkauf / CFO — no marketplace lock-in
@@ -53,9 +53,9 @@
 
 ### Pain relievers
 
-- Separates inventory-moving spend from risk spend from outside-chain contribution (BVCM)
+- Separates target-relevant in-chain spend from outside-chain contribution (BVCM); does not give PR a slice of the Klimabudget
 - Uses the data they actually have (named T1 + € + criticality), not a complete multi-tier graph
-- Treats unknown / wrong T2 as a first-class state: caps claimable € instead of blocking the brief
+- Treats unknown / wrong T2 as a first-class state: caps *reduction* claims instead of blocking the brief
 - Stops mixed “best practice insetting and offsetting” leaderboards
 - Makes claim language CSRD-safe: gross inventory vs separately disclosed credits
 - Replaces consultant theatre with a session-length planning artifact
@@ -66,7 +66,7 @@
 - Every row: evidence → assumption → claim type → €/t range → time-to-impact
 - Immediate tier-1 allocation before any upstream enrich (value in minutes)
 - Shared brief that procurement can contest on leverage, not on carbon methodology
-- Clear “what would have to be true” for a node to graduate into claimable later (e.g. PCF from the mill)
+- Clear “what would have to be true” for a node to describe in-chain spend as a reduction later (e.g. PCF from the mill)
 
 ---
 
@@ -74,10 +74,10 @@
 
 | Customer need | Product answer |
 |---|---|
-| Must allocate limited € against a Scope 3 target | Budget + optional gap in; three-bucket allocation out |
-| Must not confuse credits with inventory | Claimable vs BVCM are different columns, different claims |
-| T2 names will be wrong | Infer structure, not companies; unknown ≠ claimable |
+| Must allocate limited € against a Scope 3 target | Budget + optional gap in; two-column allocation out |
+| Must not confuse credits with inventory | In-chain vs BVCM are different columns, different claims |
+| T2 names will be wrong | Infer structure, not companies; unknown caps reduction claims |
 | German manufacturing reality | T1 legal entity is the primary object; material class is inferred |
 | v1 is a plan, not a purchase | Brief + decision record; collaborators out of scope |
 
-**Elevator fit line:** Scopebrief helps German manufacturing sustainability managers turn a supplier spend list and a climate budget into a board-ready split of *what can move the THG-Bilanz, what only reduces supplier risk, and what is residual contribution outside the value chain.*
+**Elevator fit line:** Scopebrief helps German manufacturing sustainability managers turn a supplier spend list and a climate budget into a board-ready split of *in-chain work that can count toward the target* vs *residual contribution that will not.*

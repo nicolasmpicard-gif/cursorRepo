@@ -1,9 +1,9 @@
 # JD Ranking Results — active top 5 only
-_Date: 2026-08-20_
+_Date: 2026-08-21_
 
 **Applied (off chart):** Awin, Remote, LivePerson, Cint, Packmatic, Climatiq, Searoutes, 4flow, Enpal/metrify, Trackunit, JetBrains, Reonic, Hack The Box, Tibber, ElevenLabs, brighter AI, Freshflow, Everstream Analytics.  
 **Skipped:** Coach-Hub, Filigran, Executive Integrity, Hostinger (growth/partnerships background), Lokalise (UK/Latvia/Spain only), Mistral (5+ yrs AI/LLM enterprise product — not a match).  
-**DQ / leave out:** PANELY, Riverty, Match on Monday, Personio Payroll, smalt, Kardex, Haystack, everydays, Aroundtown, Alfa Laval, CSRS, SoftServe (German required), Stem (German + Electrical/Power Engineering degree).
+**DQ / leave out:** PANELY, Riverty, Match on Monday, Personio Payroll, smalt, Kardex, Haystack, everydays, Aroundtown, Alfa Laval, CSRS, SoftServe (German required), Stem (German + Electrical/Power Engineering degree), INCO (fluent/native German), DeepRec AI Project Lead (German C1+).
 
 #    Score   Company — Role
 ------------------------------------------------------------------------------------------
@@ -30,9 +30,9 @@ _Date: 2026-08-20_
 | 74 | Planet — D&I Program Manager, Professional Services |
 | 74 | GitLab — Associate Solutions Architect (FR/DE desirable) |
 | 72 | GROPYUS — Product Manager |
+| 72 | n8n — AI Product Manager |
 | 71 | Gallup — Project Manager (bilingual FR+EN) |
-| 71 | Digible — Senior Product Manager |
-| 69 | Renew Earth — Senior PM, Nature Solutions |
+| 71 | ESMT Berlin — Program Manager, Global Online MBA |
 
-## Also scored lower
-Shape Construction, Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective
+## Also scored lower / this batch
+Digible, Renew Earth, Shape Construction, data4Life (60), Paradox Growth (64), Almedia (55), Aquent (42), Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective

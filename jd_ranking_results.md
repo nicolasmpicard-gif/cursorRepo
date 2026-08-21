@@ -18,7 +18,7 @@ _Date: 2026-08-21_
 1. **78** — Insider One — https://jobs.lever.co/insiderone/61705b42-225d-413b-ad76-03e91ccfd3e6
 2. **78** — ESMT Berlin — https://www.linkedin.com/jobs/view/4456706388/
 3. **77** — Kleinanzeigen — https://www.linkedin.com/jobs/view/4436747586/
-4. **76** — Typeform — (prior LinkedIn listing in history)
+4. **76** — Typeform — https://job-boards.greenhouse.io/typeform/jobs/8121116
 5. **74** — Planet — https://www.planet.com/company/careers/?jobid=7439062
 
 ---

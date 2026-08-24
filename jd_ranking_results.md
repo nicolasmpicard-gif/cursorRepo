@@ -1,9 +1,9 @@
 # JD Ranking Results — active top 5 only
-_Date: 2026-08-21_
+_Date: 2026-08-24_
 
 **Applied (off chart):** Awin, Remote, LivePerson, Cint, Packmatic, Climatiq, Searoutes, 4flow, Enpal/metrify, Trackunit, JetBrains, Reonic, Hack The Box, Tibber, ElevenLabs, brighter AI, Freshflow, Everstream Analytics, voize, Gallup.  
 **Skipped:** Coach-Hub, Filigran, Executive Integrity, Hostinger (growth/partnerships background), Lokalise (UK/Latvia/Spain only), Mistral (5+ yrs AI/LLM enterprise product — not a match), Rydoo (listing ~1 month old), Nash (too technical), Personio GTM (sales systems / Salesforce CPQ experience gap), Kleinanzeigen (no longer accepting applications), GitLab Assoc. SA (Remote Ireland).  
-**DQ / leave out:** PANELY, Riverty, Match on Monday, Personio Payroll, smalt, Kardex, Haystack, everydays, Aroundtown, Alfa Laval, CSRS, SoftServe (German required), Stem (German + Electrical/Power Engineering degree), INCO (fluent/native German), DeepRec AI Project Lead (German C1+).
+**DQ / leave out:** PANELY, Riverty, Match on Monday, Personio Payroll, smalt, Kardex, Haystack, everydays, Aroundtown, Alfa Laval, CSRS, SoftServe (German required), Stem (German + Electrical/Power Engineering degree), INCO (fluent/native German), DeepRec AI Project Lead (German C1+), Helsing PM (fluent German), Helsing Programme Manager Space (professional German), Freenow Health PMC (fluent German), Cozero Sr Climate Solutions (C1 German).
 
 #    Score   Company — Role
 ------------------------------------------------------------------------------------------
@@ -29,10 +29,10 @@ _Date: 2026-08-21_
 | 72 | n8n — AI Product Manager |
 | 71 | Digible — Senior Product Manager |
 | 69 | Renew Earth — Senior PM, Nature Solutions |
+| 68 | mobile.de — Senior GTM Manager |
 | 66 | Shape Construction — Product Manager |
 | 64 | Paradox — Growth Manager, EdTech (French fluent) |
-| 60 | data4Life — Senior Project Manager, RWD Platforms |
-| 55 | Almedia — AI Operations Specialist |
+| 62 | Hypofriend — Product Manager |
 
 ## Also scored lower
-Aquent (42), Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective
+data4Life, Almedia, Alpaca Clearing (55), Remote Offboarding (already applied to Remote), Aquent, Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective

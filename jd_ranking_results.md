@@ -3,7 +3,7 @@ _Date: 2026-08-26_
 
 **Applied (off chart):** Awin, Remote, LivePerson, Cint, Packmatic, Climatiq, Searoutes, 4flow, Enpal/metrify, Trackunit, JetBrains, Reonic, Hack The Box, Tibber, ElevenLabs, brighter AI, Freshflow, Everstream Analytics, voize, Gallup, Planet.  
 **Skipped:** Coach-Hub, Filigran, Executive Integrity, Hostinger (growth/partnerships background), Lokalise (UK/Latvia/Spain only), Mistral (5+ yrs AI/LLM enterprise product — not a match), Rydoo (listing ~1 month old), Nash (too technical), Personio GTM (sales systems / Salesforce CPQ experience gap), Kleinanzeigen (no longer accepting applications), GitLab Assoc. SA (Remote Ireland), GitLab Sr Engagement Manager Germany (applied last year, no interview), ESMT Online MBA PM (salary ~€40k too low).  
-**DQ / leave out:** PANELY, Riverty, Match on Monday, Personio Payroll, smalt, Kardex, Haystack (fluent German — again), everydays, Aroundtown (prior German JD; this English conversion PM scored separately), Alfa Laval, CSRS, SoftServe (German required), Stem (German + Electrical/Power Engineering degree), INCO (fluent/native German), DeepRec AI Project Lead (German C1+), Helsing PM (fluent German), Helsing Programme Manager Space (professional German), Freenow Health PMC (fluent German), Cozero Sr Climate Solutions (C1 German), Nortal Sr PM Software (German C1).
+**DQ / leave out:** PANELY, Riverty, Match on Monday, Personio Payroll, smalt, Kardex PM International (Engineering/IT degree + intralogistics experience essential), Smart Factory Technical Project Lead (fluent German; 24‑mo contract), Haystack (fluent German — again), everydays, Aroundtown (prior German JD; this English conversion PM scored separately), Alfa Laval, CSRS, SoftServe (German required), Stem (German + Electrical/Power Engineering degree), INCO (fluent/native German), DeepRec AI Project Lead (German C1+), Helsing PM (fluent German), Helsing Programme Manager Space (professional German), Freenow Health PMC (fluent German), Cozero Sr Climate Solutions (C1 German), Nortal Sr PM Software (German C1).
 
 #    Score   Company — Role
 ------------------------------------------------------------------------------------------
@@ -37,5 +37,7 @@ _Date: 2026-08-26_
 ## Also scored lower
 Hypofriend (62), Almedia PM (59), Lyceum Technical Founders Associate (35), data4Life, Almedia AI Ops, Alpaca Clearing, Aquent, Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective
 
-## Not scored (Indeed bot-walled)
-Scaling Experts Kft — Project Manager (`jk=751ff08fd5fee42a`) and the other Indeed listing without recoverable text — paste JD text if you want them ranked.
+## Indeed paste batch (2026-08-26)
+- **71** Wolters Kluwer / Libra — Lead Project & Program Manager (Comp~68 / Fit~58 +8 profitable; German plus only) — already in next 8
+- **DQ** Smart Factory Technical Project Lead — fluent German; temporary/contract 24 months
+- **DQ** Kardex Project Manager International — Engineering/IT degree gate + years of intralogistics PM essential (FR/EN mandatory would have been a Comp boost otherwise)

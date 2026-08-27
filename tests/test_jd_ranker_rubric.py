@@ -47,9 +47,9 @@ def test_validate_metadata_rejects_upgraded_funding_typo():
     assert any("funding_stage" in w for w in warnings)
 
 
-def test_validate_metadata_flags_small_seed_company():
+def test_validate_metadata_flags_seed_as_hard_dq():
     meta = {
-        "searoutes": {
+        "co": {
             "funding_stage": "seed",
             "employees": 18,
             "contact_status": "none",
@@ -57,8 +57,19 @@ def test_validate_metadata_flags_small_seed_company():
         }
     }
     warnings = jd_ranker.validate_metadata(meta)
-    assert any("≤25 employees" in w for w in warnings)
-    assert any("last_raise_date" in w for w in warnings)
+    assert any("HARD DQ" in w and "seed" in w for w in warnings)
+
+
+def test_validate_metadata_flags_young_company():
+    meta = {
+        "co": {
+            "funding_stage": "series_a",
+            "founded_year": 2025,
+            "contact_status": "none",
+        }
+    }
+    warnings = jd_ranker.validate_metadata(meta)
+    assert any("younger than 2 years" in w for w in warnings)
 
 
 def test_hard_dq_cap_logic_in_build_path():
@@ -74,9 +85,17 @@ def test_hard_dq_cap_logic_in_build_path():
             "recommended_action": "skip",
         }
     }
-    # Mimic evaluate_jds post-process cap
     for ev in evaluations.values():
         if ev.get("hard_disqualifiers"):
             expected = int(round(0.5 * ev["competitiveness_score"] + 0.5 * ev["fit_score"]))
             ev["base_score"] = min(expected, 30)
     assert evaluations["bad"]["base_score"] == 30
+
+
+def test_profile_drops_autopilot_must_and_headcount_gate():
+    assert "NOT required" in jd_ranker.SYSTEM_PROMPT
+    assert "Do NOT penalize fit for headcount" in jd_ranker.SYSTEM_PROMPT
+    assert "NOT seed-stage" in jd_ranker.PROFILE
+    assert "last 2 years" in jd_ranker.PROFILE
+    assert "Headcount does NOT matter" in jd_ranker.PROFILE
+    assert "≤25 employees, assume this is unmet" not in jd_ranker.PROFILE

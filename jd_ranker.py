@@ -23,8 +23,9 @@ USAGE
    funding_stage values  : "pre_seed" | "seed" | "series_a" | "series_b_plus" | "profitable" | "unknown"
    applicant_volume      : "low" | "medium" | "high" | "unknown"
    days_since_posted     : integer, or omit/null if unknown
-   employees             : integer headcount if known (used in fit judgment)
-   last_raise_date       : ISO date string if known (staleness informs fit, not a separate bump)
+   employees             : integer headcount if known (informational; not a Fit penalty)
+   founded_year          : integer if known (HARD DQ if company age < 2 years)
+   last_raise_date       : ISO date string if known (informational)
 
 4. Run:
    python3 jd_ranker.py ~/jds/

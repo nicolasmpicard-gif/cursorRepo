@@ -93,9 +93,21 @@ def test_hard_dq_cap_logic_in_build_path():
 
 
 def test_profile_drops_autopilot_must_and_headcount_gate():
-    assert "NOT required" in jd_ranker.SYSTEM_PROMPT
-    assert "Do NOT penalize fit for headcount" in jd_ranker.SYSTEM_PROMPT
+    assert "No autopilot requirement" in jd_ranker.SYSTEM_PROMPT
     assert "NOT seed-stage" in jd_ranker.PROFILE
     assert "last 2 years" in jd_ranker.PROFILE
     assert "Headcount does NOT matter" in jd_ranker.PROFILE
     assert "≤25 employees, assume this is unmet" not in jd_ranker.PROFILE
+    assert "solutions_pre_sales" in jd_ranker.SYSTEM_PROMPT
+    assert "Climate: NEVER hard-DQ climate mission alone" in jd_ranker.SYSTEM_PROMPT
+
+
+def test_validate_metadata_flags_us_only():
+    meta = {"digible": {"work_region": "us_only", "contact_status": "none"}}
+    warnings = jd_ranker.validate_metadata(meta)
+    assert any("us_only" in w and "HARD DQ" in w for w in warnings)
+
+
+def test_role_families_tuple():
+    assert "solutions_pre_sales" in jd_ranker.ROLE_FAMILIES
+    assert "implementations" in jd_ranker.ROLE_FAMILIES

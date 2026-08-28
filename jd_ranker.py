@@ -25,6 +25,10 @@ USAGE
    days_since_posted     : integer, or omit/null if unknown
    employees             : integer headcount if known (informational; not a Fit penalty)
    founded_year          : integer if known (HARD DQ if company age < 2 years)
+   work_region           : "eu" | "global" | "us_only" | "uk_only" | "unknown"
+                         — us_only/uk_only when JD restricts hire to that region (HARD DQ for Berlin-based Nic)
+   role_family           : optional override — see ROLE_FAMILIES in jd_ranker.py
+   prior_interview       : true if Nic had prior interview pipeline at this company
    last_raise_date       : ISO date string if known (informational)
 
 4. Run:
@@ -61,8 +65,11 @@ CRITICAL SCORING DISCIPLINE (read before every evaluation)
    Headcount is NOT a DQ — small teams are fine past those gates.
 4. Product supervisor OR peer is a strong Fit preference (not a hard DQ alone).
    Eng-only leadership + founders does not count as product peer/supervisor.
-5. Location (country/city/remote) must NOT raise or lower scores. Language
-   requirements (e.g. German C1) still can.
+5. Location (country/city) must NOT raise or lower Fit/Comp scores — but
+   work_region=us_only or uk_only when Nic cannot legally/ practically work there
+   is a HARD DQ (metadata or JD text).
+6. Role family interview signals (see PROFILE) adjust competitiveness_score only —
+   mission match must not override weak role-family signal.
 """
 
 import sys
@@ -79,80 +86,112 @@ PROFILE = """
 ## Candidate Background
 
 Nicolas Picard — French-American, based in Berlin (EU/US work auth).
-~10 years PM and product operations experience.
+~10 years across product, implementations, and solutions/pre-sales.
+
+### Strongest proof points (use for competitiveness, not fit inflation):
+- Oracle Utilities Pre-Sales: scoped/negotiated/closed $65M+ SaaS incl. $23M deal; RFI/RFP; best writer on team
+- OpenSC Lead/Sr Implementation: Nespresso QBRs, renewals, onboarding 4× cost cut, $130K business case, trusted advisor
+- Pulsora Pre-Sales Solutions Consultant — reached OFFER (ESG/compliance B2B SaaS)
+- Scale AI Engagement Manager EU — 3rd round | LeanIX Sr CS Onboarding EMEA — 2nd round
+- Trade Republic Process Automation & Product/Data Analyst — final round
+- NinjaOne Solutions Engineer — 2nd round (same company: Account Manager did not advance)
+- Applied: Deel Product Ops, Insider One Solutions Consultant DACH, Paradox (French)
 
 ### Key experience areas (in rough order of depth):
+- Solutions consulting & pre-sales (Oracle, OpenSC pitching, Pulsora offer-path)
+- Software implementations & onboarding (OpenSC, LeanIX-shaped)
 - B2B SaaS product management (IntegrityNext, OpenSC, Oracle Utilities)
-- Supply chain transparency and agri-food traceability (OpenSC / Nespresso value chain)
-- ESG/sustainability compliance SaaS (IntegrityNext — CSRD, supplier due diligence)
-- Web3 / tokenized real-world assets (AstroFinance — aerospace assets on Algorand)
-- Community platform management and growth (we are village / BuddyBoss)
-- Implementation management and solutions consulting (OpenSC, Oracle)
-- Public-sector / government proposal development (Asia Foundation — grant proposals)
-- Pre-sales technical proposal contribution (Oracle Utilities)
+- Supply chain / agri-food traceability & ESG compliance SaaS
+- AI-assisted prototyping & workflow design (AstroFinance, IntegrityNext AI feature) — differentiator inside solutions/impl/PM, not a standalone "AI builder" title
 - Product ops: KPI dashboards, Jira/Notion/Airtable, Agile/Kanban
-- Data tools: SQL, Amazon QuickSight, Google Sheets modeling
-- Design/discovery: Figma, Miro, AI-assisted prototyping
+- Data tools: SQL, QuickSight, basic Python
+- Public-sector proposals (Asia Foundation, WEConnect)
 
 ### Languages:
-- English: Native
-- French: Native
-- German: B1-B2 (actively studying)
-- Spanish: B2
+- English: Native | French: Native | German: B1-B2 (actively studying) | Spanish: B2
 
-### Education:
-- MSc Policy Analysis & Management, Carnegie Mellon
-- BA International Development, McGill
+### Education & certs:
+- MSc Policy Analysis & Management, Carnegie Mellon | BA International Development, McGill
+- PMP (2019) | IBM AI Product Manager Certificate (2024)
+
+---
+
+## Primary role lanes (Aug 2026 — rank and apply in this order)
+
+1. **Solutions / Pre-Sales / Engagement (technical-commercial)** — STRONGEST interview signal
+   Titles: Solutions Consultant, Pre-Sales Solutions, Technical Pre-Sales, Engagement Manager,
+   Solutions Engineer (discovery/scoping-heavy), AI Solution Strategist
+   CV: **solutions_cv** (Oracle + OpenSC pitch/QBR + RFP story)
+
+2. **Software Implementations / Onboarding / CS delivery** — STRONG second signal
+   Titles: Implementation Manager, Lead Implementation, Onboarding Manager, CS Onboarding,
+   Deployment Strategist (if maturity gates pass), Technical CSE (integration-heavy)
+   CV: **implementations_cv** (OpenSC delivery + dashboards + renewals)
+
+3. **Product Manager** — parallel track; best at mature product orgs (Typeform, n8n, NiCE)
+   CV: **pm_cv** (IntegrityNext + OpenSC product + AI prototyping)
+
+WEAKER interview signal (deprioritize unless exceptional JD): pure Account Manager, Strategic AM,
+Program Manager / PMO, org-transformation consulting, sales-ops, monitoring/eval ops.
+
+### CV selection (output as recommended_cv):
+- solutions_cv → CV1 "Solutions Consultant | Enterprise B2B SaaS"
+- implementations_cv → CV2 "Software Implementations | AI & Data Products"
+- pm_cv → climate/product CV emphasizing PM + domain
+- either → truly hybrid
 
 ---
 
 ## What Nic is looking for RIGHT NOW
 
-### Hard requirements (must-haves — failure = hard disqualifier or severe fit cut):
-- Does NOT require German fluency (B2 and above required by employer = disqualifier; B2 optional is fine)
-- NOT seed-stage (or pre-seed). Seed / pre-seed companies are a hard disqualifier regardless of
-  mission quality. Series A+ or profitable/bootstrapped-beyond-seed is fine.
-- NOT founded in the last 2 years. Companies younger than ~24 months are a hard disqualifier.
-  Headcount does NOT matter — small teams are OK if the company clears age + stage gates.
-- Company prizes knowledge management, experimentation, and structured research culture
-- Not a high-burn startup in desperate scale-up mode (structured environment, sustainable pace)
+### Hard requirements (must-haves — failure = hard disqualifier):
+- Does NOT require German fluency (B2+ required by employer = disqualifier; "German plus" / optional is fine)
+- NOT seed-stage (or pre-seed). Hard DQ regardless of mission.
+- NOT founded in the last 2 years. Hard DQ. Headcount does NOT matter — small teams OK past gates.
+- NOT US-only or UK-only remote/hire when Nic is Berlin-based EU/US (must be EU-eligible or global remote)
+- Not a high-burn "always-on" culture explicitly requiring 9-5+ intensity with no structure (Almedia-style)
 
-### Strong preference (Fit factor — not a hard DQ by itself):
-- At least one existing product supervisor (Head/Director/VP Product, CPO) OR product peer (another PM).
-  "VP of Engineering" + "Product Engineer" + founders does NOT count as product supervision/peers.
-  Solo / first-PM / blank-page product seats without a product counterpart → Fit cut (−10 to −20),
-  not an automatic base_score cap unless combined with other hard DQs.
+### Strong preference (Fit factor — not hard DQ alone):
+- At least one product supervisor (Head/Director/VP Product, CPO) OR product peer — for PM roles especially.
+  Missing → Fit −10 to −20. Eng-only + founders ≠ product peer.
+- For solutions/implementations roles: existing CS/implementation/solutions team or clear handoff to delivery
+  (not lone commercial hire with no delivery scaffold — Fit −10 to −15).
 
-### Nice-to-have (appear as bonus flags in output, do NOT affect fit_score):
-- Partially or fully remote within EU
-- 4-day / part-time work week options mentioned
-- NOTE: Location itself (Germany vs Greece vs France vs US, onsite city, etc.) must NOT
-  change competitiveness_score, fit_score, or final_score. Remote/onsite may appear as
-  bonus_flags only.
+### Climate / mission — IMPORTANT NUANCE (read carefully):
+- Climate, sustainability, ESG, supply chain mission is a COMPETITIVENESS BOOSTER when paired with
+  enterprise B2B SaaS and a solutions or implementations role (Pulsora, OpenSC, IntegrityNext pattern).
+- Climate-first STARTUPS (seed, <2 years) are HARD DQ on maturity — not because climate is bad, but because
+  Nic's interview data shows first rounds without offers there (Renew Earth, Sustaain, many Plan A/CEEZER/Regrow shapes).
+- Climate **strategy consulting at industrials** (GEA-style) or **mission-only CS at young climate cos**:
+  OK to apply if time, but LOWER competitiveness_score (−5 to −10 vs enterprise SaaS solutions) — interview
+  activity without close history. Do NOT treat mission match as substitute for role family + maturity.
+- DO NOT skip all climate roles — prioritize climate AT Series A+ / profitable B2B SaaS with solutions/impl titles.
 
-### Competitiveness boosters (Nic is more likely to get interviews):
-- French language required or strongly preferred
-- B2B SaaS
-- Climate, sustainability, Agtech, or supply chain tech
-- Regulatory tech, compliance, or ESG/reporting software
-- Implementation, solutions, or customer-facing PM hybrid roles
-- Roles valuing innovation, prototyping, or 0-to-1 thinking as a *candidate quality*:
-  Nic has a strong track record here — clickable prototypes at AstroFinance (one built in
-  Claude Code that placed top 6 of 100+ teams in the Algorand Foundation pitch competition),
-  AI-assisted prototyping as a practised skill, launched a B2B CX diagnostic tool from
-  scratch with 5 engineers, and "AI-assisted research & prototyping" explicitly on both CVs.
-  This is a genuine differentiator. NOTE: do not confuse "builder/prototyper as a
-  candidate quality" with a blank-page founding seat that lacks product peers — the
-  latter is a Fit concern, the former is a Comp booster.
+### Nice-to-have (bonus_flags only — do NOT affect fit_score):
+- EU remote or hybrid | French required/preferred | 4-day week mentioned
+- Location (city/country) is NEVER a score factor except work_region hard DQ above
 
-### Things that reduce fit (soft disqualifiers):
-- Pure consumer product (no B2B component)
-- Hard German fluency requirement
-- Hyper-growth scale-up with unclear structure
-- Requires deep technical background (engineering degree, ML expertise, CAx/CAD kernels, etc.)
-- No sustainability or social impact angle at all (not disqualifying, just less motivating)
-- No product supervisor or peer (solo / first-PM seat) — Fit cut, not hard DQ alone
-- Roles that are pure blank-page founding functions with no scaffolding (workplace-style hit)
+### Competitiveness boosters (interview probability — adjust Comp, not Fit):
+- Role family: solutions/pre-sales/engagement (+8 to +12 Comp vs baseline)
+- Role family: implementations/onboarding (+5 to +8 Comp)
+- Role family: PM at mature B2B SaaS with product org (+3 to +6 Comp)
+- French required or strongly preferred (+5 to +8 Comp)
+- B2B SaaS | compliance/regtech/ESG/supply chain domain (+5 Comp if role family also strong)
+- Prior interview at company (metadata prior_interview=true): +5 Comp via contact bump path
+- AI-assisted prototyping / evals / workflow scoping as candidate quality (+5 to +8 Comp)
+
+### Competitiveness reducers (lower Comp, not automatic skip):
+- Pure Account Manager / quota-carrying AM (−8 to −12 Comp) — NinjaOne AM vs SE lesson
+- Program Manager / PMO / prof-services coordinator (−5 to −10 Comp)
+- Org transformation / NGO ops / strategy consulting without SaaS product (−5 to −10 Comp)
+- "AI builder" / founding PM / solo product at seed — weak interview history (−5 Comp unless mature org)
+- Climate mission-only at non-SaaS employer (−5 Comp; see climate nuance above)
+- Intensity culture ("not 9-5", perpetual urgency, venture builder) (−5 to −10 Fit and −3 Comp)
+
+### Things that reduce fit (soft):
+- Pure consumer (no B2B) | Hard German | Hyper-growth chaos | Engineering-degree gate
+- No product supervisor/peer on PM roles | Blank-page founding with no scaffolding (workplace style)
+- Low structure AND low autonomy simultaneously (−20 to −25 Fit)
 
 ## Workplace Style — environmental factors for sustained performance
 
@@ -201,50 +240,54 @@ You are an expert career advisor and talent evaluator. You receive a candidate p
 For each JD produce a JSON evaluation object:
 - "title": job title
 - "company": company name (use "Unknown" if unclear)
+- "role_family": one of:
+    solutions_pre_sales  — Solutions Consultant, Pre-Sales, Technical Pre-Sales, Engagement Manager,
+                          Solutions Engineer (scoping/demo-heavy), AI Solution Strategist
+    implementations      — Implementation Manager, Lead Implementation, Onboarding, CS Onboarding, CSE (integration-heavy)
+    product_manager      — Product Manager, Product Ops (with product org)
+    customer_success     — generic CSM / AM without solutions or implementation depth
+    account_manager      — quota-carrying AM / Strategic AM
+    program_manager      — PMO, Program Manager, Prof Services coordinator
+    consulting_other     — org transformation, strategy consulting, NGO ops, sales ops
+    other
+- "interview_signal": "strong" | "moderate" | "weak" — based on PROFILE role-lane history:
+    strong = solutions_pre_sales or implementations at enterprise B2B SaaS
+    moderate = product_manager at mature org, or CS with technical onboarding scope
+    weak = account_manager, program_manager, consulting_other (unless exceptional domain match)
+- "recommended_cv": "solutions_cv" | "implementations_cv" | "pm_cv" | "either"
 - "base_score": integer 0-100
-- "competitiveness_score": integer 0-100 (how likely Nic is to get an interview/offer)
-- "fit_score": integer 0-100 — incorporates TWO components equally:
-  (a) PREFERENCE FIT: product supervisor/peer present, sustainable pace/culture, and
-      maturity gates (not seed/pre-seed; not founded within last 2 years). Headcount is
-      NOT a fit penalty. Autopilot/steady-state in 6-12 months is NOT required and must
-      NOT drive fit_score. Remote work and 4-day week are NOT fit factors — bonus_flags only.
-      LOCATION (country/city) is NEVER a fit factor.
-  (b) WORKPLACE STYLE FIT: how well the role's day-to-day operating environment matches
-      the Workplace Style traits in the profile (structure + autonomy, feedback loops,
-      engaged counterpart, existing scaffolding vs blank-page chaos).
-  The worst-case workplace style pattern (low structure + low autonomy simultaneously) should
-  pull fit_score down by 20-25 pts on its own, noted explicitly in fit_concerns.
-- "maturity_notes": one sentence on founding year / funding stage vs the hard gates
-- "hard_disqualifiers": list of strings (deal-breakers) — include German B2+, seed/pre-seed,
-  founded <2 years when applicable
-- "fit_highlights": list of up to 5 strings
-- "fit_concerns": list of up to 5 strings
-- "bonus_flags": list of strings (remote, 4-day week, French, etc.)
-- "which_cv": "product_ops" | "climate_pm" | "either"
+- "competitiveness_score": integer 0-100 — interview/offer probability; MUST reflect role_family
+  signal above (solutions +8-12, implementations +5-8, AM/PMO -5-12 vs neutral baseline).
+  Climate mission alone must NOT inflate Comp if role_family is weak or company fails maturity gates.
+- "fit_score": integer 0-100 — TWO components equally:
+  (a) PREFERENCE FIT: product supervisor/peer (PM roles), delivery scaffold (solutions/impl roles),
+      maturity gates, sustainable pace. No autopilot requirement. No headcount penalty.
+  (b) WORKPLACE STYLE FIT: structure + autonomy, feedback loops, scaffolding vs blank-page chaos.
+  Low structure + low autonomy together → Fit −20 to −25.
+- "maturity_notes": founding year / funding stage vs hard gates; note if climate startup fails gates
+- "hard_disqualifiers": list — German B2+, seed/pre-seed, founded <2 years, US-only/UK-only hire
+- "fit_highlights", "fit_concerns", "bonus_flags" (max 5 each)
+- "which_cv": DEPRECATED alias — copy same value as recommended_cv for backward compatibility
 - "recommended_action": "apply_now" | "apply_soon" | "apply_if_time" | "skip"
-- "one_line_verdict": single sentence summary
-- "funding_stage_inferred": one of pre_seed|seed|series_a|series_b_plus|profitable|unknown
-  — only if metadata did not supply funding_stage; must be justified from known facts,
-  never guessed upward from mission quality
+  — apply_now: strong role_family + passes maturity + no hard DQ
+  — apply_soon: good fit but moderate signal or one soft concern
+  — apply_if_time: climate mission-only, weak role_family, or stretch domain
+  — skip: any hard DQ
+- "one_line_verdict": single sentence
+- "funding_stage_inferred": pre_seed|seed|series_a|series_b_plus|profitable|unknown
 
 base_score = 0.5 * competitiveness_score + 0.5 * fit_score
 
 IMPORTANT RULES:
-- Hard disqualifiers: German B2+/C1+ required; seed or pre-seed stage; company founded
-  within the last 2 years. Any of these → cap base_score at 30 and recommend skip.
-- Product supervisor OR peer is a strong Fit preference. Missing it → Fit −10 to −20,
-  but NOT an automatic hard DQ / base cap by itself. Eng-only + founders ≠ product peer.
-- Do NOT penalize fit for headcount or for "unlikely to reach autopilot in 6-12 months."
-- Workplace style red flag: BOTH low structure (blank-page founding, no scaffolding) AND
-  low autonomy/directive management → additional Fit −20 to −25; flag in fit_concerns.
-- If a JD values innovation, prototyping, 0-to-1 work, or a "builder" mindset as a
-  *candidate quality*, boost competitiveness_score by 5-8 pts (Nic's prototype track record).
-- COMPETITIVENESS ≠ FIT. Never let Comp 75+ drag Fit upward.
-- Do NOT use location (Germany/Greece/France/US/Berlin/Athens/remote) to raise or lower
-  competitiveness_score, fit_score, or base_score. Language requirements may still disqualify.
-- Be specific and honest — do not inflate scores. When uncertain on funding stage, use
-  "unknown" (0 bump), never invent a later stage. When uncertain on founding year, say so
-  in maturity_notes and do not invent a cleared age gate.
+- Hard DQs → cap base_score at 30, recommend skip: German B2+/C1+; seed/pre-seed; founded <2 years;
+  JD restricts to US-only or UK-only without EU work eligibility.
+- Climate: NEVER hard-DQ climate mission alone. Seed/young climate startups DQ on maturity, not mission.
+  Climate strategy consulting / young-climate CSM → lower Comp (−5-10), apply_if_time at best.
+  Climate + enterprise B2B SaaS + solutions/impl → strong Comp (Pulsora pattern).
+- Product peer/supervisor: Fit preference for PM roles; missing → Fit −10 to −20, not base cap alone.
+- AI prototyping/evals: Comp booster as candidate quality, not a separate "AI builder" role family.
+- COMPETITIVENESS ≠ FIT. Profitable mature SaaS + weak role (AM) can be Fit 70 / Comp 45.
+- Do not invent Series A+ from "climate tech" or "VC-backed". Unknown funding → unknown (0 bump).
 
 Return ONLY valid JSON, no markdown fences:
 {"evaluations": [{"jd_key": "<key>", ...}, ...]}
@@ -295,6 +338,19 @@ APPLICANT_BUMPS = {
 VALID_FUNDING = set(FUNDING_BUMPS)
 VALID_CONTACT = set(CONTACT_BUMPS)
 VALID_APPLICANTS = set(APPLICANT_BUMPS)
+VALID_WORK_REGIONS = {"eu", "global", "us_only", "uk_only", "unknown"}
+
+# Role families with strongest historical interview → offer signal (non-PM track)
+ROLE_FAMILIES = (
+    "solutions_pre_sales",
+    "implementations",
+    "product_manager",
+    "customer_success",
+    "account_manager",
+    "program_manager",
+    "consulting_other",
+    "other",
+)
 
 
 def apply_bumps(base, days, contact, funding, applicants="unknown"):
@@ -338,6 +394,14 @@ def validate_metadata(metadata):
                     )
             except (TypeError, ValueError):
                 pass
+        wr = meta.get("work_region", "unknown")
+        if wr not in VALID_WORK_REGIONS:
+            warnings.append(f"{key}: invalid work_region={wr!r} → treating as unknown")
+            meta["work_region"] = "unknown"
+        elif wr in {"us_only", "uk_only"}:
+            warnings.append(
+                f"{key}: work_region={wr} — HARD DQ for Berlin-based Nic unless JD allows EU"
+            )
     return warnings
 
 # ──────────────────────────────────────────────────────────────
@@ -382,9 +446,9 @@ def evaluate_jds(jds):
         f"## Candidate Profile\n{PROFILE}\n\n## Job Descriptions\n{jd_block}\n\n"
         f"Evaluate all {len(jds)} JDs and return JSON.\n\n"
         "REMINDER: Keep competitiveness_score and fit_score independent. "
-        "Hard DQs: German B2+, seed/pre-seed, founded <2 years. "
-        "Headcount is fine; product peer/supervisor is a Fit preference not a hard DQ. "
-        "Do NOT score on autopilot-in-6-12-months."
+        "Hard DQs: German B2+, seed/pre-seed, founded <2 years, US-only/UK-only hire. "
+        "Score role_family interview signal on Comp (solutions/impl strong; AM/PMO weak). "
+        "Climate mission is NOT a DQ — maturity gates are. Climate-only weak roles → apply_if_time."
     )
     print(f"Sending {len(jds)} JD(s) to Claude...\n", file=sys.stderr)
     response = client.messages.create(
@@ -425,7 +489,16 @@ def evaluate_jds(jds):
 # ──────────────────────────────────────────────────────────────
 
 ACTION_EMOJI = {"apply_now": "🟢", "apply_soon": "🟡", "apply_if_time": "🟠", "skip": "🔴"}
-CV_LABEL     = {"product_ops": "Product Ops CV", "climate_pm": "Climate PM CV", "either": "Either CV"}
+CV_LABEL = {
+    "solutions_cv": "CV1 Solutions Consultant",
+    "implementations_cv": "CV2 Implementations",
+    "pm_cv": "PM / Climate CV",
+    "either": "Either CV",
+    # legacy keys from older runs
+    "product_ops": "CV1 Solutions Consultant",
+    "climate_pm": "PM / Climate CV",
+}
+INTERVIEW_SIGNAL_EMOJI = {"strong": "📈", "moderate": "➖", "weak": "📉", "unknown": "❓"}
 FUNDING_EMOJI = {
     "pre_seed": "🌱", "seed": "🌿", "series_a": "🅰️",
     "series_b_plus": "🅱️", "profitable": "💰", "unknown": "❓"
@@ -492,7 +565,8 @@ def format_results(rankings):
         )
         lines.append(
             f"**Action**: {emoji} {r.get('recommended_action','?').upper()}  |  "
-            f"**CV**: {CV_LABEL.get(r.get('which_cv','either'))}  |  "
+            f"**CV**: {CV_LABEL.get(r.get('recommended_cv') or r.get('which_cv','either'))}  |  "
+            f"**Lane**: {r.get('role_family','?')} {INTERVIEW_SIGNAL_EMOJI.get(r.get('interview_signal','unknown'), '❓')}  |  "
             f"{femoji} {r['funding_label']}{emp_str}"
         )
         lines.append(f"_{r['recency_label']}, {r['contact_label']}, {r['applicant_label']}_")

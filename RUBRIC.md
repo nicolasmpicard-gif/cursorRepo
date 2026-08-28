@@ -6,36 +6,59 @@ Use `jd_ranker.py` as the source of truth.
 `base = 0.5 * competitiveness + 0.5 * fit`  
 `final = clamp(0, 100, base + recency + contact + funding + applicants)`
 
-## Non-negotiables
-1. **Verify `funding_stage`** from Crunchbase/Tracxn/press. Never infer Series A+ from “climate startup” or mission quality. If unsure → `unknown` (0).
-2. **Comp ≠ Fit.** A role can be Comp 80+ and Fit ~40. Do not let skill match inflate fit.
-3. **Hard maturity DQs:** seed / pre-seed **or** company founded within the last 2 years → leave out / cap base at 30. **Headcount is fine** — small teams OK past those gates.
-4. **Product supervisor or peer** (Head/Director/VP Product, CPO, or another PM) is a **strong Fit preference**, not a hard DQ alone. Eng-only + founders does not count. Solo / first-PM → Fit −10 to −20.
-5. **Autopilot / steady-state in 6–12 months is NOT required** and must not drive Fit.
-6. **Location is score-neutral** (DE/GR/FR/US/remote). Language gates (e.g. German B2+) still apply.
-7. **Hard DQs** (German B2+, seed/pre-seed, founded <2 years) → **cap `base_score` at 30**.
+## Hard DQs (cap base at 30, skip)
+- German B2+ / C1+ required
+- Seed or pre-seed stage
+- Company founded within the last 2 years
+- US-only or UK-only hire (no EU eligibility) — set `work_region` in metadata
+
+**Not hard DQs:** climate mission, small headcount, missing product peer (Fit cut only).
+
+## Role lanes (competitiveness / interview signal)
+Score `role_family` and `interview_signal` on every JD:
+
+| Signal | Role families | Comp adjustment |
+|--------|---------------|-----------------|
+| **Strong** | Solutions / pre-sales / engagement / AI Solution Strategist; Implementations / onboarding | +8–12 / +5–8 |
+| **Moderate** | PM at mature B2B SaaS; technical CS/onboarding | +3–6 |
+| **Weak** | Account Manager, PMO/program, org consulting, sales ops | −5–12 |
+
+**CV mapping:** `solutions_cv` (CV1) · `implementations_cv` (CV2) · `pm_cv`
+
+## Climate nuance (important)
+- **Do not** skip all climate roles.
+- **Do** hard-DQ climate **startups** that fail maturity (seed, &lt;2 years) — interview activity without offers.
+- **Prioritize** climate at **enterprise B2B SaaS** in solutions/implementations lanes (Pulsora pattern).
+- Climate strategy consulting / mission-only CSM at young cos → `apply_if_time`, Comp −5–10.
+
+## Fit (unchanged core)
+- Product supervisor or peer = strong preference for PM roles (−10–20 if missing)
+- Workplace style: low structure + low autonomy = −20–25
+- No autopilot requirement; no headcount penalty
+
+## Metadata
+```json
+{
+  "pulsora_sc": {
+    "days_since_posted": 5,
+    "contact_status": "interview",
+    "funding_stage": "series_a",
+    "founded_year": 2019,
+    "work_region": "eu",
+    "applicant_volume": "low",
+    "prior_interview": true
+  }
+}
+```
+
+`work_region`: `eu` | `global` | `us_only` | `uk_only` | `unknown`
 
 ## Funding bumps
 | Stage | Bump |
 |---|---:|
-| pre_seed | −10 |
-| seed | −5 (also a hard DQ under current preference) |
+| pre_seed | −10 (also hard DQ) |
+| seed | −5 (also hard DQ) |
 | series_a | +5 |
 | series_b_plus | +8 |
 | profitable | +8 |
 | unknown | 0 |
-
-## Metadata fields to prefer
-```json
-{
-  "example": {
-    "days_since_posted": 3,
-    "contact_status": "none",
-    "funding_stage": "series_a",
-    "applicant_volume": "low",
-    "employees": 18,
-    "founded_year": 2021,
-    "last_raise_date": "2024-06-01"
-  }
-}
-```

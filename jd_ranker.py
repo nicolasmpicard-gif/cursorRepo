@@ -22,6 +22,8 @@ USAGE
    contact_status values : "none" | "positive_contact" | "interview"
    funding_stage values  : "pre_seed" | "seed" | "series_a" | "series_b_plus" | "profitable" | "unknown"
    applicant_volume      : "low" | "medium" | "high" | "unknown"
+   french_language       : "required" | "preferred" | "none" | "unknown"
+                         — required = fluent/native/mandatory; preferred = plus/advantage/nice-to-have
    days_since_posted     : integer, or omit/null if unknown
    employees             : integer headcount if known (informational; not a Fit penalty)
    founded_year          : integer if known (HARD DQ if company age < 2 years)
@@ -53,7 +55,8 @@ funding_bump   : -10 to +8 pts
   profitable   →  +8
   unknown      →   0
 applicant_bump : -5 to +5 pts (low competition → +5, high (100+) → -5)
-final_score    = clamp(0, 100, base_score + recency_bump + contact_bump + funding_bump + applicant_bump)
+french_bump    : 0-7 pts (required/fluent → +7, preferred/plus → +4, none → 0)
+final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french)
 
 CRITICAL SCORING DISCIPLINE (read before every evaluation)
 ---------------------------------------------------------
@@ -121,31 +124,23 @@ Nicolas Picard — French-American, based in Berlin (EU/US work auth).
 1. **Solutions / Pre-Sales / Engagement (technical-commercial)** — STRONGEST interview signal
    Titles: Solutions Consultant, Pre-Sales Solutions, Technical Pre-Sales, Engagement Manager,
    Solutions Engineer (discovery/scoping-heavy), AI Solution Strategist
-   CV: **solutions_cv** (Oracle + OpenSC pitch/QBR + RFP story)
 
 2. **Software Implementations / Onboarding / CS delivery** — STRONG second signal
    Titles: Implementation Manager, Lead Implementation, Onboarding Manager, CS Onboarding,
    Deployment Strategist (if maturity gates pass), Technical CSE (integration-heavy)
-   CV: **implementations_cv** (OpenSC delivery + dashboards + renewals)
 
 3. **Product Manager** — parallel track; best at mature product orgs (Typeform, n8n, NiCE)
-   CV: **pm_cv** (IntegrityNext + OpenSC product + AI prototyping)
 
 WEAKER interview signal (deprioritize unless exceptional JD): pure Account Manager, Strategic AM,
 Program Manager / PMO, org-transformation consulting, sales-ops, monitoring/eval ops.
-
-### CV selection (output as recommended_cv):
-- solutions_cv → CV1 "Solutions Consultant | Enterprise B2B SaaS"
-- implementations_cv → CV2 "Software Implementations | AI & Data Products"
-- pm_cv → climate/product CV emphasizing PM + domain
-- either → truly hybrid
 
 ---
 
 ## What Nic is looking for RIGHT NOW
 
 ### Hard requirements (must-haves — failure = hard disqualifier):
-- Does NOT require German fluency (B2+ required by employer = disqualifier; "German plus" / optional is fine)
+- HARD DQ German only for **native German** or **C2** (or "Muttersprache"/native-level).
+  C1, B2 required, "fluent", or "professional working proficiency" are NOT hard DQs — use Fit penalties.
 - NOT seed-stage (or pre-seed). Hard DQ regardless of mission.
 - NOT founded in the last 2 years. Hard DQ. Headcount does NOT matter — small teams OK past gates.
 - NOT US-only or UK-only remote/hire when Nic is Berlin-based EU/US (must be EU-eligible or global remote)
@@ -189,7 +184,7 @@ Program Manager / PMO, org-transformation consulting, sales-ops, monitoring/eval
 - Intensity culture ("not 9-5", perpetual urgency, venture builder) (−5 to −10 Fit and −3 Comp)
 
 ### Things that reduce fit (soft):
-- Pure consumer (no B2B) | Hard German | Hyper-growth chaos | Engineering-degree gate
+- Pure consumer (no B2B) | German B2/C1/fluent required (not hard DQ) | Hyper-growth chaos | Engineering-degree gate
 - No product supervisor/peer on PM roles | Blank-page founding with no scaffolding (workplace style)
 - Low structure AND low autonomy simultaneously (−20 to −25 Fit)
 
@@ -250,11 +245,8 @@ For each JD produce a JSON evaluation object:
     program_manager      — PMO, Program Manager, Prof Services coordinator
     consulting_other     — org transformation, strategy consulting, NGO ops, sales ops
     other
-- "interview_signal": "strong" | "moderate" | "weak" — based on PROFILE role-lane history:
-    strong = solutions_pre_sales or implementations at enterprise B2B SaaS
-    moderate = product_manager at mature org, or CS with technical onboarding scope
-    weak = account_manager, program_manager, consulting_other (unless exceptional domain match)
-- "recommended_cv": "solutions_cv" | "implementations_cv" | "pm_cv" | "either"
+- "interview_signal": "strong" | "moderate" | "weak"
+- "french_language": "required" | "preferred" | "none" — from JD text (required/fluent/mandatory vs plus/preferred)
 - "base_score": integer 0-100
 - "competitiveness_score": integer 0-100 — interview/offer probability; MUST reflect role_family
   signal above (solutions +8-12, implementations +5-8, AM/PMO -5-12 vs neutral baseline).
@@ -265,9 +257,8 @@ For each JD produce a JSON evaluation object:
   (b) WORKPLACE STYLE FIT: structure + autonomy, feedback loops, scaffolding vs blank-page chaos.
   Low structure + low autonomy together → Fit −20 to −25.
 - "maturity_notes": founding year / funding stage vs hard gates; note if climate startup fails gates
-- "hard_disqualifiers": list — German B2+, seed/pre-seed, founded <2 years, US-only/UK-only hire
+- "hard_disqualifiers": list — German native/C2 only; seed/pre-seed; founded <2 years; US-only/UK-only hire
 - "fit_highlights", "fit_concerns", "bonus_flags" (max 5 each)
-- "which_cv": DEPRECATED alias — copy same value as recommended_cv for backward compatibility
 - "recommended_action": "apply_now" | "apply_soon" | "apply_if_time" | "skip"
   — apply_now: strong role_family + passes maturity + no hard DQ
   — apply_soon: good fit but moderate signal or one soft concern
@@ -279,8 +270,12 @@ For each JD produce a JSON evaluation object:
 base_score = 0.5 * competitiveness_score + 0.5 * fit_score
 
 IMPORTANT RULES:
-- Hard DQs → cap base_score at 30, recommend skip: German B2+/C1+; seed/pre-seed; founded <2 years;
-  JD restricts to US-only or UK-only without EU work eligibility.
+- Hard DQs → cap base_score at 30, recommend skip: German **native or C2 only**; seed/pre-seed;
+  founded <2 years; JD restricts to US-only or UK-only without EU work eligibility.
+- German C1 / B2 required / "fluent" / professional proficiency → NOT hard DQ; reduce Fit (−8 to −15)
+  and note in fit_concerns. Do not add to hard_disqualifiers.
+- french_language "required" → +7 competitiveness worth (applied as french_bump in post-processing).
+  french_language "preferred" → +4. Always set french_language field from JD.
 - Climate: NEVER hard-DQ climate mission alone. Seed/young climate startups DQ on maturity, not mission.
   Climate strategy consulting / young-climate CSM → lower Comp (−5-10), apply_if_time at best.
   Climate + enterprise B2B SaaS + solutions/impl → strong Comp (Pulsora pattern).
@@ -335,9 +330,17 @@ APPLICANT_BUMPS = {
     "unknown": (0,   "applicant volume unknown"),
 }
 
+FRENCH_BUMPS = {
+    "required":  (+7, "French fluent/required/mandatory"),
+    "preferred": (+4, "French preferred/plus/advantage"),
+    "none":      (0,  "no French requirement"),
+    "unknown":   (0,  "French requirement unknown"),
+}
+
 VALID_FUNDING = set(FUNDING_BUMPS)
 VALID_CONTACT = set(CONTACT_BUMPS)
 VALID_APPLICANTS = set(APPLICANT_BUMPS)
+VALID_FRENCH = set(FRENCH_BUMPS)
 VALID_WORK_REGIONS = {"eu", "global", "us_only", "uk_only", "unknown"}
 
 # Role families with strongest historical interview → offer signal (non-PM track)
@@ -353,13 +356,14 @@ ROLE_FAMILIES = (
 )
 
 
-def apply_bumps(base, days, contact, funding, applicants="unknown"):
+def apply_bumps(base, days, contact, funding, applicants="unknown", french="unknown"):
     r_pts, r_label = recency_bump(days)
     c_pts, c_label = CONTACT_BUMPS.get(contact, (0, "no prior contact"))
     f_pts, f_label = FUNDING_BUMPS.get(funding, (0, "funding stage unknown"))
     a_pts, a_label = APPLICANT_BUMPS.get(applicants, (0, "applicant volume unknown"))
-    final = max(0, min(100, base + r_pts + c_pts + f_pts + a_pts))
-    return final, r_pts, c_pts, f_pts, a_pts, r_label, c_label, f_label, a_label
+    fr_pts, fr_label = FRENCH_BUMPS.get(french, (0, "French requirement unknown"))
+    final = max(0, min(100, base + r_pts + c_pts + f_pts + a_pts + fr_pts))
+    return final, r_pts, c_pts, f_pts, a_pts, fr_pts, r_label, c_label, f_label, a_label, fr_label
 
 
 def validate_metadata(metadata):
@@ -378,6 +382,10 @@ def validate_metadata(metadata):
         if apps not in VALID_APPLICANTS:
             warnings.append(f"{key}: invalid applicant_volume={apps!r} → treating as unknown")
             meta["applicant_volume"] = "unknown"
+        french = meta.get("french_language", "unknown")
+        if french not in VALID_FRENCH:
+            warnings.append(f"{key}: invalid french_language={french!r} → treating as unknown")
+            meta["french_language"] = "unknown"
         # Soft warning: seed/pre-seed is a hard maturity DQ — flag loudly
         if meta.get("funding_stage") in {"seed", "pre_seed"}:
             warnings.append(
@@ -446,7 +454,7 @@ def evaluate_jds(jds):
         f"## Candidate Profile\n{PROFILE}\n\n## Job Descriptions\n{jd_block}\n\n"
         f"Evaluate all {len(jds)} JDs and return JSON.\n\n"
         "REMINDER: Keep competitiveness_score and fit_score independent. "
-        "Hard DQs: German B2+, seed/pre-seed, founded <2 years, US-only/UK-only hire. "
+        "Hard DQs: German native/C2 only, seed/pre-seed, founded <2 years, US-only/UK-only hire. "
         "Score role_family interview signal on Comp (solutions/impl strong; AM/PMO weak). "
         "Climate mission is NOT a DQ — maturity gates are. Climate-only weak roles → apply_if_time."
     )
@@ -489,15 +497,6 @@ def evaluate_jds(jds):
 # ──────────────────────────────────────────────────────────────
 
 ACTION_EMOJI = {"apply_now": "🟢", "apply_soon": "🟡", "apply_if_time": "🟠", "skip": "🔴"}
-CV_LABEL = {
-    "solutions_cv": "CV1 Solutions Consultant",
-    "implementations_cv": "CV2 Implementations",
-    "pm_cv": "PM / Climate CV",
-    "either": "Either CV",
-    # legacy keys from older runs
-    "product_ops": "CV1 Solutions Consultant",
-    "climate_pm": "PM / Climate CV",
-}
 INTERVIEW_SIGNAL_EMOJI = {"strong": "📈", "moderate": "➖", "weak": "📉", "unknown": "❓"}
 FUNDING_EMOJI = {
     "pre_seed": "🌱", "seed": "🌿", "series_a": "🅰️",
@@ -514,14 +513,19 @@ def build_rankings(evaluations, metadata):
         if funding not in VALID_FUNDING:
             funding = "unknown"
         applicants = meta.get("applicant_volume", "unknown")
+        french     = meta.get("french_language") or ev.get("french_language") or "unknown"
+        if french not in VALID_FRENCH:
+            french = "unknown"
         employees  = meta.get("employees")
-        final, r_pts, c_pts, f_pts, a_pts, r_label, c_label, f_label, a_label = apply_bumps(
-            ev.get("base_score", 0), days, contact, funding, applicants)
+        final, r_pts, c_pts, f_pts, a_pts, fr_pts, r_label, c_label, f_label, a_label, fr_label = apply_bumps(
+            ev.get("base_score", 0), days, contact, funding, applicants, french)
         results.append({**ev, "jd_key": key, "final_score": final,
                         "recency_pts": r_pts, "contact_pts": c_pts,
                         "funding_pts": f_pts, "applicant_pts": a_pts,
+                        "french_pts": fr_pts,
                         "recency_label": r_label, "contact_label": c_label,
                         "funding_label": f_label, "applicant_label": a_label,
+                        "french_label": fr_label,
                         "funding_stage": funding, "employees": employees})
     results.sort(key=lambda x: x["final_score"], reverse=True)
     return results
@@ -529,19 +533,21 @@ def build_rankings(evaluations, metadata):
 def format_results(rankings):
     today = date.today().isoformat()
     lines = [f"# JD Ranking Results — {today}\n"]
-    lines.append(f"{'#':<4} {'Score':<7} {'Base':<6} {'Fit':<5} {'Comp':<5} {'+Rec':<6} {'+Con':<6} {'+Fund':<7} {'+App':<6} {'Fund':<5} {'Act':<5} {'Company':<20} Title")
-    lines.append("-" * 150)
+    lines.append(f"{'#':<4} {'Score':<7} {'Base':<6} {'Fit':<5} {'Comp':<5} {'+Rec':<6} {'+Con':<6} {'+Fund':<7} {'+App':<6} {'+Fr':<5} {'Fund':<5} {'Act':<5} {'Company':<20} Title")
+    lines.append("-" * 158)
     for i, r in enumerate(rankings, 1):
         emoji   = ACTION_EMOJI.get(r.get("recommended_action", "?"), "⚪")
         femoji  = FUNDING_EMOJI.get(r.get("funding_stage", "unknown"), "❓")
         f_pts   = r["funding_pts"]
         a_pts   = r["applicant_pts"]
+        fr_pts  = r.get("french_pts", 0)
         f_str   = f"+{f_pts}" if f_pts >= 0 else str(f_pts)
         a_str   = f"+{a_pts}" if a_pts >= 0 else str(a_pts)
+        fr_str  = f"+{fr_pts}" if fr_pts >= 0 else str(fr_pts)
         lines.append(
             f"{i:<4} {r['final_score']:<7} {r.get('base_score',0):<6} "
             f"{r.get('fit_score',0):<5} {r.get('competitiveness_score',0):<5} "
-            f"+{r['recency_pts']:<5} +{r['contact_pts']:<5} {f_str:<7} {a_str:<6} "
+            f"+{r['recency_pts']:<5} +{r['contact_pts']:<5} {f_str:<7} {a_str:<6} {fr_str:<5} "
             f"{femoji:<5} {emoji:<5} {r.get('company','?')[:18]:<20} {r.get('title','?')[:42]}"
         )
     lines.append("")
@@ -550,14 +556,16 @@ def format_results(rankings):
         femoji = FUNDING_EMOJI.get(r.get("funding_stage", "unknown"), "❓")
         f_pts  = r["funding_pts"]
         a_pts  = r["applicant_pts"]
+        fr_pts = r.get("french_pts", 0)
         f_str  = f"+{f_pts}" if f_pts >= 0 else str(f_pts)
         a_str  = f"+{a_pts}" if a_pts >= 0 else str(a_pts)
+        fr_str = f"+{fr_pts}" if fr_pts >= 0 else str(fr_pts)
         lines.append(f"---\n## {i}. {r.get('company','?')} — {r.get('title','?')}")
         emp_str = f"  |  👥 {r['employees']}" if r.get("employees") else ""
         lines.append(
             f"**Final score**: {r['final_score']}/100  "
             f"(base {r.get('base_score',0)} + recency +{r['recency_pts']} "
-            f"+ contact +{r['contact_pts']} + funding {f_str} + applicants {a_str})"
+            f"+ contact +{r['contact_pts']} + funding {f_str} + applicants {a_str} + french {fr_str})"
         )
         lines.append(
             f"Fit: {r.get('fit_score',0)}/100  |  "
@@ -565,11 +573,10 @@ def format_results(rankings):
         )
         lines.append(
             f"**Action**: {emoji} {r.get('recommended_action','?').upper()}  |  "
-            f"**CV**: {CV_LABEL.get(r.get('recommended_cv') or r.get('which_cv','either'))}  |  "
             f"**Lane**: {r.get('role_family','?')} {INTERVIEW_SIGNAL_EMOJI.get(r.get('interview_signal','unknown'), '❓')}  |  "
             f"{femoji} {r['funding_label']}{emp_str}"
         )
-        lines.append(f"_{r['recency_label']}, {r['contact_label']}, {r['applicant_label']}_")
+        lines.append(f"_{r['recency_label']}, {r['contact_label']}, {r['applicant_label']}, {r.get('french_label', 'French requirement unknown')}_")
         lines.append(f"\n**Maturity**: {r.get('maturity_notes', 'N/A')}")
         lines.append(f"\n> {r.get('one_line_verdict','')}\n")
         if r.get("hard_disqualifiers"):

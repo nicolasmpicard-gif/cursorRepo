@@ -72,6 +72,22 @@ def test_validate_metadata_flags_young_company():
     assert any("younger than 2 years" in w for w in warnings)
 
 
+def test_french_bump_required():
+    final, r, c, f, a, fr, *_labels = jd_ranker.apply_bumps(
+        60, days=None, contact="none", funding="unknown", french="required"
+    )
+    assert fr == 7
+    assert final == 67
+
+
+def test_french_bump_preferred():
+    final, r, c, f, a, fr, *_labels = jd_ranker.apply_bumps(
+        60, days=None, contact="none", funding="unknown", french="preferred"
+    )
+    assert fr == 4
+    assert final == 64
+
+
 def test_hard_dq_cap_logic_in_build_path():
     evaluations = {
         "bad": {
@@ -81,7 +97,7 @@ def test_hard_dq_cap_logic_in_build_path():
             "base_score": 55,
             "competitiveness_score": 60,
             "fit_score": 50,
-            "hard_disqualifiers": ["German C1+ required"],
+            "hard_disqualifiers": ["Native German (Muttersprache) required"],
             "recommended_action": "skip",
         }
     }
@@ -100,6 +116,8 @@ def test_profile_drops_autopilot_must_and_headcount_gate():
     assert "≤25 employees, assume this is unmet" not in jd_ranker.PROFILE
     assert "solutions_pre_sales" in jd_ranker.SYSTEM_PROMPT
     assert "Climate: NEVER hard-DQ climate mission alone" in jd_ranker.SYSTEM_PROMPT
+    assert "German **native or C2 only**" in jd_ranker.SYSTEM_PROMPT
+    assert "recommended_cv" not in jd_ranker.SYSTEM_PROMPT
 
 
 def test_validate_metadata_flags_us_only():

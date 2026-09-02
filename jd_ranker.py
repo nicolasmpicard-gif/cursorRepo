@@ -27,6 +27,9 @@ USAGE
    german_requirement    : "none" | "plus" | "b2" | "fluent" | "c1" | "c2" | "native" | "unknown"
                          — lane-precedence + chart eligibility: pass if none/plus/b2/unknown;
                            fluent/c1 penalized; c2/native hard DQ
+   pm_domain             : "none" | "data_ai_internal" | "data_ai_product" | "unknown"
+                         — data_ai_internal = internal tooling / BI / data platform PM (Nic strength);
+                           data_ai_product = external data/AI SaaS PM; +4/+3 when language gate passes
    days_since_posted     : integer, or omit/null if unknown
    employees             : integer headcount if known (informational; not a Fit penalty)
    founded_year          : integer if known (HARD DQ if company age < 2 years)
@@ -60,8 +63,9 @@ funding_bump   : -10 to +8 pts
 applicant_bump : -5 to +5 pts (low competition → +5, high (100+) → -5)
 french_bump    : 0-7 pts (required/fluent → +7, preferred/plus → +4, none → 0)
 lane_bump      : 0-6 pts when language gate passes (solutions/impl +6, delivery PM/TPM +4; PM gets 0)
+pm_domain_bump : 0-4 pts for PM roles in Nic's strength domains when language gate passes
 language_pen   : 0 to -12 pts (fluent −8, c1 −12; c2/native = hard DQ)
-final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + language_pen)
+final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + pm_domain + language_pen)
 
 CRITICAL SCORING DISCIPLINE (read before every evaluation)
 ---------------------------------------------------------
@@ -142,7 +146,10 @@ product manager roles. Language gate: English/French native OK; German requireme
 3. **Delivery project management** — third priority lane (above PM)
    Titles: Technical Project Manager, Implementation PM, Delivery PM (NOT PMO / program coordinator)
 
-4. **Product Manager** — parallel track; best at mature product orgs (Typeform, n8n, NiCE)
+4. **Product Manager** — parallel track; do NOT discount PM roles entirely.
+   **Strong PM sub-lane (Nic strengths):** internal tooling, data platform / BI-as-product,
+   and AI product PM (Trade Republic data/PM final round, IBM AI PM cert, IntegrityNext AI feature).
+   Titles: Data & AI PM, Technical PM (data), Product Ops at mature SaaS, AI PM at mature orgs (n8n, Typeform)
 
 WEAKER interview signal (deprioritize unless exceptional JD): pure Account Manager, Strategic AM,
 PMO / Program Manager / prof-services coordinator, org-transformation consulting, sales-ops,
@@ -186,6 +193,7 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
 - Role family: solutions/pre-sales/engagement (+8 to +12 Comp vs baseline)
 - Role family: implementations/onboarding (+5 to +8 Comp)
 - Role family: PM at mature B2B SaaS with product org (+3 to +6 Comp)
+- PM sub-domain data/AI/internal tooling: strong Fit (+5 to +8 Fit) and pm_domain_bump (+4 internal, +3 external data/AI)
 - French required or strongly preferred (+5 to +8 Comp)
 - B2B SaaS | compliance/regtech/ESG/supply chain domain (+5 Comp if role family also strong)
 - Prior interview at company (metadata prior_interview=true): +5 Comp via contact bump path
@@ -264,6 +272,7 @@ For each JD produce a JSON evaluation object:
     consulting_other     — org transformation, strategy consulting, NGO ops, sales ops
     other
 - "german_requirement": "none" | "plus" | "b2" | "fluent" | "c1" | "c2" | "native" — from JD text
+- "pm_domain": "none" | "data_ai_internal" | "data_ai_product" — internal BI/data platform/tooling vs external data/AI SaaS PM
 - "language_gate_pass": true if german_requirement is none/plus/b2; false if fluent/c1/c2/native
 - "interview_signal": "strong" | "moderate" | "weak"
 - "french_language": "required" | "preferred" | "none" — from JD text (required/fluent/mandatory vs plus/preferred)
@@ -296,7 +305,9 @@ IMPORTANT RULES:
   reduce Fit (−8 to −15), language_pen applied in post-processing (fluent −8, c1 −12).
   Do not add c1/fluent to hard_disqualifiers. c2/native → hard_disqualifiers.
 - Lane precedence (post-processing): when language_gate_pass=true, solutions_pre_sales +6,
-  implementations +6, project_management +4. product_manager and PMO get 0. This can outrank PM on chart.
+  implementations +6, project_management +4. product_manager gets 0 lane bump but may get pm_domain bump.
+- PM domain (post-processing): when language_gate_pass=true, data_ai_internal +4, data_ai_product +3.
+  Internal tooling / BI / data platform PM is a Nic strength — do NOT penalize or skip for "internal vs external."
 - french_language "required" → +7 competitiveness worth (applied as french_bump in post-processing).
   french_language "preferred" → +4. Always set french_language field from JD.
 - Climate: NEVER hard-DQ climate mission alone. Seed/young climate startups DQ on maturity, not mission.
@@ -383,6 +394,16 @@ LANE_PRECEDENCE_BUMPS = {
     "project_management":  (4, "delivery project management lane"),
 }
 
+# PM domain bumps — Nic strengths in internal tooling / data / AI product (Sep 2026)
+VALID_PM_DOMAIN = {"none", "data_ai_internal", "data_ai_product", "unknown"}
+
+PM_DOMAIN_BUMPS = {
+    "none":              (0,  "no PM domain bump"),
+    "unknown":           (0,  "PM domain unknown"),
+    "data_ai_internal":  (4,  "PM internal tooling/data/AI platform — Nic strength"),
+    "data_ai_product":   (3,  "PM data/AI external product"),
+}
+
 VALID_FUNDING = set(FUNDING_BUMPS)
 VALID_CONTACT = set(CONTACT_BUMPS)
 VALID_APPLICANTS = set(APPLICANT_BUMPS)
@@ -423,18 +444,26 @@ def language_penalty(german_req):
     return LANGUAGE_PENALTIES.get(german_req, (0, "German requirement unknown"))
 
 
+def pm_domain_bump(pm_domain, german_req):
+    """+4 internal data/AI PM, +3 external data/AI PM when language gate passes."""
+    if not passes_language_gate(german_req):
+        return 0, "language gate failed — no PM domain bump"
+    return PM_DOMAIN_BUMPS.get(pm_domain, (0, "PM domain unknown"))
+
+
 def apply_bumps(base, days, contact, funding, applicants="unknown", french="unknown",
-                role_family="other", german_req="unknown"):
+                role_family="other", german_req="unknown", pm_domain="unknown"):
     r_pts, r_label = recency_bump(days)
     c_pts, c_label = CONTACT_BUMPS.get(contact, (0, "no prior contact"))
     f_pts, f_label = FUNDING_BUMPS.get(funding, (0, "funding stage unknown"))
     a_pts, a_label = APPLICANT_BUMPS.get(applicants, (0, "applicant volume unknown"))
     fr_pts, fr_label = FRENCH_BUMPS.get(french, (0, "French requirement unknown"))
     lane_pts, lane_label = lane_precedence_bump(role_family, german_req)
+    pm_pts, pm_label = pm_domain_bump(pm_domain, german_req)
     lang_pts, lang_label = language_penalty(german_req)
-    final = max(0, min(100, base + r_pts + c_pts + f_pts + a_pts + fr_pts + lane_pts + lang_pts))
-    return (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, lang_pts,
-            r_label, c_label, f_label, a_label, fr_label, lane_label, lang_label)
+    final = max(0, min(100, base + r_pts + c_pts + f_pts + a_pts + fr_pts + lane_pts + pm_pts + lang_pts))
+    return (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, pm_pts, lang_pts,
+            r_label, c_label, f_label, a_label, fr_label, lane_label, pm_label, lang_label)
 
 
 def validate_metadata(metadata):
@@ -465,6 +494,10 @@ def validate_metadata(metadata):
             warnings.append(
                 f"{key}: german_requirement={german} — HARD DQ (native/C2 German required)"
             )
+        pm_dom = meta.get("pm_domain", "unknown")
+        if pm_dom not in VALID_PM_DOMAIN:
+            warnings.append(f"{key}: invalid pm_domain={pm_dom!r} → treating as unknown")
+            meta["pm_domain"] = "unknown"
         # Soft warning: seed/pre-seed is a hard maturity DQ — flag loudly
         if meta.get("funding_stage") in {"seed", "pre_seed"}:
             warnings.append(
@@ -599,21 +632,26 @@ def build_rankings(evaluations, metadata):
         if german not in VALID_GERMAN:
             german = "unknown"
         role_family = meta.get("role_family") or ev.get("role_family") or "other"
+        pm_domain   = meta.get("pm_domain") or ev.get("pm_domain") or "unknown"
+        if pm_domain not in VALID_PM_DOMAIN:
+            pm_domain = "unknown"
         employees  = meta.get("employees")
         bump_result = apply_bumps(
             ev.get("base_score", 0), days, contact, funding, applicants, french,
-            role_family=role_family, german_req=german)
-        (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, lang_pts,
-         r_label, c_label, f_label, a_label, fr_label, lane_label, lang_label) = bump_result
+            role_family=role_family, german_req=german, pm_domain=pm_domain)
+        (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, pm_pts, lang_pts,
+         r_label, c_label, f_label, a_label, fr_label, lane_label, pm_label, lang_label) = bump_result
         results.append({**ev, "jd_key": key, "final_score": final,
                         "recency_pts": r_pts, "contact_pts": c_pts,
                         "funding_pts": f_pts, "applicant_pts": a_pts,
-                        "french_pts": fr_pts, "lane_pts": lane_pts, "language_pts": lang_pts,
+                        "french_pts": fr_pts, "lane_pts": lane_pts,
+                        "pm_domain_pts": pm_pts, "language_pts": lang_pts,
                         "recency_label": r_label, "contact_label": c_label,
                         "funding_label": f_label, "applicant_label": a_label,
                         "french_label": fr_label, "lane_label": lane_label,
-                        "language_label": lang_label,
-                        "german_requirement": german, "language_gate_pass": passes_language_gate(german),
+                        "pm_domain_label": pm_label, "language_label": lang_label,
+                        "german_requirement": german, "pm_domain": pm_domain,
+                        "language_gate_pass": passes_language_gate(german),
                         "funding_stage": funding, "employees": employees, "role_family": role_family})
     results.sort(key=lambda x: x["final_score"], reverse=True)
     return results
@@ -621,8 +659,8 @@ def build_rankings(evaluations, metadata):
 def format_results(rankings):
     today = date.today().isoformat()
     lines = [f"# JD Ranking Results — {today}\n"]
-    lines.append(f"{'#':<4} {'Score':<7} {'Base':<6} {'Fit':<5} {'Comp':<5} {'+Rec':<6} {'+Con':<6} {'+Fund':<7} {'+App':<6} {'+Fr':<5} {'+Lane':<6} {'+Lang':<6} {'Gate':<5} {'Fund':<5} {'Act':<5} {'Company':<20} Title")
-    lines.append("-" * 175)
+    lines.append(f"{'#':<4} {'Score':<7} {'Base':<6} {'Fit':<5} {'Comp':<5} {'+Rec':<6} {'+Con':<6} {'+Fund':<7} {'+App':<6} {'+Fr':<5} {'+Lane':<6} {'+PM':<5} {'+Lang':<6} {'Gate':<5} {'Fund':<5} {'Act':<5} {'Company':<20} Title")
+    lines.append("-" * 182)
     for i, r in enumerate(rankings, 1):
         emoji   = ACTION_EMOJI.get(r.get("recommended_action", "?"), "⚪")
         femoji  = FUNDING_EMOJI.get(r.get("funding_stage", "unknown"), "❓")
@@ -630,18 +668,20 @@ def format_results(rankings):
         a_pts   = r["applicant_pts"]
         fr_pts  = r.get("french_pts", 0)
         lane_pts = r.get("lane_pts", 0)
+        pm_pts = r.get("pm_domain_pts", 0)
         lang_pts = r.get("language_pts", 0)
         gate    = "✓" if r.get("language_gate_pass") else "✗"
         f_str   = f"+{f_pts}" if f_pts >= 0 else str(f_pts)
         a_str   = f"+{a_pts}" if a_pts >= 0 else str(a_pts)
         fr_str  = f"+{fr_pts}" if fr_pts >= 0 else str(fr_pts)
         lane_str = f"+{lane_pts}" if lane_pts >= 0 else str(lane_pts)
+        pm_str = f"+{pm_pts}" if pm_pts >= 0 else str(pm_pts)
         lang_str = f"+{lang_pts}" if lang_pts >= 0 else str(lang_pts)
         lines.append(
             f"{i:<4} {r['final_score']:<7} {r.get('base_score',0):<6} "
             f"{r.get('fit_score',0):<5} {r.get('competitiveness_score',0):<5} "
             f"+{r['recency_pts']:<5} +{r['contact_pts']:<5} {f_str:<7} {a_str:<6} {fr_str:<5} "
-            f"{lane_str:<6} {lang_str:<6} {gate:<5} "
+            f"{lane_str:<6} {pm_str:<5} {lang_str:<6} {gate:<5} "
             f"{femoji:<5} {emoji:<5} {r.get('company','?')[:18]:<20} {r.get('title','?')[:42]}"
         )
     lines.append("")
@@ -652,11 +692,13 @@ def format_results(rankings):
         a_pts  = r["applicant_pts"]
         fr_pts = r.get("french_pts", 0)
         lane_pts = r.get("lane_pts", 0)
+        pm_pts = r.get("pm_domain_pts", 0)
         lang_pts = r.get("language_pts", 0)
         f_str  = f"+{f_pts}" if f_pts >= 0 else str(f_pts)
         a_str  = f"+{a_pts}" if a_pts >= 0 else str(a_pts)
         fr_str = f"+{fr_pts}" if fr_pts >= 0 else str(fr_pts)
         lane_str = f"+{lane_pts}" if lane_pts >= 0 else str(lane_pts)
+        pm_str = f"+{pm_pts}" if pm_pts >= 0 else str(pm_pts)
         lang_str = f"+{lang_pts}" if lang_pts >= 0 else str(lang_pts)
         gate_str = "pass" if r.get("language_gate_pass") else "FAIL"
         lines.append(f"---\n## {i}. {r.get('company','?')} — {r.get('title','?')}")
@@ -665,7 +707,7 @@ def format_results(rankings):
             f"**Final score**: {r['final_score']}/100  "
             f"(base {r.get('base_score',0)} + recency +{r['recency_pts']} "
             f"+ contact +{r['contact_pts']} + funding {f_str} + applicants {a_str} "
-            f"+ french {fr_str} + lane {lane_str} + language {lang_str})"
+            f"+ french {fr_str} + lane {lane_str} + pm_domain {pm_str} + language {lang_str})"
         )
         lines.append(
             f"Fit: {r.get('fit_score',0)}/100  |  "
@@ -674,13 +716,14 @@ def format_results(rankings):
         lines.append(
             f"**Action**: {emoji} {r.get('recommended_action','?').upper()}  |  "
             f"**Lane**: {r.get('role_family','?')} {INTERVIEW_SIGNAL_EMOJI.get(r.get('interview_signal','unknown'), '❓')}  |  "
+            f"**PM domain**: {r.get('pm_domain','unknown')}  |  "
             f"**Language gate**: {gate_str} (German: {r.get('german_requirement','unknown')})  |  "
             f"{femoji} {r['funding_label']}{emp_str}"
         )
         lines.append(
             f"_{r['recency_label']}, {r['contact_label']}, {r['applicant_label']}, "
             f"{r.get('french_label', 'French requirement unknown')}, {r.get('lane_label', '')}, "
-            f"{r.get('language_label', '')}_"
+            f"{r.get('pm_domain_label', '')}, {r.get('language_label', '')}_"
         )
         lines.append(f"\n**Maturity**: {r.get('maturity_notes', 'N/A')}")
         lines.append(f"\n> {r.get('one_line_verdict','')}\n")

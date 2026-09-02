@@ -136,13 +136,41 @@ def test_gls_nxt_rescore():
   assert final == 73
 
 
+def test_holidu_venture_up_rescore():
+    """Holidu/Venture Up Data & AI PM: base 77 + recency +6 + funding +8 - apps -5 + pm +4 = 90."""
+    final, *_ = jd_ranker.apply_bumps(
+        77, days=14, contact="none", funding="series_b_plus",
+        applicants="high", role_family="product_manager",
+        german_req="none", pm_domain="data_ai_internal",
+    )
+    assert final == 90
+
+
+def test_pm_domain_blocked_when_german_fluent():
+    final, *_ = jd_ranker.apply_bumps(
+        70, days=None, contact="none", funding="unknown",
+        role_family="product_manager", german_req="fluent",
+        pm_domain="data_ai_internal",
+    )
+    assert final == 62  # 70 - 8 language, no pm bump
+
+
 def test_neuronation_rescore():
-  """NeuroNation TPM: base 64 + lane +4 = 68."""
-  final, *_ = jd_ranker.apply_bumps(
-      64, days=None, contact="none", funding="unknown",
-      role_family="project_management", german_req="plus"
-  )
-  assert final == 68
+    """NeuroNation TPM: base 64 + lane +4 = 68."""
+    final, *_ = jd_ranker.apply_bumps(
+        64, days=None, contact="none", funding="unknown",
+        role_family="project_management", german_req="plus"
+    )
+    assert final == 68
+
+
+def test_pm_domain_internal():
+    final, *_ = jd_ranker.apply_bumps(
+        70, days=None, contact="none", funding="unknown",
+        role_family="product_manager", german_req="none",
+        pm_domain="data_ai_internal",
+    )
+    assert final == 74  # 70 + 4
 
 
 def test_hard_dq_cap_logic_in_build_path():
@@ -192,5 +220,6 @@ def test_role_families_tuple():
 def test_profile_lane_precedence_protocol():
     assert "highest precedence" in jd_ranker.PROFILE
     assert "B2 at most" in jd_ranker.PROFILE
-    assert "project_management" in jd_ranker.SYSTEM_PROMPT
-    assert "language_gate_pass" in jd_ranker.SYSTEM_PROMPT
+    assert "do NOT discount PM" in jd_ranker.PROFILE
+    assert "data_ai_internal" in jd_ranker.SYSTEM_PROMPT
+    assert "pm_domain" in jd_ranker.SYSTEM_PROMPT

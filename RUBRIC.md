@@ -4,7 +4,7 @@ Use `jd_ranker.py` as the source of truth.
 
 ## Formula
 `base = 0.5 * competitiveness + 0.5 * fit`  
-`final = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + language_pen)`
+`final = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + pm_domain + language_pen)`
 
 ## Hard DQs (cap base at 30, skip)
 - **Native German** or **C2** required (Muttersprache / native-level)
@@ -27,7 +27,7 @@ English/French native OK. German requirement must be **none, plus, or B2 max** t
 | c2 / native | **hard DQ** | — | −15 |
 
 ## Lane precedence (when language gate passes)
-Solutions / implementations / delivery PM outrank product manager on the chart:
+Solutions / implementations / delivery PM outrank generic PM on the chart — but **do not discount PM entirely**.
 
 | `role_family` | Lane bump |
 |---|---:|
@@ -35,7 +35,15 @@ Solutions / implementations / delivery PM outrank product manager on the chart:
 | `implementations` | +6 |
 | `project_management` (TPM, delivery PM — not PMO) | +4 |
 | `product_manager` | 0 |
-| `program_manager` (PMO) | 0 |
+
+## PM domain bumps (when language gate passes)
+Nic strengths: **internal tooling, data platform / BI-as-product, AI product PM**.
+
+| `pm_domain` | Bump | Examples |
+|---|---:|---|
+| `data_ai_internal` | +4 | Holidu Data & AI PM, internal analytics/BI platform |
+| `data_ai_product` | +3 | External data/AI SaaS PM |
+| `none` | 0 | General PM without data/AI focus |
 
 ## French bump
 | Level | Bump |
@@ -78,7 +86,8 @@ Score `role_family` and `interview_signal` on every JD:
     "applicant_volume": "low",
     "french_language": "required",
     "german_requirement": "none",
-    "role_family": "solutions_pre_sales",
+    "pm_domain": "data_ai_internal",
+    "role_family": "product_manager",
     "prior_interview": true
   }
 }
@@ -87,6 +96,7 @@ Score `role_family` and `interview_signal` on every JD:
 `work_region`: `eu` | `global` | `us_only` | `uk_only` | `unknown`  
 `french_language`: `required` | `preferred` | `none` | `unknown`  
 `german_requirement`: `none` | `plus` | `b2` | `fluent` | `c1` | `c2` | `native` | `unknown`  
+`pm_domain`: `none` | `data_ai_internal` | `data_ai_product` | `unknown`  
 `role_family`: see `ROLE_FAMILIES` in `jd_ranker.py`
 
 ## Funding bumps

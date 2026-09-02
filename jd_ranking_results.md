@@ -1,71 +1,85 @@
 # JD Ranking Results — active top 5 only
-_Date: 2026-09-01_
+_Date: 2026-09-02_
 
-**Rubric update:** German hard DQ is **native or C2 only** (C1/B2/fluent → Fit penalty, not skip). **French bump:** +7 required/fluent, +4 preferred/plus. Hard maturity DQs = seed/pre-seed OR founded &lt;2 years.
+**Rubric:** German hard DQ = native/C2 only. French bump +7/+4. Applicant counts from LinkedIn when shown on listing (`<25` = LinkedIn “be among the first 25 applicants”).
 
-**Applied (off chart):** Awin, Remote, LivePerson, Cint, Packmatic, Climatiq, Searoutes, 4flow, Enpal/metrify, Trackunit, JetBrains, Reonic, Hack The Box, Tibber, ElevenLabs, brighter AI, Freshflow, Everstream Analytics, voize, Gallup, Planet, Deel, Insider One, Paradox, Digible (US-only), **NiCE, Docker**.  
-**Skipped:** Coach-Hub, Filigran, Executive Integrity, Hostinger (growth/partnerships background), Lokalise (UK/Latvia/Spain only), Mistral (5+ yrs AI/LLM enterprise product — not a match), Rydoo (listing ~1 month old), Nash (too technical), Personio GTM (sales systems / Salesforce CPQ experience gap), Kleinanzeigen (no longer accepting applications), GitLab Assoc. SA (Remote Ireland), GitLab Sr Engagement Manager Germany (applied last year, no interview), ESMT Online MBA PM (salary ~€40k too low), GROPYUS (listing ~3 months old), Perk Business Travel Consultant (French), N26 Atlassian Consultant, Clipboard / Monarch / Siena (HR/ops/recruiting), Green Recruitment Procurement (renewable-energy contracts, not SaaS).  
-**Hard DQ / leave out:** PANELY (native German JD), Riverty, Match on Monday, Personio Payroll, smalt, Kardex PM International (Engineering/IT degree + intralogistics), INCO (native German), Alfa Laval (Engineering BSc gate), CSRS, Stem (German + Electrical/Power Engineering degree), GALVANY Sr PM (seed), Renew Earth (founded 2025), Sustaain (founded 2024 / &lt;2y), Veloq / Rohlik Senior Solutions Consultant (spun out Jun 2025), Cardino (seed stage), Wonderful Deployment Strategist (young AI startup).
+**Applied (off chart):** Awin, Remote, LivePerson, Cint, Packmatic, Climatiq, Searoutes, 4flow, Enpal/metrify, Trackunit, JetBrains, Reonic, Hack The Box, Tibber, ElevenLabs, brighter AI, Freshflow, Everstream Analytics, voize, Gallup, **Planet**, Deel, Insider One, Paradox, Digible (US-only), **NiCE, Docker**.  
+**Removed / skipped:** **Typeform** (listing stale), **WK/Libra** (link expired), **IDnow** (fluent German required — user skip), Coach-Hub, Filigran, Executive Integrity, Hostinger, Lokalise, Mistral, Rydoo, Nash, Personio GTM (sales systems gap), Kleinanzeigen, GitLab roles, ESMT, GROPYUS, Perk Business Travel, N26 Atlassian, Clipboard/Monarch/Siena, Green Recruitment Procurement, **Matera PM** (German C2 hard DQ), **Planet Pre-Sales Defense** (applied), EWOR Supply Chain BD (venture builder), Seco Tools Solva (manufacturing/machining), Beam AI Solutions Engineer (young AI startup), Venture Up Data/AI PM (internal tools).  
+**Hard DQ / leave out:** PANELY, INCO (native German), Kardex, GALVANY (seed), Renew Earth, Sustaain, Veloq, Cardino, Wonderful Deployment Strategist.
 
 #    Score   Company — Role
 ------------------------------------------------------------------------------------------
-1    84      Typeform — Senior Product Manager
-2    79      n8n — AI Product Manager
-3    79      Wolters Kluwer / Libra — Lead Project & Program Manager
-4    79      IDnow — Onboarding Implementation Consultant
-5    72      mobile.de — Senior GTM Manager
+1    85      Personio — Senior Engagement Manager, Professional Services
+2    82      Kainos — Workday EDM Solution Consultant
+3    79      n8n — AI Product Manager
+4    77      Bloomreach — Senior Solutions Consultant (DACH)
+5    75      Aircall — Forward Deployed Engineer (AI Solutions), DACH
 
 ---
 ## Top 5 links
-1. **84** — Typeform — https://job-boards.greenhouse.io/typeform/jobs/8121116
-2. **79** — n8n — https://jobs.ashbyhq.com/n8n/d418f8fb-b2f2-405e-8f22-db73dcf4e8b4
-3. **79** — Wolters Kluwer / Libra — https://www.linkedin.com/jobs/view/4443199214/
-4. **79** — IDnow — https://www.stepstone.de/stellenangebote--Onboarding-Implementation-Consultant-f-m-d-Berlin-Berlin-Germany-Muenchen-Bavaria-Germany-IDnow-GmbH--14038329-inline.html
-5. **72** — mobile.de — _(LinkedIn listing from prior batch — re-verify URL)_
+1. **85** — Personio — https://www.linkedin.com/jobs/view/4440193647/
+2. **82** — Kainos — https://www.linkedin.com/jobs/view/4450290246/
+3. **79** — n8n — https://jobs.ashbyhq.com/n8n/d418f8fb-b2f2-405e-8f22-db73dcf4e8b4
+4. **77** — Bloomreach — https://www.linkedin.com/jobs/view/4442776220/
+5. **75** — Aircall — https://www.linkedin.com/jobs/view/4458353225/
 
 ---
 ## Did not make top 5 (next 8)
-| Score | Company — Role | Notes |
-|------:|----------------|-------|
-| 70 | Aroundtown — Sr PM, Real Estate Space Conversions | English posting; public co |
-| 68 | KoRo — Senior Product Manager, Outbound Logistics & Returns | German *plus* only |
-| 68 | Intellect — Senior Implementation Analyst (remote Europe) | QMS/manufacturing domain stretch |
-| 67 | GLS/NXT — Customer Solutions Engineer | EN only; logistics parent |
-| 66 | Capco — Client Engagement & Support Model Solution Lead | Principal-level capital markets consulting |
-| 65 | Hypofriend — Product Manager | Mature fintech PM seat |
-| 64 | NeuroNation — Technical Project Manager | German *bonus* (not required) |
-| 63 | Nortal — Senior Product Manager Software | C1 German → Fit −10, not DQ |
+| Score | Apps | Company — Role | Notes |
+|------:|-----:|----------------|-------|
+| 74 | <25 | ProGlove — Senior PM, Software Solutions | Munich; IoT/industrial PM; P&L ownership |
+| 72 | 46 | Essity — Senior PM, Digital Solutions | Munich; digital health/medical devices |
+| 72 | — | mobile.de — Senior GTM Manager | eBay-backed GTM |
+| 71 | 107 | ACI Worldwide — Solution Consultant (Merchant) | Payments/fraud presales; high competition |
+| 71 | 31 | Poka — Implementation Consultant | Hamburg; industrial onboarding; Oil & Gas focus |
+| 70 | — | Aroundtown — Sr PM, Real Estate Space Conversions | English posting |
+| 68 | 96 | Intellect — Senior Implementation Analyst | Remote EU; QMS/manufacturing stretch |
+| 68 | — | KoRo — Sr PM, Outbound Logistics & Returns | German *plus* only |
+
+## Sep 2 batch — full ranking
+| Rank | Score | Apps | Verdict | Role |
+|------|------:|-----:|---------|------|
+| 1 | 85 | <25 | 🟢 Apply now | Personio — Sr Engagement Manager, Professional Services |
+| 2 | 82 | <25 | 🟢 Apply now | Kainos — Workday EDM Solution Consultant |
+| 3 | 77 | 65 | 🟡 Apply soon | Bloomreach — Senior Solutions Consultant (DACH) |
+| 4 | 75 | <25 | 🟡 Apply soon | Aircall — Forward Deployed Engineer (AI Solutions), DACH |
+| 5 | 74 | <25 | 🟡 Apply soon | ProGlove — Senior PM, Software Solutions |
+| 6 | 72 | 46 | 🟡 Apply soon | Essity — Senior PM, Digital Solutions |
+| 7 | 71 | 107 | 🟡 Apply soon | ACI Worldwide — Solution Consultant |
+| 8 | 71 | 31 | 🟡 Apply soon | Poka — Implementation Consultant |
+| 9 | 67 | 31 | 🟠 Apply if time | Recyda — Solution Architect |
+| 10 | 68 | 96 | 🟡 Apply soon | Intellect — Senior Implementation Analyst |
+| 11 | 75 | <25 | 🟠 Stretch | Siemens — PreSales Solution Consultant, Electronics EMEA |
+| 12 | 57 | <25 | 🔴 Skip | Seco Tools — Solva Regional Project Lead |
+| 13 | 52 | 41 | 🔴 Skip | EWOR — Supply Chain Business Development Manager |
+| 14 | 54 | 69 | 🔴 Skip | Beam AI — Senior Solutions Engineer |
+| 15 | 51 | 140 | 🔴 Skip | Venture Up — Senior Data & AI Product Manager |
+| — | DQ | <25 | 🔴 Skip | Matera — PM (German **C2** required) |
+| — | — | — | 🔴 Skip | Planet — Solutions Architect Pre-Sales Defense (applied) |
 
 ## Recently applied (off chart)
-| Score | Company — Role | Link |
-|------:|----------------|------|
-| 81 | NiCE — AI Solution Strategist | https://www.linkedin.com/jobs/view/4446225326/ |
-| 74 | Docker — Senior Implementation Engineer (EMEA) | https://www.linkedin.com/jobs/view/4457055476/ |
+| Score | Apps | Role | Link |
+|------:|-----:|------|------|
+| 81 | — | NiCE — AI Solution Strategist | https://www.linkedin.com/jobs/view/4446225326/ |
+| 74 | — | Docker — Senior Implementation Engineer (EMEA) | https://www.linkedin.com/jobs/view/4457055476/ |
 
 ## Also scored (German no longer auto-DQ)
-| Score | Company — Role | German ask | Why |
-|------:|----------------|------------|-----|
-| 62 | data4Life — Senior Project Manager, RWD Platforms | — | PMO-lean; health data |
-| 60 | TrustNow — Project Manager | Fluent | Fit −12; regtech PMO |
-| 60 | Cozero — Sr Climate Solutions Consultant | C1 | Climate solutions lane; Fit −12 |
-| 58 | Voi — Ops Strategy Manager (Supplier Mgmt) | Professional proficiency | Ops/strategy; weak lane |
-| 56 | Perk — Sr Business Travel Consultant (French) | — | French +7 but hospitality/GDS lane |
-| 55 | Haystack — Partner Product Manager | Fluent | Partner PM; German Fit −10 |
-| 52 | DeepRec — AI Project Lead | C1+ | AI project lead; language stretch |
-| 50 | SoftServe — _(role from batch)_ | German required | Services/consulting; Comp capped |
-| 48 | Freenow — Health Product Marketing Consultant | Fluent | PMC/consulting hybrid |
-| 46 | Green Recruitment — Procurement & Contract Mgmt | C1+ | Renewable-energy procurement |
-| 43 | Smart Factory — Technical Project Lead | Fluent | 24‑mo contract + TPM |
-| 42 | Helsing — Product Manager | Fluent | Defense; weak domain + language |
-
-## Also scored lower
-Kit Sr PM (65), Artefact Data & AI Strategy (64), GitLab Sr Program Manager ETA (64), Packmatic Technical Onboarding Manager (78, prior Packmatic apply), YSI Business Integration Manager (62), Shape Construction PM (60), flaconi Team Lead Supplier Ops (59), anyIP Sr PM Customer Dashboard (55), Almedia PM (60), Almedia Venture Manager (52), Almedia AI Ops (55), Lyceum Technical Founders Associate (35), Clipboard Knowledge Ops (42), Monarch People Ops (28), Siena Talent Ops (26), N26 Atlassian Consultant (58), Alpaca Clearing, Aquent, Siemens Energy, vCluster Labs (vMetal), Nucs AI, Neo4j, Tanium, Wikimedia, WhiteTech, Eaton, Scaleo, Parts-Cloud, Ruby Labs, Gypsy Collective
+| Score | Company — Role | German ask |
+|------:|----------------|------------|
+| 67 | GLS/NXT — Customer Solutions Engineer | EN only |
+| 66 | Capco — Client Engagement Solution Lead | Professional working |
+| 65 | Hypofriend — Product Manager | — |
+| 64 | NeuroNation — Technical Project Manager | Bonus |
+| 63 | Nortal — Senior Product Manager Software | C1 |
+| 62 | data4Life — Senior Project Manager, RWD Platforms | — |
+| 60 | TrustNow — Project Manager | Fluent |
+| 60 | Cozero — Sr Climate Solutions Consultant | C1 |
 
 ## Maturity DQs (unchanged)
 | Verdict | Role | Notes |
 |--------:|------|-------|
-| **DQ** | Veloq — Senior Solutions Consultant | Founded/spun out **Jun 2025** (&lt;2 years). https://www.linkedin.com/jobs/view/4432582428/ |
-| **DQ** | Cardino — Engagement Manager / Deployment Strategist | **Seed** stage. https://www.linkedin.com/jobs/view/4448030058/ |
-| **DQ** | GALVANY — Senior Product Manager | **Seed** (climate OS — mission strong but maturity gate) |
-| **DQ** | Renew Earth — Sr PM Nature Solutions | Founded **2025** |
-| **DQ** | Sustaain — Customer Success Engineer | Founded **2024** / early team |
+| **DQ** | Veloq — Senior Solutions Consultant | Spun out Jun 2025. https://www.linkedin.com/jobs/view/4432582428/ |
+| **DQ** | Cardino — Deployment Strategist | Seed. https://www.linkedin.com/jobs/view/4448030058/ |
+| **DQ** | GALVANY — Senior Product Manager | Seed |
+| **DQ** | Renew Earth — Sr PM Nature Solutions | Founded 2025 |
+| **DQ** | Sustaain — Customer Success Engineer | Founded 2024 |

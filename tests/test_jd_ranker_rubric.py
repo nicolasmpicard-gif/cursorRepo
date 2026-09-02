@@ -101,7 +101,21 @@ def test_lane_precedence_blocked_when_german_fluent():
       70, days=None, contact="none", funding="unknown",
       role_family="solutions_pre_sales", german_req="fluent"
   )
-  assert final == 62  # 70 - 8 language, no lane
+  assert final == 70  # no lane bump; fluent is hard DQ at base-cap layer, not a penalty
+
+
+def test_german_proficiency_is_hard_dq():
+  assert jd_ranker.german_is_hard_dq("proficiency")
+  assert jd_ranker.german_is_hard_dq("business_professional")
+  assert jd_ranker.german_is_hard_dq("fluent")
+  assert not jd_ranker.german_is_hard_dq("plus")
+  assert not jd_ranker.german_is_hard_dq("b2")
+
+
+def test_domain_fintech_is_hard_dq():
+  assert jd_ranker.domain_is_hard_dq("fintech_payments", "match")
+  assert jd_ranker.domain_is_hard_dq("general_b2b_saas", "mismatch")
+  assert not jd_ranker.domain_is_hard_dq("supply_chain_esg", "match")
 
 
 def test_lane_precedence_implementations():
@@ -152,7 +166,7 @@ def test_pm_domain_blocked_when_german_fluent():
         role_family="product_manager", german_req="fluent",
         pm_domain="data_ai_internal",
     )
-    assert final == 62  # 70 - 8 language, no pm bump
+    assert final == 70  # no pm bump when fluent (hard DQ)
 
 
 def test_neuronation_rescore():
@@ -201,7 +215,7 @@ def test_profile_drops_autopilot_must_and_headcount_gate():
     assert "≤25 employees, assume this is unmet" not in jd_ranker.PROFILE
     assert "solutions_pre_sales" in jd_ranker.SYSTEM_PROMPT
     assert "Climate: NEVER hard-DQ climate mission alone" in jd_ranker.SYSTEM_PROMPT
-    assert "German **native or C2 only**" in jd_ranker.SYSTEM_PROMPT
+    assert "German proficiency/fluent/business/C1+" in jd_ranker.SYSTEM_PROMPT
     assert "recommended_cv" not in jd_ranker.SYSTEM_PROMPT
 
 

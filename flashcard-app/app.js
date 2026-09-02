@@ -296,12 +296,14 @@
   }
 
   function renderHome() {
+    const count = Array.isArray(window.SEED_WORDS) ? window.SEED_WORDS.length : state.cards.length;
     return `
       <section class="panel hero">
         <h1 class="hero-brand">Wortkarte</h1>
         <p class="hero-lead">
           Flip through German words, rate how well you know them, and keep tabs on every card in Browse.
         </p>
+        <p class="meta-text">Deck: ${count} words</p>
         <div class="cta-row">
           <button type="button" class="btn btn-primary" data-action="go-study">Start studying</button>
           <button type="button" class="btn btn-secondary" data-action="go-browse">Browse words</button>
@@ -728,7 +730,7 @@
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js").catch((error) => {
+      navigator.serviceWorker.register("./sw.js?v=165").catch((error) => {
         console.warn("Service worker registration failed:", error);
       });
     });

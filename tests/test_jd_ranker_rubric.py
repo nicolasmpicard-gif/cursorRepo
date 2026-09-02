@@ -25,7 +25,7 @@ def test_searoutes_style_score_does_not_inflate_fit_into_base():
     comp, fit = 82, 42
     base = int(round(0.5 * comp + 0.5 * fit))
     assert base == 62
-    final, r, c, f, a, *_ = jd_ranker.apply_bumps(
+    final, r, c, f, a, fr, lane, lang, *_ = jd_ranker.apply_bumps(
         base, days=None, contact="none", funding="seed", applicants="unknown"
     )
     assert f == -5
@@ -73,7 +73,7 @@ def test_validate_metadata_flags_young_company():
 
 
 def test_french_bump_required():
-    final, r, c, f, a, fr, *_labels = jd_ranker.apply_bumps(
+    final, r, c, f, a, fr, lane, lang, *_labels = jd_ranker.apply_bumps(
         60, days=None, contact="none", funding="unknown", french="required"
     )
     assert fr == 7
@@ -81,11 +81,68 @@ def test_french_bump_required():
 
 
 def test_french_bump_preferred():
-    final, r, c, f, a, fr, *_labels = jd_ranker.apply_bumps(
+    final, r, c, f, a, fr, lane, lang, *_labels = jd_ranker.apply_bumps(
         60, days=None, contact="none", funding="unknown", french="preferred"
     )
     assert fr == 4
     assert final == 64
+
+
+def test_lane_precedence_solutions_passes_gate():
+  final, *_ = jd_ranker.apply_bumps(
+      70, days=None, contact="none", funding="unknown",
+      role_family="solutions_pre_sales", german_req="none"
+  )
+  assert final == 76  # 70 + 6 lane
+
+
+def test_lane_precedence_blocked_when_german_fluent():
+  final, *_ = jd_ranker.apply_bumps(
+      70, days=None, contact="none", funding="unknown",
+      role_family="solutions_pre_sales", german_req="fluent"
+  )
+  assert final == 62  # 70 - 8 language, no lane
+
+
+def test_lane_precedence_implementations():
+  final, *_ = jd_ranker.apply_bumps(
+      65, days=None, contact="none", funding="unknown",
+      role_family="implementations", german_req="plus"
+  )
+  assert final == 71  # 65 + 6
+
+
+def test_lane_precedence_project_management():
+  final, *_ = jd_ranker.apply_bumps(
+      64, days=None, contact="none", funding="unknown",
+      role_family="project_management", german_req="b2"
+  )
+  assert final == 68  # 64 + 4
+
+
+def test_language_gate_passes_b2():
+  assert jd_ranker.passes_language_gate("b2")
+  assert jd_ranker.passes_language_gate("plus")
+  assert not jd_ranker.passes_language_gate("fluent")
+  assert not jd_ranker.passes_language_gate("c1")
+
+
+def test_gls_nxt_rescore():
+  """GLS/NXT CSE: base 67 + lane +6 = 73."""
+  final, *_ = jd_ranker.apply_bumps(
+      67, days=None, contact="none", funding="unknown",
+      role_family="solutions_pre_sales", german_req="none"
+  )
+  assert final == 73
+
+
+def test_neuronation_rescore():
+  """NeuroNation TPM: base 64 + lane +4 = 68."""
+  final, *_ = jd_ranker.apply_bumps(
+      64, days=None, contact="none", funding="unknown",
+      role_family="project_management", german_req="plus"
+  )
+  assert final == 68
 
 
 def test_hard_dq_cap_logic_in_build_path():
@@ -129,3 +186,11 @@ def test_validate_metadata_flags_us_only():
 def test_role_families_tuple():
     assert "solutions_pre_sales" in jd_ranker.ROLE_FAMILIES
     assert "implementations" in jd_ranker.ROLE_FAMILIES
+    assert "project_management" in jd_ranker.ROLE_FAMILIES
+
+
+def test_profile_lane_precedence_protocol():
+    assert "highest precedence" in jd_ranker.PROFILE
+    assert "B2 at most" in jd_ranker.PROFILE
+    assert "project_management" in jd_ranker.SYSTEM_PROMPT
+    assert "language_gate_pass" in jd_ranker.SYSTEM_PROMPT

@@ -24,6 +24,9 @@ USAGE
    applicant_volume      : "low" | "medium" | "high" | "unknown"
    french_language       : "required" | "preferred" | "none" | "unknown"
                          — required = fluent/native/mandatory; preferred = plus/advantage/nice-to-have
+   german_requirement    : "none" | "plus" | "b2" | "fluent" | "c1" | "c2" | "native" | "unknown"
+                         — lane-precedence + chart eligibility: pass if none/plus/b2/unknown;
+                           fluent/c1 penalized; c2/native hard DQ
    days_since_posted     : integer, or omit/null if unknown
    employees             : integer headcount if known (informational; not a Fit penalty)
    founded_year          : integer if known (HARD DQ if company age < 2 years)
@@ -56,7 +59,9 @@ funding_bump   : -10 to +8 pts
   unknown      →   0
 applicant_bump : -5 to +5 pts (low competition → +5, high (100+) → -5)
 french_bump    : 0-7 pts (required/fluent → +7, preferred/plus → +4, none → 0)
-final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french)
+lane_bump      : 0-6 pts when language gate passes (solutions/impl +6, delivery PM/TPM +4; PM gets 0)
+language_pen   : 0 to -12 pts (fluent −8, c1 −12; c2/native = hard DQ)
+final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + language_pen)
 
 CRITICAL SCORING DISCIPLINE (read before every evaluation)
 ---------------------------------------------------------
@@ -121,18 +126,27 @@ Nicolas Picard — French-American, based in Berlin (EU/US work auth).
 
 ## Primary role lanes (Aug 2026 — rank and apply in this order)
 
+**Protocol (Sep 2026):** Solutions consulting, implementation management, and delivery
+project management roles that pass the language gate take **highest precedence** — even above
+product manager roles. Language gate: English/French native OK; German requirement must be
+**none, plus, or B2 at most** (fluent/C1/C2/native fails gate and loses lane bump).
+
 1. **Solutions / Pre-Sales / Engagement (technical-commercial)** — STRONGEST interview signal
    Titles: Solutions Consultant, Pre-Sales Solutions, Technical Pre-Sales, Engagement Manager,
-   Solutions Engineer (discovery/scoping-heavy), AI Solution Strategist
+   Solutions Engineer (discovery/scoping-heavy), AI Solution Strategist, Customer Solutions Engineer
 
 2. **Software Implementations / Onboarding / CS delivery** — STRONG second signal
    Titles: Implementation Manager, Lead Implementation, Onboarding Manager, CS Onboarding,
-   Deployment Strategist (if maturity gates pass), Technical CSE (integration-heavy)
+   Implementation Consultant, Deployment Strategist (if maturity gates pass), Technical CSE (integration-heavy)
 
-3. **Product Manager** — parallel track; best at mature product orgs (Typeform, n8n, NiCE)
+3. **Delivery project management** — third priority lane (above PM)
+   Titles: Technical Project Manager, Implementation PM, Delivery PM (NOT PMO / program coordinator)
+
+4. **Product Manager** — parallel track; best at mature product orgs (Typeform, n8n, NiCE)
 
 WEAKER interview signal (deprioritize unless exceptional JD): pure Account Manager, Strategic AM,
-Program Manager / PMO, org-transformation consulting, sales-ops, monitoring/eval ops.
+PMO / Program Manager / prof-services coordinator, org-transformation consulting, sales-ops,
+monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM.
 
 ---
 
@@ -140,7 +154,9 @@ Program Manager / PMO, org-transformation consulting, sales-ops, monitoring/eval
 
 ### Hard requirements (must-haves — failure = hard disqualifier):
 - HARD DQ German only for **native German** or **C2** (or "Muttersprache"/native-level).
-  C1, B2 required, "fluent", or "professional working proficiency" are NOT hard DQs — use Fit penalties.
+  C1, B2 required, "fluent", or "professional working proficiency" are NOT hard DQs — use language_pen + Fit penalties.
+- Language gate for lane precedence: English/French native OK; German must be **none / plus / B2 max**.
+  Fluent, C1, professional working, C2, native → no lane bump; fluent −8, C1 −12 on final score.
 - NOT seed-stage (or pre-seed). Hard DQ regardless of mission.
 - NOT founded in the last 2 years. Hard DQ. Headcount does NOT matter — small teams OK past gates.
 - NOT US-only or UK-only remote/hire when Nic is Berlin-based EU/US (must be EU-eligible or global remote)
@@ -237,14 +253,18 @@ For each JD produce a JSON evaluation object:
 - "company": company name (use "Unknown" if unclear)
 - "role_family": one of:
     solutions_pre_sales  — Solutions Consultant, Pre-Sales, Technical Pre-Sales, Engagement Manager,
-                          Solutions Engineer (scoping/demo-heavy), AI Solution Strategist
-    implementations      — Implementation Manager, Lead Implementation, Onboarding, CS Onboarding, CSE (integration-heavy)
+                          Solutions Engineer (scoping/demo-heavy), AI Solution Strategist, Customer Solutions Engineer
+    implementations      — Implementation Manager, Lead Implementation, Onboarding, CS Onboarding, CSE (integration-heavy),
+                          Implementation Consultant
+    project_management   — Technical Project Manager, Implementation PM, Delivery PM (software delivery; NOT PMO)
     product_manager      — Product Manager, Product Ops (with product org)
     customer_success     — generic CSM / AM without solutions or implementation depth
     account_manager      — quota-carrying AM / Strategic AM
-    program_manager      — PMO, Program Manager, Prof Services coordinator
+    program_manager      — PMO, Program Manager, Prof Services coordinator (no lane bump)
     consulting_other     — org transformation, strategy consulting, NGO ops, sales ops
     other
+- "german_requirement": "none" | "plus" | "b2" | "fluent" | "c1" | "c2" | "native" — from JD text
+- "language_gate_pass": true if german_requirement is none/plus/b2; false if fluent/c1/c2/native
 - "interview_signal": "strong" | "moderate" | "weak"
 - "french_language": "required" | "preferred" | "none" — from JD text (required/fluent/mandatory vs plus/preferred)
 - "base_score": integer 0-100
@@ -272,8 +292,11 @@ base_score = 0.5 * competitiveness_score + 0.5 * fit_score
 IMPORTANT RULES:
 - Hard DQs → cap base_score at 30, recommend skip: German **native or C2 only**; seed/pre-seed;
   founded <2 years; JD restricts to US-only or UK-only without EU work eligibility.
-- German C1 / B2 required / "fluent" / professional proficiency → NOT hard DQ; reduce Fit (−8 to −15)
-  and note in fit_concerns. Do not add to hard_disqualifiers.
+- German C1 / B2 required / "fluent" / professional proficiency → NOT hard DQ; set language_gate_pass=false,
+  reduce Fit (−8 to −15), language_pen applied in post-processing (fluent −8, c1 −12).
+  Do not add c1/fluent to hard_disqualifiers. c2/native → hard_disqualifiers.
+- Lane precedence (post-processing): when language_gate_pass=true, solutions_pre_sales +6,
+  implementations +6, project_management +4. product_manager and PMO get 0. This can outrank PM on chart.
 - french_language "required" → +7 competitiveness worth (applied as french_bump in post-processing).
   french_language "preferred" → +4. Always set french_language field from JD.
 - Climate: NEVER hard-DQ climate mission alone. Seed/young climate startups DQ on maturity, not mission.
@@ -337,6 +360,29 @@ FRENCH_BUMPS = {
     "unknown":   (0,  "French requirement unknown"),
 }
 
+# German requirement levels — language gate for lane precedence
+VALID_GERMAN = {"none", "plus", "b2", "fluent", "c1", "c2", "native", "unknown"}
+
+LANGUAGE_GATE_PASS = {"none", "plus", "b2", "unknown"}
+
+LANGUAGE_PENALTIES = {
+    "none":    (0,  "no German requirement"),
+    "plus":    (0,  "German plus/bonus only"),
+    "b2":      (0,  "German B2 max — passes language gate"),
+    "unknown": (0,  "German requirement unknown"),
+    "fluent":  (-8, "fluent German required — fails language gate"),
+    "c1":      (-12, "German C1 required — fails language gate"),
+    "c2":      (-15, "German C2 required — hard DQ"),
+    "native":  (-15, "native German required — hard DQ"),
+}
+
+# Lane precedence bumps when language gate passes (Sep 2026 protocol)
+LANE_PRECEDENCE_BUMPS = {
+    "solutions_pre_sales": (6, "solutions/pre-sales lane — highest precedence"),
+    "implementations":     (6, "implementations lane — highest precedence"),
+    "project_management":  (4, "delivery project management lane"),
+}
+
 VALID_FUNDING = set(FUNDING_BUMPS)
 VALID_CONTACT = set(CONTACT_BUMPS)
 VALID_APPLICANTS = set(APPLICANT_BUMPS)
@@ -347,6 +393,7 @@ VALID_WORK_REGIONS = {"eu", "global", "us_only", "uk_only", "unknown"}
 ROLE_FAMILIES = (
     "solutions_pre_sales",
     "implementations",
+    "project_management",
     "product_manager",
     "customer_success",
     "account_manager",
@@ -356,14 +403,38 @@ ROLE_FAMILIES = (
 )
 
 
-def apply_bumps(base, days, contact, funding, applicants="unknown", french="unknown"):
+def passes_language_gate(german_req):
+    """True when German requirement is none/plus/b2/unknown (English/French native OK)."""
+    return german_req in LANGUAGE_GATE_PASS
+
+
+def lane_precedence_bump(role_family, german_req):
+    """+6 solutions/impl, +4 delivery PM when language gate passes."""
+    if not passes_language_gate(german_req):
+        return 0, "language gate failed — no lane bump"
+    entry = LANE_PRECEDENCE_BUMPS.get(role_family)
+    if entry:
+        return entry
+    return 0, "not a priority lane"
+
+
+def language_penalty(german_req):
+    """Penalty for German above B2 (fluent/C1); c2/native also hard DQ."""
+    return LANGUAGE_PENALTIES.get(german_req, (0, "German requirement unknown"))
+
+
+def apply_bumps(base, days, contact, funding, applicants="unknown", french="unknown",
+                role_family="other", german_req="unknown"):
     r_pts, r_label = recency_bump(days)
     c_pts, c_label = CONTACT_BUMPS.get(contact, (0, "no prior contact"))
     f_pts, f_label = FUNDING_BUMPS.get(funding, (0, "funding stage unknown"))
     a_pts, a_label = APPLICANT_BUMPS.get(applicants, (0, "applicant volume unknown"))
     fr_pts, fr_label = FRENCH_BUMPS.get(french, (0, "French requirement unknown"))
-    final = max(0, min(100, base + r_pts + c_pts + f_pts + a_pts + fr_pts))
-    return final, r_pts, c_pts, f_pts, a_pts, fr_pts, r_label, c_label, f_label, a_label, fr_label
+    lane_pts, lane_label = lane_precedence_bump(role_family, german_req)
+    lang_pts, lang_label = language_penalty(german_req)
+    final = max(0, min(100, base + r_pts + c_pts + f_pts + a_pts + fr_pts + lane_pts + lang_pts))
+    return (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, lang_pts,
+            r_label, c_label, f_label, a_label, fr_label, lane_label, lang_label)
 
 
 def validate_metadata(metadata):
@@ -386,6 +457,14 @@ def validate_metadata(metadata):
         if french not in VALID_FRENCH:
             warnings.append(f"{key}: invalid french_language={french!r} → treating as unknown")
             meta["french_language"] = "unknown"
+        german = meta.get("german_requirement", "unknown")
+        if german not in VALID_GERMAN:
+            warnings.append(f"{key}: invalid german_requirement={german!r} → treating as unknown")
+            meta["german_requirement"] = "unknown"
+        elif german in {"c2", "native"}:
+            warnings.append(
+                f"{key}: german_requirement={german} — HARD DQ (native/C2 German required)"
+            )
         # Soft warning: seed/pre-seed is a hard maturity DQ — flag loudly
         if meta.get("funding_stage") in {"seed", "pre_seed"}:
             warnings.append(
@@ -516,38 +595,53 @@ def build_rankings(evaluations, metadata):
         french     = meta.get("french_language") or ev.get("french_language") or "unknown"
         if french not in VALID_FRENCH:
             french = "unknown"
+        german     = meta.get("german_requirement") or ev.get("german_requirement") or "unknown"
+        if german not in VALID_GERMAN:
+            german = "unknown"
+        role_family = meta.get("role_family") or ev.get("role_family") or "other"
         employees  = meta.get("employees")
-        final, r_pts, c_pts, f_pts, a_pts, fr_pts, r_label, c_label, f_label, a_label, fr_label = apply_bumps(
-            ev.get("base_score", 0), days, contact, funding, applicants, french)
+        bump_result = apply_bumps(
+            ev.get("base_score", 0), days, contact, funding, applicants, french,
+            role_family=role_family, german_req=german)
+        (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, lang_pts,
+         r_label, c_label, f_label, a_label, fr_label, lane_label, lang_label) = bump_result
         results.append({**ev, "jd_key": key, "final_score": final,
                         "recency_pts": r_pts, "contact_pts": c_pts,
                         "funding_pts": f_pts, "applicant_pts": a_pts,
-                        "french_pts": fr_pts,
+                        "french_pts": fr_pts, "lane_pts": lane_pts, "language_pts": lang_pts,
                         "recency_label": r_label, "contact_label": c_label,
                         "funding_label": f_label, "applicant_label": a_label,
-                        "french_label": fr_label,
-                        "funding_stage": funding, "employees": employees})
+                        "french_label": fr_label, "lane_label": lane_label,
+                        "language_label": lang_label,
+                        "german_requirement": german, "language_gate_pass": passes_language_gate(german),
+                        "funding_stage": funding, "employees": employees, "role_family": role_family})
     results.sort(key=lambda x: x["final_score"], reverse=True)
     return results
 
 def format_results(rankings):
     today = date.today().isoformat()
     lines = [f"# JD Ranking Results — {today}\n"]
-    lines.append(f"{'#':<4} {'Score':<7} {'Base':<6} {'Fit':<5} {'Comp':<5} {'+Rec':<6} {'+Con':<6} {'+Fund':<7} {'+App':<6} {'+Fr':<5} {'Fund':<5} {'Act':<5} {'Company':<20} Title")
-    lines.append("-" * 158)
+    lines.append(f"{'#':<4} {'Score':<7} {'Base':<6} {'Fit':<5} {'Comp':<5} {'+Rec':<6} {'+Con':<6} {'+Fund':<7} {'+App':<6} {'+Fr':<5} {'+Lane':<6} {'+Lang':<6} {'Gate':<5} {'Fund':<5} {'Act':<5} {'Company':<20} Title")
+    lines.append("-" * 175)
     for i, r in enumerate(rankings, 1):
         emoji   = ACTION_EMOJI.get(r.get("recommended_action", "?"), "⚪")
         femoji  = FUNDING_EMOJI.get(r.get("funding_stage", "unknown"), "❓")
         f_pts   = r["funding_pts"]
         a_pts   = r["applicant_pts"]
         fr_pts  = r.get("french_pts", 0)
+        lane_pts = r.get("lane_pts", 0)
+        lang_pts = r.get("language_pts", 0)
+        gate    = "✓" if r.get("language_gate_pass") else "✗"
         f_str   = f"+{f_pts}" if f_pts >= 0 else str(f_pts)
         a_str   = f"+{a_pts}" if a_pts >= 0 else str(a_pts)
         fr_str  = f"+{fr_pts}" if fr_pts >= 0 else str(fr_pts)
+        lane_str = f"+{lane_pts}" if lane_pts >= 0 else str(lane_pts)
+        lang_str = f"+{lang_pts}" if lang_pts >= 0 else str(lang_pts)
         lines.append(
             f"{i:<4} {r['final_score']:<7} {r.get('base_score',0):<6} "
             f"{r.get('fit_score',0):<5} {r.get('competitiveness_score',0):<5} "
             f"+{r['recency_pts']:<5} +{r['contact_pts']:<5} {f_str:<7} {a_str:<6} {fr_str:<5} "
+            f"{lane_str:<6} {lang_str:<6} {gate:<5} "
             f"{femoji:<5} {emoji:<5} {r.get('company','?')[:18]:<20} {r.get('title','?')[:42]}"
         )
     lines.append("")
@@ -557,15 +651,21 @@ def format_results(rankings):
         f_pts  = r["funding_pts"]
         a_pts  = r["applicant_pts"]
         fr_pts = r.get("french_pts", 0)
+        lane_pts = r.get("lane_pts", 0)
+        lang_pts = r.get("language_pts", 0)
         f_str  = f"+{f_pts}" if f_pts >= 0 else str(f_pts)
         a_str  = f"+{a_pts}" if a_pts >= 0 else str(a_pts)
         fr_str = f"+{fr_pts}" if fr_pts >= 0 else str(fr_pts)
+        lane_str = f"+{lane_pts}" if lane_pts >= 0 else str(lane_pts)
+        lang_str = f"+{lang_pts}" if lang_pts >= 0 else str(lang_pts)
+        gate_str = "pass" if r.get("language_gate_pass") else "FAIL"
         lines.append(f"---\n## {i}. {r.get('company','?')} — {r.get('title','?')}")
         emp_str = f"  |  👥 {r['employees']}" if r.get("employees") else ""
         lines.append(
             f"**Final score**: {r['final_score']}/100  "
             f"(base {r.get('base_score',0)} + recency +{r['recency_pts']} "
-            f"+ contact +{r['contact_pts']} + funding {f_str} + applicants {a_str} + french {fr_str})"
+            f"+ contact +{r['contact_pts']} + funding {f_str} + applicants {a_str} "
+            f"+ french {fr_str} + lane {lane_str} + language {lang_str})"
         )
         lines.append(
             f"Fit: {r.get('fit_score',0)}/100  |  "
@@ -574,9 +674,14 @@ def format_results(rankings):
         lines.append(
             f"**Action**: {emoji} {r.get('recommended_action','?').upper()}  |  "
             f"**Lane**: {r.get('role_family','?')} {INTERVIEW_SIGNAL_EMOJI.get(r.get('interview_signal','unknown'), '❓')}  |  "
+            f"**Language gate**: {gate_str} (German: {r.get('german_requirement','unknown')})  |  "
             f"{femoji} {r['funding_label']}{emp_str}"
         )
-        lines.append(f"_{r['recency_label']}, {r['contact_label']}, {r['applicant_label']}, {r.get('french_label', 'French requirement unknown')}_")
+        lines.append(
+            f"_{r['recency_label']}, {r['contact_label']}, {r['applicant_label']}, "
+            f"{r.get('french_label', 'French requirement unknown')}, {r.get('lane_label', '')}, "
+            f"{r.get('language_label', '')}_"
+        )
         lines.append(f"\n**Maturity**: {r.get('maturity_notes', 'N/A')}")
         lines.append(f"\n> {r.get('one_line_verdict','')}\n")
         if r.get("hard_disqualifiers"):

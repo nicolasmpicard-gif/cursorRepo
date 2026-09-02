@@ -4,7 +4,7 @@ Use `jd_ranker.py` as the source of truth.
 
 ## Formula
 `base = 0.5 * competitiveness + 0.5 * fit`  
-`final = clamp(0, 100, base + recency + contact + funding + applicants + french)`
+`final = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + language_pen)`
 
 ## Hard DQs (cap base at 30, skip)
 - **Native German** or **C2** required (Muttersprache / native-level)
@@ -12,7 +12,30 @@ Use `jd_ranker.py` as the source of truth.
 - Company founded within the last 2 years
 - US-only or UK-only hire (no EU eligibility) — set `work_region` in metadata
 
-**Not hard DQs:** German C1 / B2 / "fluent" / professional working proficiency (Fit penalty −8 to −15 instead); climate mission; small headcount; missing product peer (Fit cut only).
+**Not hard DQs:** German C1 / B2 / "fluent" / professional working proficiency (language_pen + Fit penalty instead); climate mission; small headcount; missing product peer (Fit cut only).
+
+## Language gate (Sep 2026)
+English/French native OK. German requirement must be **none, plus, or B2 max** to pass.
+
+| `german_requirement` | Gate | Lane bump | language_pen |
+|---|---|---|---|
+| none / unknown | pass | eligible | 0 |
+| plus | pass | eligible | 0 |
+| b2 | pass | eligible | 0 |
+| fluent | **fail** | none | −8 |
+| c1 | **fail** | none | −12 |
+| c2 / native | **hard DQ** | — | −15 |
+
+## Lane precedence (when language gate passes)
+Solutions / implementations / delivery PM outrank product manager on the chart:
+
+| `role_family` | Lane bump |
+|---|---:|
+| `solutions_pre_sales` | +6 |
+| `implementations` | +6 |
+| `project_management` (TPM, delivery PM — not PMO) | +4 |
+| `product_manager` | 0 |
+| `program_manager` (PMO) | 0 |
 
 ## French bump
 | Level | Bump |
@@ -28,9 +51,9 @@ Score `role_family` and `interview_signal` on every JD:
 
 | Signal | Role families | Comp adjustment |
 |--------|---------------|-----------------|
-| **Strong** | Solutions / pre-sales / engagement / AI Solution Strategist; Implementations / onboarding | +8–12 / +5–8 |
-| **Moderate** | PM at mature B2B SaaS; technical CS/onboarding | +3–6 |
-| **Weak** | Account Manager, PMO/program, org consulting, sales ops | −5–12 |
+| **Strong** | Solutions / pre-sales / engagement / AI Solution Strategist / CSE; Implementations / onboarding | +8–12 / +5–8 |
+| **Moderate** | Delivery TPM; PM at mature B2B SaaS; technical CS/onboarding | +3–6 |
+| **Weak** | Account Manager, PMO/program, org consulting, sales ops, venture-builder biz dev, manufacturing domain | −5–12 |
 
 ## Climate nuance (important)
 - **Do not** skip all climate roles.
@@ -54,13 +77,17 @@ Score `role_family` and `interview_signal` on every JD:
     "work_region": "eu",
     "applicant_volume": "low",
     "french_language": "required",
+    "german_requirement": "none",
+    "role_family": "solutions_pre_sales",
     "prior_interview": true
   }
 }
 ```
 
 `work_region`: `eu` | `global` | `us_only` | `uk_only` | `unknown`  
-`french_language`: `required` | `preferred` | `none` | `unknown`
+`french_language`: `required` | `preferred` | `none` | `unknown`  
+`german_requirement`: `none` | `plus` | `b2` | `fluent` | `c1` | `c2` | `native` | `unknown`  
+`role_family`: see `ROLE_FAMILIES` in `jd_ranker.py`
 
 ## Funding bumps
 | Stage | Bump |

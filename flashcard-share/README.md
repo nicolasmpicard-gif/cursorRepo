@@ -6,6 +6,17 @@ Blank flashcard app your classmates can each use to build their own word bank.
 
 https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/share/index.html
 
+## Track profiles created
+
+Open the teacher dashboard:
+
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/share/admin.html
+
+Or live feed:
+
+https://ntfy.sh/wortkarte-class-nicolaspicard
+
+When a classmate taps **Create my deck**, their name is posted to that free tracker.
 ## How it works (free hosting)
 
 - Hosted as a static site (no paid backend)

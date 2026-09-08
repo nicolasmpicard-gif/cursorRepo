@@ -125,7 +125,32 @@
     };
     store.activeProfileId = id;
     saveStore(store);
+    trackProfileCreated(store.profiles[id]);
     return store.profiles[id];
+  }
+
+  function trackProfileCreated(profile) {
+    try {
+      const cfg = window.WORTKARTE_TRACKING || {};
+      const endpoint = cfg.endpoint || "https://ntfy.sh/wortkarte-class-nicolaspicard";
+      const payload = {
+        name: profile.name,
+        createdAt: profile.createdAt || Date.now(),
+        source: "share",
+        profileId: profile.id,
+      };
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Title: "New Wortkarte profile",
+          Tags: "bust_in_silhouette,seedling",
+        },
+        body: JSON.stringify(payload),
+      }).catch((error) => console.warn("Profile tracking failed:", error));
+    } catch (error) {
+      console.warn("Profile tracking failed:", error);
+    }
   }
 
   function deleteProfile(profileId) {

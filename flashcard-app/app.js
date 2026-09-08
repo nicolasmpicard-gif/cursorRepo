@@ -4,13 +4,21 @@
   const STORAGE_KEY = "wortkarte.progress.v1";
   const DELETED_KEY = "wortkarte.deleted.v1";
   const CUSTOM_KEY = "wortkarte.custom.v1";
+  const PREFS_KEY = "wortkarte.prefs.v1";
   const STATUS_ORDER = ["forgot", "difficult", "easy", "instant"];
+  const ALL_STATUSES = ["new", "forgot", "difficult", "easy", "instant"];
   const STATUS_LABELS = {
-    forgot: "Forgot",
-    difficult: "Difficult",
-    easy: "Easy",
-    instant: "Instant",
-    none: "New",
+    forgot: "Vergessen",
+    difficult: "Schwer",
+    easy: "Leicht",
+    instant: "Sofort",
+    new: "Neu",
+    none: "Neu",
+  };
+  const DIRECTION_LABELS = {
+    "de-en": "Deutsch → Englisch",
+    "en-de": "Englisch → Deutsch",
+    mixed: "Gemischt",
   };
 
   const state = {
@@ -18,8 +26,13 @@
     cards: [],
     studyQueue: [],
     studyIndex: 0,
+    sessionTotal: 0,
+    sessionRated: 0,
     flipped: false,
     selectedIds: new Set(),
+    browseFilters: new Set(ALL_STATUSES),
+    studyStatuses: new Set(["new", "forgot", "difficult"]),
+    studyDirection: "de-en",
     lastError: null,
     browseNotice: "",
   };
@@ -37,6 +50,32 @@
     } catch {
       return fallback;
     }
+  }
+
+  function loadPrefs() {
+    const prefs = safeParse(localStorage.getItem(PREFS_KEY), {});
+    if (prefs && typeof prefs === "object") {
+      if (["de-en", "en-de", "mixed"].includes(prefs.studyDirection)) {
+        state.studyDirection = prefs.studyDirection;
+      }
+      if (Array.isArray(prefs.studyStatuses) && prefs.studyStatuses.length) {
+        state.studyStatuses = new Set(prefs.studyStatuses.filter((s) => ALL_STATUSES.includes(s)));
+      }
+      if (Array.isArray(prefs.browseFilters) && prefs.browseFilters.length) {
+        state.browseFilters = new Set(prefs.browseFilters.filter((s) => ALL_STATUSES.includes(s)));
+      }
+    }
+  }
+
+  function savePrefs() {
+    localStorage.setItem(
+      PREFS_KEY,
+      JSON.stringify({
+        studyDirection: state.studyDirection,
+        studyStatuses: [...state.studyStatuses],
+        browseFilters: [...state.browseFilters],
+      })
+    );
   }
 
   function loadProgress() {
@@ -97,6 +136,10 @@
     return seeds.map((word) => normalizeWord(word)).filter(Boolean);
   }
 
+  function cardStatusKey(card) {
+    return card.status || "new";
+  }
+
   function buildCards() {
     const progress = loadProgress();
     const deleted = loadDeleted();
@@ -108,7 +151,6 @@
     const byId = new Map();
     [...seeds, ...custom].forEach((word) => {
       if (deleted.has(word.id)) return;
-      // Custom entries can override seed entries with the same id.
       byId.set(word.id, word);
     });
 
@@ -157,7 +199,6 @@
 
     saveCustomWords([...byId.values()]);
 
-    // If a word was previously deleted, importing it again restores it.
     const deleted = loadDeleted();
     let restored = 0;
     normalizedEntries.forEach((entry) => {
@@ -180,10 +221,7 @@
     const customIds = new Set(custom.map((word) => word.id));
 
     ids.forEach((id) => {
-      if (customIds.has(id)) {
-        // Drop custom words entirely.
-        return;
-      }
+      if (customIds.has(id)) return;
       deleted.add(id);
       delete progress[id];
     });
@@ -199,7 +237,6 @@
     const text = String(raw || "").trim();
     if (!text) return [];
 
-    // JSON array or { words: [...] }
     if (text.startsWith("[") || text.startsWith("{")) {
       const parsed = safeParse(text, null);
       const list = Array.isArray(parsed)
@@ -233,34 +270,49 @@
     return copy;
   }
 
-  function studyPriority(status) {
-    if (status === "forgot") return 0;
-    if (status === "difficult") return 1;
-    if (status === null) return 2;
-    if (status === "easy") return 3;
+  function studyPriority(statusKey) {
+    if (statusKey === "forgot") return 0;
+    if (statusKey === "difficult") return 1;
+    if (statusKey === "new") return 2;
+    if (statusKey === "easy") return 3;
     return 4;
   }
 
+  function pickDirection() {
+    if (state.studyDirection === "mixed") {
+      return Math.random() < 0.5 ? "de-en" : "en-de";
+    }
+    return state.studyDirection;
+  }
+
+  function cardsForStudy() {
+    return state.cards.filter((card) => state.studyStatuses.has(cardStatusKey(card)));
+  }
+
   function buildStudyQueue() {
-    const prioritized = [...state.cards].sort((a, b) => {
-      const diff = studyPriority(a.status) - studyPriority(b.status);
+    const filtered = cardsForStudy();
+    const prioritized = [...filtered].sort((a, b) => {
+      const diff = studyPriority(cardStatusKey(a)) - studyPriority(cardStatusKey(b));
       if (diff !== 0) return diff;
       return (a.lastReviewedAt || 0) - (b.lastReviewedAt || 0);
     });
 
-    // Keep weaker cards earlier, but mix within bands so sessions feel fresh.
     const bands = [[], [], [], [], []];
     prioritized.forEach((card) => {
-      bands[studyPriority(card.status)].push(card);
+      bands[studyPriority(cardStatusKey(card))].push(card);
     });
-    return bands.flatMap((band) => shuffle(band));
+
+    return bands.flatMap((band) =>
+      shuffle(band).map((card) => ({
+        ...card,
+        direction: pickDirection(),
+      }))
+    );
   }
 
   function currentStudyCard() {
     if (!state.studyQueue.length) return null;
-    if (state.studyIndex < 0 || state.studyIndex >= state.studyQueue.length) {
-      return null;
-    }
+    if (state.studyIndex < 0 || state.studyIndex >= state.studyQueue.length) return null;
     return state.studyQueue[state.studyIndex] || null;
   }
 
@@ -268,6 +320,8 @@
     refreshCards();
     state.studyQueue = buildStudyQueue();
     state.studyIndex = 0;
+    state.sessionTotal = state.studyQueue.length;
+    state.sessionRated = 0;
     state.flipped = false;
     state.lastError = null;
   }
@@ -286,7 +340,7 @@
   }
 
   function statusLabel(status) {
-    return STATUS_LABELS[status || "none"];
+    return STATUS_LABELS[status || "new"];
   }
 
   function setActiveNav(view) {
@@ -295,50 +349,120 @@
     });
   }
 
+  function renderFilterChips(selectedSet, actionPrefix, options = ALL_STATUSES) {
+    return options
+      .map((key) => {
+        const active = selectedSet.has(key) ? "is-active" : "";
+        return `
+          <button
+            type="button"
+            class="filter-chip ${active}"
+            data-action="${actionPrefix}"
+            data-status="${key}"
+          >${escapeHtml(STATUS_LABELS[key])}</button>
+        `;
+      })
+      .join("");
+  }
+
   function renderHome() {
     const count = Array.isArray(window.SEED_WORDS) ? window.SEED_WORDS.length : state.cards.length;
     return `
       <section class="panel hero">
         <h1 class="hero-brand">Wortkarte</h1>
         <p class="hero-lead">
-          Flip through German words, rate how well you know them, and keep tabs on every card in Browse.
+          Lerne deutsche Wörter mit Karteikarten, bewerte dein Wissen und behalte den Überblick unter Wörter.
         </p>
-        <p class="meta-text">Deck: ${count} words</p>
+        <p class="meta-text">Kartenstapel: ${count} Wörter</p>
         <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-action="go-study">Start studying</button>
-          <button type="button" class="btn btn-secondary" data-action="go-browse">Browse words</button>
+          <button type="button" class="btn btn-primary" data-action="go-study">Lernen starten</button>
+          <button type="button" class="btn btn-secondary" data-action="go-browse">Wörter ansehen</button>
         </div>
       </section>
     `;
   }
 
   function renderStudy() {
-    const total = state.studyQueue.length;
+    const total = state.sessionTotal;
     const card = currentStudyCard();
+
+    const controls = `
+      <div class="study-controls">
+        <div class="control-block">
+          <p class="control-label">Richtung</p>
+          <div class="chip-row">
+            ${["de-en", "en-de", "mixed"]
+              .map(
+                (dir) => `
+              <button
+                type="button"
+                class="filter-chip ${state.studyDirection === dir ? "is-active" : ""}"
+                data-action="set-direction"
+                data-direction="${dir}"
+              >${escapeHtml(DIRECTION_LABELS[dir])}</button>`
+              )
+              .join("")}
+          </div>
+        </div>
+        <div class="control-block">
+          <p class="control-label">Welche Wörter?</p>
+          <div class="chip-row">
+            ${renderFilterChips(state.studyStatuses, "toggle-study-status")}
+          </div>
+          <button type="button" class="btn btn-secondary btn-small" data-action="restart-study">Sitzung starten / neu mischen</button>
+        </div>
+      </div>
+    `;
+
+    if (!state.studyStatuses.size) {
+      return `
+        <section class="panel study-shell">
+          ${controls}
+          <div class="empty-state">
+            <h2>Keine Filter gewählt</h2>
+            <p>Wähle mindestens einen Status (z. B. Neu, Vergessen, Schwer).</p>
+          </div>
+        </section>
+      `;
+    }
 
     if (!total) {
       return `
-        <section class="panel empty-state">
-          <h2>No cards to study</h2>
-          <p>Your deck is empty. Add words back from Browse, or restore the seed list by clearing deleted cards in browser storage.</p>
-          <button type="button" class="btn btn-secondary" data-action="go-browse">Open Browse</button>
+        <section class="panel study-shell">
+          ${controls}
+          <div class="empty-state">
+            <h2>Keine Karten für diese Auswahl</h2>
+            <p>Es gibt keine Wörter mit den gewählten Statusfiltern. Passe die Auswahl an oder füge Wörter hinzu.</p>
+            <button type="button" class="btn btn-secondary" data-action="go-browse">Zu Wörter</button>
+          </div>
         </section>
       `;
     }
 
     if (!card) {
-      // Recover from an out-of-range index instead of crashing Study mode.
+      if (state.sessionRated >= state.sessionTotal && state.sessionTotal > 0) {
+        return `
+          <section class="panel study-shell">
+            ${controls}
+            <div class="empty-state">
+              <h2>Sitzung fertig</h2>
+              <p>Du hast ${state.sessionRated} / ${state.sessionTotal} Karten bewertet.</p>
+              <button type="button" class="btn btn-primary" data-action="restart-study">Nochmal lernen</button>
+            </div>
+          </section>
+        `;
+      }
       state.studyIndex = 0;
       state.flipped = false;
       const recovered = currentStudyCard();
       if (!recovered) {
         return `
           <section class="panel error-state">
-            <h2>Couldn’t load this card</h2>
-            <p>Something went wrong while preparing the next flashcard. Reload the study session to continue.</p>
+            <h2>Karte konnte nicht geladen werden</h2>
+            <p>Beim Laden der nächsten Karte ist etwas schiefgelaufen.</p>
             <div class="cta-row">
-              <button type="button" class="btn btn-primary" data-action="restart-study">Reload study</button>
-              <button type="button" class="btn btn-secondary" data-action="go-home">Go back</button>
+              <button type="button" class="btn btn-primary" data-action="restart-study">Lernen neu laden</button>
+              <button type="button" class="btn btn-secondary" data-action="go-home">Zurück</button>
             </div>
           </section>
         `;
@@ -346,30 +470,37 @@
     }
 
     const active = currentStudyCard();
-    const progressLabel = `${Math.min(state.studyIndex + 1, total)} / ${total}`;
+    const progressLabel = `${Math.min(state.sessionRated + 1, Math.max(state.sessionTotal, 1))} / ${state.sessionTotal}`;
     const flipClass = state.flipped ? "is-flipped" : "";
+    const direction = active.direction || "de-en";
+    const frontLabel = direction === "en-de" ? "Englisch" : "Deutsch";
+    const backLabel = direction === "en-de" ? "Deutsch" : "Bedeutung";
+    const frontText = direction === "en-de" ? active.english : active.german;
+    const backMeaning = direction === "en-de" ? active.german : active.english;
 
     return `
       <section class="panel study-shell">
         <div class="study-meta">
-          <p class="meta-text">Card ${escapeHtml(progressLabel)}</p>
-          <button type="button" class="btn btn-ghost" data-action="restart-study">Shuffle again</button>
+          <p class="meta-text">Karte ${escapeHtml(progressLabel)}</p>
+          <p class="meta-text">${escapeHtml(DIRECTION_LABELS[direction === "mixed" ? state.studyDirection : direction])}</p>
         </div>
+
+        ${controls}
 
         <button
           type="button"
           class="flashcard ${flipClass}"
           data-action="flip-card"
-          aria-label="Flip flashcard"
+          aria-label="Karteikarte umdrehen"
         >
           <div class="flashcard-inner">
             <div class="face face-front">
-              <p class="face-label">German</p>
-              <h2 class="face-word">${escapeHtml(active.german)}</h2>
+              <p class="face-label">${escapeHtml(frontLabel)}</p>
+              <h2 class="face-word">${escapeHtml(frontText)}</h2>
             </div>
             <div class="face face-back">
-              <p class="face-label">Meaning</p>
-              <p class="face-meaning">${escapeHtml(active.english)}</p>
+              <p class="face-label">${escapeHtml(backLabel)}</p>
+              <p class="face-meaning">${escapeHtml(backMeaning)}</p>
               <div class="face-example">
                 <strong>${escapeHtml(active.exampleDe)}</strong>
                 <span>${escapeHtml(active.exampleEn)}</span>
@@ -378,25 +509,37 @@
           </div>
         </button>
 
-        <p class="hint">${state.flipped ? "Rate this card to continue" : "Tap the card to reveal the meaning"}</p>
+        <p class="hint">${
+          state.flipped
+            ? "Bewerte diese Karte, um weiterzumachen"
+            : "Tippe auf die Karte, um die Antwort zu sehen"
+        }</p>
 
         <div class="rating-row" ${state.flipped ? "" : "hidden"}>
-          <button type="button" class="rate-btn rate-forgot" data-action="rate" data-status="forgot">Forgot</button>
-          <button type="button" class="rate-btn rate-difficult" data-action="rate" data-status="difficult">Difficult</button>
-          <button type="button" class="rate-btn rate-easy" data-action="rate" data-status="easy">Easy</button>
-          <button type="button" class="rate-btn rate-instant" data-action="rate" data-status="instant">Instant</button>
+          <button type="button" class="rate-btn rate-forgot" data-action="rate" data-status="forgot">Vergessen</button>
+          <button type="button" class="rate-btn rate-difficult" data-action="rate" data-status="difficult">Schwer</button>
+          <button type="button" class="rate-btn rate-easy" data-action="rate" data-status="easy">Leicht</button>
+          <button type="button" class="rate-btn rate-instant" data-action="rate" data-status="instant">Sofort</button>
         </div>
       </section>
     `;
   }
 
+  function filteredBrowseCards() {
+    return state.cards.filter((card) => state.browseFilters.has(cardStatusKey(card)));
+  }
+
   function renderBrowse() {
-    const selectedCount = state.selectedIds.size;
+    const visible = filteredBrowseCards();
+    const selectedCount = [...state.selectedIds].filter((id) =>
+      visible.some((card) => card.id === id)
+    ).length;
+
     const notice = state.browseNotice
       ? `<p class="browse-notice" role="status">${escapeHtml(state.browseNotice)}</p>`
       : "";
 
-    const rows = state.cards
+    const rows = visible
       .map((card, index) => {
         const checked = state.selectedIds.has(card.id) ? "checked" : "";
         const selectedClass = state.selectedIds.has(card.id) ? "is-selected" : "";
@@ -408,7 +551,7 @@
               data-action="toggle-select"
               data-id="${escapeHtml(card.id)}"
               ${checked}
-              aria-label="Select ${escapeHtml(card.german)}"
+              aria-label="${escapeHtml(card.german)} auswählen"
             >
             <div class="word-main">
               <h3 class="word-de">${escapeHtml(card.german)}</h3>
@@ -424,11 +567,11 @@
     return `
       <section class="panel browse-shell">
         <div class="browse-toolbar">
-          <p class="meta-text">${state.cards.length} words · alphabetical</p>
+          <p class="meta-text">${visible.length} / ${state.cards.length} Wörter · alphabetisch</p>
           <div class="browse-toolbar-actions">
-            <button type="button" class="btn btn-secondary" data-action="export-words">Export</button>
+            <button type="button" class="btn btn-secondary" data-action="export-words">Exportieren</button>
             <button type="button" class="btn btn-secondary" data-action="select-all">
-              ${state.cards.length && selectedCount === state.cards.length ? "Clear selection" : "Select all"}
+              ${visible.length && selectedCount === visible.length ? "Auswahl aufheben" : "Alle auswählen"}
             </button>
             <button
               type="button"
@@ -436,48 +579,55 @@
               data-action="delete-selected"
               ${selectedCount ? "" : "disabled"}
             >
-              Delete${selectedCount ? ` (${selectedCount})` : ""}
+              Löschen${selectedCount ? ` (${selectedCount})` : ""}
             </button>
+          </div>
+        </div>
+
+        <div class="control-block">
+          <p class="control-label">Filter</p>
+          <div class="chip-row">
+            ${renderFilterChips(state.browseFilters, "toggle-browse-filter")}
           </div>
         </div>
 
         ${notice}
 
-        <details class="import-panel" open>
-          <summary>Restore / add words</summary>
+        <details class="import-panel">
+          <summary>Wörter wiederherstellen / hinzufügen</summary>
           <p class="import-help">
-            Paste your older list (one per line as <code>German – English</code>), or add a single word below.
+            Ältere Liste einfügen (eine Zeile: <code>Deutsch – Englisch</code>) oder unten ein einzelnes Wort hinzufügen.
           </p>
-          <label class="field-label" for="import-text">Import list</label>
+          <label class="field-label" for="import-text">Liste importieren</label>
           <textarea
             id="import-text"
             class="import-text"
             rows="6"
-            placeholder="sich freuen – to be glad&#10;die Gelegenheit – opportunity&#10;abhängen von – to depend on"
+            placeholder="sich freuen – to be glad&#10;die Gelegenheit – opportunity"
           ></textarea>
           <div class="cta-row import-actions">
-            <button type="button" class="btn btn-primary" data-action="import-words">Import into deck</button>
+            <button type="button" class="btn btn-primary" data-action="import-words">In den Stapel importieren</button>
           </div>
 
           <div class="add-grid">
-            <label class="field-label" for="add-german">German</label>
+            <label class="field-label" for="add-german">Deutsch</label>
             <input id="add-german" class="field-input" type="text" autocomplete="off">
-            <label class="field-label" for="add-english">English</label>
+            <label class="field-label" for="add-english">Englisch</label>
             <input id="add-english" class="field-input" type="text" autocomplete="off">
-            <label class="field-label" for="add-example-de">Sample sentence (DE)</label>
+            <label class="field-label" for="add-example-de">Beispielsatz (DE)</label>
             <input id="add-example-de" class="field-input" type="text" autocomplete="off">
-            <label class="field-label" for="add-example-en">Sample sentence (EN)</label>
+            <label class="field-label" for="add-example-en">Beispielsatz (EN)</label>
             <input id="add-example-en" class="field-input" type="text" autocomplete="off">
           </div>
           <div class="cta-row import-actions">
-            <button type="button" class="btn btn-secondary" data-action="add-word">Add word</button>
+            <button type="button" class="btn btn-secondary" data-action="add-word">Wort hinzufügen</button>
           </div>
         </details>
 
         ${
-          state.cards.length
+          visible.length
             ? `<ul class="word-list">${rows}</ul>`
-            : `<div class="empty-state"><h2>No words yet</h2><p>Import your previous list above to restore the full deck.</p></div>`
+            : `<div class="empty-state"><h2>Keine Wörter</h2><p>Keine Einträge für die aktuellen Filter. Filter anpassen oder Wörter hinzufügen.</p></div>`
         }
       </section>
     `;
@@ -486,11 +636,11 @@
   function renderError(message) {
     return `
       <section class="panel error-state">
-        <h2>This page couldn’t load</h2>
-        <p>${escapeHtml(message || "Reload to try again, or go back home.")}</p>
+        <h2>Seite konnte nicht geladen werden</h2>
+        <p>${escapeHtml(message || "Neu laden oder zurück zur Startseite.")}</p>
         <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-action="reload-view">Reload</button>
-          <button type="button" class="btn btn-secondary" data-action="go-home">Go back</button>
+          <button type="button" class="btn btn-primary" data-action="reload-view">Neu laden</button>
+          <button type="button" class="btn btn-secondary" data-action="go-home">Zurück</button>
         </div>
       </section>
     `;
@@ -504,7 +654,7 @@
       if (state.view === "home") html = renderHome();
       else if (state.view === "study") html = renderStudy();
       else if (state.view === "browse") html = renderBrowse();
-      else html = renderError("Unknown view.");
+      else html = renderError("Unbekannte Ansicht.");
 
       els.main.innerHTML = html;
       state.lastError = null;
@@ -512,7 +662,7 @@
       console.error("Render failed:", error);
       state.lastError = error;
       els.main.innerHTML = renderError(
-        "Something went wrong while rendering this screen. Reload to try again or go back."
+        "Beim Anzeigen dieser Seite ist etwas schiefgelaufen. Neu laden oder zurück."
       );
     }
   }
@@ -522,13 +672,11 @@
     state.lastError = null;
 
     if (view === "study") {
-      // Always rebuild a safe queue when entering Study to avoid stale indices.
       startStudySession();
     }
 
     if (view === "browse") {
       refreshCards();
-      // Drop selections that no longer exist.
       [...state.selectedIds].forEach((id) => {
         if (!state.cards.some((card) => card.id === id)) {
           state.selectedIds.delete(id);
@@ -548,25 +696,13 @@
     }
 
     setCardStatus(card.id, status);
+    state.sessionRated += 1;
+    state.flipped = false;
 
-    // Rebuild queue membership from refreshed cards, keep relative progress.
-    const remainingIds = state.studyQueue
-      .slice(state.studyIndex + 1)
-      .map((item) => item.id)
-      .filter((id) => state.cards.some((c) => c.id === id));
-
-    const nextQueue = remainingIds
-      .map((id) => state.cards.find((c) => c.id === id))
-      .filter(Boolean);
-
-    if (!nextQueue.length) {
-      // Session complete — reshuffle for another round.
-      startStudySession();
-    } else {
-      state.studyQueue = nextQueue;
-      state.studyIndex = 0;
-      state.flipped = false;
-    }
+    // Keep remaining unrated cards in queue order, without resetting session totals.
+    const remaining = state.studyQueue.slice(state.studyIndex + 1);
+    state.studyQueue = remaining;
+    state.studyIndex = 0;
 
     render();
   }
@@ -589,6 +725,34 @@
       case "reload-view":
         goTo(state.view === "study" ? "study" : state.view || "home");
         break;
+      case "set-direction": {
+        const direction = target.dataset.direction;
+        if (!["de-en", "en-de", "mixed"].includes(direction)) return;
+        state.studyDirection = direction;
+        savePrefs();
+        startStudySession();
+        render();
+        break;
+      }
+      case "toggle-study-status": {
+        const status = target.dataset.status;
+        if (!ALL_STATUSES.includes(status)) return;
+        if (state.studyStatuses.has(status)) state.studyStatuses.delete(status);
+        else state.studyStatuses.add(status);
+        savePrefs();
+        startStudySession();
+        render();
+        break;
+      }
+      case "toggle-browse-filter": {
+        const status = target.dataset.status;
+        if (!ALL_STATUSES.includes(status)) return;
+        if (state.browseFilters.has(status)) state.browseFilters.delete(status);
+        else state.browseFilters.add(status);
+        savePrefs();
+        render();
+        break;
+      }
       case "flip-card":
         state.flipped = !state.flipped;
         render();
@@ -608,23 +772,26 @@
         break;
       }
       case "select-all": {
-        if (state.selectedIds.size === state.cards.length) {
-          state.selectedIds.clear();
+        const visible = filteredBrowseCards();
+        const allSelected = visible.every((card) => state.selectedIds.has(card.id));
+        if (allSelected) {
+          visible.forEach((card) => state.selectedIds.delete(card.id));
         } else {
-          state.cards.forEach((card) => state.selectedIds.add(card.id));
+          visible.forEach((card) => state.selectedIds.add(card.id));
         }
         render();
         break;
       }
       case "delete-selected": {
-        const ids = [...state.selectedIds];
+        const visibleIds = new Set(filteredBrowseCards().map((card) => card.id));
+        const ids = [...state.selectedIds].filter((id) => visibleIds.has(id));
         if (!ids.length) return;
         const confirmed = window.confirm(
-          `Delete ${ids.length} word${ids.length === 1 ? "" : "s"} from your deck?`
+          `${ids.length} Wort${ids.length === 1 ? "" : "e"} aus dem Stapel löschen?`
         );
         if (!confirmed) return;
         deleteCards(ids);
-        state.browseNotice = `Deleted ${ids.length} word${ids.length === 1 ? "" : "s"}.`;
+        state.browseNotice = `${ids.length} Wort${ids.length === 1 ? "" : "e"} gelöscht.`;
         render();
         break;
       }
@@ -632,12 +799,12 @@
         const area = document.getElementById("import-text");
         const entries = parseImportText(area ? area.value : "");
         if (!entries.length) {
-          state.browseNotice = "No words found. Use lines like: Wort – meaning";
+          state.browseNotice = "Keine Wörter gefunden. Format: Wort – Bedeutung";
           render();
           return;
         }
         const result = upsertCustomWords(entries);
-        state.browseNotice = `Imported ${entries.length}: ${result.added} new, ${result.updated} updated.`;
+        state.browseNotice = `${entries.length} importiert: ${result.added} neu, ${result.updated} aktualisiert.`;
         render();
         break;
       }
@@ -654,19 +821,19 @@
           custom: true,
         });
         if (!entry) {
-          state.browseNotice = "Add both a German word and an English meaning.";
+          state.browseNotice = "Bitte Deutsch und Englisch ausfüllen.";
           render();
           return;
         }
         if (!entry.exampleDe) entry.exampleDe = entry.german;
         if (!entry.exampleEn) entry.exampleEn = entry.english;
         upsertCustomWords([entry]);
-        state.browseNotice = `Added “${entry.german}”.`;
+        state.browseNotice = `„${entry.german}“ hinzugefügt.`;
         render();
         break;
       }
       case "export-words": {
-        const payload = state.cards.map(({ id, german, english, exampleDe, exampleEn }) => ({
+        const payload = filteredBrowseCards().map(({ id, german, english, exampleDe, exampleEn }) => ({
           id,
           german,
           english,
@@ -677,10 +844,10 @@
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "wortkarte-words.json";
+        link.download = "wortkarte-woerter.json";
         link.click();
         URL.revokeObjectURL(url);
-        state.browseNotice = `Exported ${payload.length} words.`;
+        state.browseNotice = `${payload.length} Wörter exportiert.`;
         render();
         break;
       }
@@ -702,10 +869,7 @@
     els.main.addEventListener("click", (event) => {
       const target = event.target.closest("[data-action]");
       if (!target || !els.main.contains(target)) return;
-
-      // Checkboxes also fire click; handle via change for toggle-select.
       if (target.dataset.action === "toggle-select") return;
-
       onAction(target.dataset.action, target);
     });
 
@@ -717,11 +881,10 @@
     });
 
     window.addEventListener("error", () => {
-      // Surface a recoverable UI if an unexpected runtime error occurs mid-view.
       if (state.view === "study" && !state.lastError) {
         state.lastError = true;
         els.main.innerHTML = renderError(
-          "Study mode hit an unexpected error. Reload the session or go back home."
+          "Im Lernmodus ist ein Fehler aufgetreten. Sitzung neu laden oder zurück."
         );
       }
     });
@@ -730,7 +893,7 @@
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js?v=165").catch((error) => {
+      navigator.serviceWorker.register("./sw.js?v=166").catch((error) => {
         console.warn("Service worker registration failed:", error);
       });
     });
@@ -738,15 +901,14 @@
 
   function init() {
     try {
+      loadPrefs();
       refreshCards();
       bindEvents();
       registerServiceWorker();
       goTo("home");
     } catch (error) {
       console.error("Init failed:", error);
-      els.main.innerHTML = renderError(
-        "The app failed to start. Reload the page to try again."
-      );
+      els.main.innerHTML = renderError("Die App konnte nicht gestartet werden. Seite neu laden.");
     }
   }
 

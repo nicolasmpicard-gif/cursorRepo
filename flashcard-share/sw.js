@@ -1,11 +1,13 @@
 /* Offline-capable cache for the blank shareable Wortkarte copy. */
-const CACHE = "wortkarte-share-v2";
+const CACHE = "wortkarte-share-v3";
 const ASSETS = [
   "./",
   "./index.html",
+  "./admin.html",
   "./styles.css",
   "./app.js",
   "./words.js",
+  "./tracking-config.js",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",

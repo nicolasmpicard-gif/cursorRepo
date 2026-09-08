@@ -71,8 +71,8 @@ _Date: 2026-09-08 (evening refresh)_
 | 68 | — | KoRo — Sr PM, Outbound Logistics & Returns | https://www.korodrogerie.de/karriere |
 | 67 | 31 | Recyda — Solution Architect | https://www.recyda.com/careers |
 | 66 | — | 360Dialog — Project Manager EMEA | https://euremotejobs.com/job/project-manager-emea-remote/ |
-| — | — | *(chart thinned after applied/stale removals — only 8 below top 5)* | — |
-| — | — | | |
+
+_Note: next-10 list is short after applied/stale removals — only 8 active roles below top 5._
 
 ## Active full ranking
 | Rank | Score | Apps | Verdict | Role |

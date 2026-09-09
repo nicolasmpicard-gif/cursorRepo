@@ -422,6 +422,47 @@ button {
   color: #f8f4ec;
 }
 
+.filter-dropdown {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 0.15rem 0.7rem;
+}
+
+.filter-dropdown summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  color: var(--pine-deep);
+  padding: 0.55rem 0;
+}
+
+.filter-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.filter-dropdown-menu {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0 0 0.65rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.55rem;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.filter-option input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--pine);
+}
+
 .btn-small {
   justify-self: start;
   padding: 0.55rem 0.95rem;

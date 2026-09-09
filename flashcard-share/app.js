@@ -36,6 +36,7 @@
     studyStatuses: new Set(["new", "forgot", "difficult"]),
     studyDirection: "de-en",
     editingId: null,
+    studyFilterOpen: false,
     lastError: null,
     browseNotice: "",
     homeNotice: "",
@@ -539,6 +540,41 @@
       .join("");
   }
 
+  function renderStudyWordFilter() {
+    const selectedLabels = ALL_STATUSES.filter((key) => state.studyStatuses.has(key))
+      .map((key) => STATUS_LABELS[key])
+      .join(", ");
+    const summaryText = selectedLabels || "Keine Auswahl";
+    const options = ALL_STATUSES.map((key) => {
+      const checked = state.studyStatuses.has(key) ? "checked" : "";
+      return `
+        <label class="filter-option">
+          <input
+            type="checkbox"
+            data-action="toggle-study-status"
+            data-status="${key}"
+            ${checked}
+          >
+          <span>${escapeHtml(STATUS_LABELS[key])}</span>
+        </label>
+      `;
+    }).join("");
+
+    return `
+      <div class="control-block">
+        <p class="control-label">Wortfilter</p>
+        <details class="filter-dropdown" data-action="noop" ${state.studyFilterOpen ? "open" : ""}>
+          <summary data-action="toggle-filter-open">${escapeHtml(summaryText)}</summary>
+          <div class="filter-dropdown-menu">
+            ${options}
+          </div>
+        </details>
+        <button type="button" class="btn btn-secondary btn-small" data-action="restart-study">Sitzung starten / neu mischen</button>
+      </div>
+    `;
+  }
+
+
   function renderHome() {
     const profiles = listProfiles();
     const active = getActiveProfile();
@@ -628,13 +664,7 @@
               .join("")}
           </div>
         </div>
-        <div class="control-block">
-          <p class="control-label">Welche Wörter?</p>
-          <div class="chip-row">
-            ${renderFilterChips(state.studyStatuses, "toggle-study-status")}
-          </div>
-          <button type="button" class="btn btn-secondary btn-small" data-action="restart-study">Sitzung starten / neu mischen</button>
-        </div>
+        ${renderStudyWordFilter()}
       </div>
     `;
 
@@ -1045,11 +1075,17 @@
         render();
         break;
       }
+      case "toggle-filter-open": {
+        state.studyFilterOpen = !state.studyFilterOpen;
+        render();
+        break;
+      }
       case "toggle-study-status": {
         const status = target.dataset.status;
         if (!ALL_STATUSES.includes(status)) return;
         if (state.studyStatuses.has(status)) state.studyStatuses.delete(status);
         else state.studyStatuses.add(status);
+        state.studyFilterOpen = true;
         savePrefs();
         startStudySession();
         render();
@@ -1231,14 +1267,17 @@
       const target = event.target.closest("[data-action]");
       if (!target || !els.main.contains(target)) return;
       if (target.dataset.action === "toggle-select") return;
+      if (target.dataset.action === "noop") return;
+      if (target.dataset.action === "toggle-study-status" && target instanceof HTMLInputElement) return;
       onAction(target.dataset.action, target);
     });
 
     els.main.addEventListener("change", (event) => {
       const target = event.target;
       if (!(target instanceof HTMLInputElement)) return;
-      if (target.dataset.action !== "toggle-select") return;
-      onAction("toggle-select", target);
+      if (target.dataset.action === "toggle-select" || target.dataset.action === "toggle-study-status") {
+        onAction(target.dataset.action, target);
+      }
     });
 
     window.addEventListener("error", () => {
@@ -1254,7 +1293,7 @@
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js?v=share3").catch((error) => {
+      navigator.serviceWorker.register("./sw.js?v=share4").catch((error) => {
         console.warn("Service worker registration failed:", error);
       });
     });

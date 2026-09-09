@@ -1,11 +1,11 @@
 /* Offline-capable cache for classroom Wortkarte. */
-const CACHE = "wortkarte-share-v4";
+const CACHE = "wortkarte-share-v5";
 const ASSETS = [
   "./",
   "./index.html",
   "./admin.html",
-  "./styles.css?v=share3",
-  "./app.js?v=share3",
+  "./styles.css?v=share4",
+  "./app.js?v=share4",
   "./words.js",
   "./tracking-config.js",
   "./manifest.webmanifest",

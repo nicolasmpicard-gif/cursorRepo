@@ -1,11 +1,11 @@
-/* Offline-capable cache for the blank shareable Wortkarte copy. */
-const CACHE = "wortkarte-share-v3";
+/* Offline-capable cache for classroom Wortkarte. */
+const CACHE = "wortkarte-share-v4";
 const ASSETS = [
   "./",
   "./index.html",
   "./admin.html",
-  "./styles.css",
-  "./app.js",
+  "./styles.css?v=share3",
+  "./app.js?v=share3",
   "./words.js",
   "./tracking-config.js",
   "./manifest.webmanifest",
@@ -27,9 +27,30 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function isFreshRequest(url) {
+  return /\/(words|app|index)\.(js|html)(?:$|\?)/.test(url.pathname + url.search) ||
+    url.pathname.endsWith("/");
+}
+
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
+  const url = new URL(request.url);
+
+  if (isFreshRequest(url) || request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(request).then((cached) => {
@@ -42,7 +63,6 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => cached);
-
       return cached || network;
     })
   );

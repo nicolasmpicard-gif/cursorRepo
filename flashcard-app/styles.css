@@ -561,11 +561,23 @@ button {
   font-weight: 500;
 }
 
-.word-example {
-  margin: 0.15rem 0 0;
-  color: var(--muted);
-  font-size: 0.92rem;
+.word-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
 }
+
+.word-item.is-editing {
+  grid-template-columns: 1fr;
+}
+
+.edit-grid {
+  display: grid;
+  gap: 0.2rem;
+  width: 100%;
+}
+
 
 .status-pill {
   display: inline-flex;

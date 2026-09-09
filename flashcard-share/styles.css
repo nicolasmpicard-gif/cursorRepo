@@ -385,88 +385,67 @@ button {
   max-width: 28rem;
 }
 
-.classroom-home {
-  text-align: center;
-}
-
-.profile-create {
-  width: min(100%, 28rem);
-  margin: 0.5rem auto 0;
-  text-align: left;
-}
-
-.profile-create-row {
-  display: flex;
-  gap: 0.55rem;
-  flex-wrap: wrap;
-}
-
-.profile-create-row .field-input {
-  flex: 1 1 12rem;
-}
-
-.profile-list-wrap {
-  width: min(100%, 28rem);
-  margin: 1.25rem auto 0;
-  text-align: left;
-}
-
-.profile-heading {
-  margin: 0 0 0.55rem;
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  color: var(--pine-deep);
-}
-
-.profile-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.control-block {
   display: grid;
   gap: 0.45rem;
+  margin: 0.25rem 0 0.75rem;
 }
 
-.profile-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.35rem;
-  align-items: center;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--card);
-  padding: 0.35rem;
-}
-
-.profile-item.is-active {
-  border-color: var(--moss);
-  background: rgba(231, 239, 233, 0.9);
-}
-
-.profile-select {
-  border: 0;
-  background: transparent;
-  text-align: left;
-  padding: 0.55rem 0.65rem;
-  display: grid;
-  gap: 0.1rem;
-  color: inherit;
-  width: 100%;
-}
-
-.profile-name {
+.control-label {
+  margin: 0;
+  font-size: 0.82rem;
   font-weight: 700;
-  color: var(--pine-deep);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.profile-meta {
-  color: var(--muted);
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter-chip {
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 247, 0.9);
+  color: var(--pine-deep);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-weight: 700;
   font-size: 0.88rem;
 }
 
-.profile-delete {
-  padding: 0.45rem 0.7rem;
-  font-size: 0.85rem;
+.filter-chip.is-active {
+  background: var(--pine);
+  border-color: var(--pine);
+  color: #f8f4ec;
 }
+
+.btn-small {
+  justify-self: start;
+  padding: 0.55rem 0.95rem;
+  font-size: 0.9rem;
+}
+
+.study-controls {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 252, 247, 0.75);
+}
+
+.browse-notice {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(61, 122, 95, 0.12);
+  color: var(--pine-deep);
+  font-weight: 600;
+}
+
 
 .import-panel {
   border: 1px solid var(--line);
@@ -582,11 +561,106 @@ button {
   font-weight: 500;
 }
 
-.word-example {
-  margin: 0.15rem 0 0;
-  color: var(--muted);
-  font-size: 0.92rem;
+.word-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
 }
+
+.word-item.is-editing {
+  grid-template-columns: 1fr;
+}
+
+.edit-grid {
+  display: grid;
+  gap: 0.2rem;
+  width: 100%;
+}
+
+.classroom-home {
+  text-align: center;
+}
+
+.profile-create {
+  width: min(100%, 28rem);
+  margin: 0.5rem auto 0;
+  text-align: left;
+}
+
+.profile-create-row {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.profile-create-row .field-input {
+  flex: 1 1 12rem;
+}
+
+.profile-list-wrap {
+  width: min(100%, 28rem);
+  margin: 1.25rem auto 0;
+  text-align: left;
+}
+
+.profile-heading {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--pine-deep);
+}
+
+.profile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.profile-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 0.35rem;
+}
+
+.profile-item.is-active {
+  border-color: var(--moss);
+  background: rgba(231, 239, 233, 0.9);
+}
+
+.profile-select {
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  display: grid;
+  gap: 0.1rem;
+  color: inherit;
+  width: 100%;
+}
+
+.profile-name {
+  font-weight: 700;
+  color: var(--pine-deep);
+}
+
+.profile-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.profile-delete {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.85rem;
+}
+
 
 .status-pill {
   display: inline-flex;

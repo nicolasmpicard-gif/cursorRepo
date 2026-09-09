@@ -33,6 +33,7 @@
     browseFilters: new Set(ALL_STATUSES),
     studyStatuses: new Set(["new", "forgot", "difficult"]),
     studyDirection: "de-en",
+    editingId: null,
     lastError: null,
     browseNotice: "",
   };
@@ -230,7 +231,38 @@
     saveDeleted(deleted);
     saveProgress(progress);
     ids.forEach((id) => state.selectedIds.delete(id));
+    if (state.editingId && ids.includes(state.editingId)) state.editingId = null;
     refreshCards();
+  }
+
+  function saveEditedWord(id, fields, statusKey) {
+    const existing = state.cards.find((card) => card.id === id);
+    if (!existing) return false;
+
+    const updated = normalizeWord({
+      id,
+      german: fields.german,
+      english: fields.english,
+      exampleDe: fields.exampleDe || fields.german,
+      exampleEn: fields.exampleEn || fields.english,
+      custom: true,
+    });
+    if (!updated) return false;
+
+    upsertCustomWords([updated]);
+
+    const progress = loadProgress();
+    if (!statusKey || statusKey === "new") {
+      delete progress[id];
+    } else if (STATUS_ORDER.includes(statusKey)) {
+      progress[id] = {
+        status: statusKey,
+        lastReviewedAt: Date.now(),
+      };
+    }
+    saveProgress(progress);
+    refreshCards();
+    return true;
   }
 
   function parseImportText(raw) {
@@ -543,6 +575,39 @@
       .map((card, index) => {
         const checked = state.selectedIds.has(card.id) ? "checked" : "";
         const selectedClass = state.selectedIds.has(card.id) ? "is-selected" : "";
+        const isEditing = state.editingId === card.id;
+
+        if (isEditing) {
+          const statusKey = cardStatusKey(card);
+          return `
+            <li class="word-item is-editing" style="animation-delay: ${Math.min(index, 12) * 25}ms">
+              <div class="edit-grid">
+                <label class="field-label" for="edit-german">Deutsch</label>
+                <input id="edit-german" class="field-input" type="text" value="${escapeHtml(card.german)}">
+                <label class="field-label" for="edit-english">Englisch / Bedeutung</label>
+                <input id="edit-english" class="field-input" type="text" value="${escapeHtml(card.english)}">
+                <label class="field-label" for="edit-example-de">Beispielsatz (DE)</label>
+                <input id="edit-example-de" class="field-input" type="text" value="${escapeHtml(card.exampleDe)}">
+                <label class="field-label" for="edit-example-en">Beispielsatz (EN)</label>
+                <input id="edit-example-en" class="field-input" type="text" value="${escapeHtml(card.exampleEn)}">
+                <label class="field-label" for="edit-status">Status</label>
+                <select id="edit-status" class="field-input">
+                  ${ALL_STATUSES.map(
+                    (key) =>
+                      `<option value="${key}" ${statusKey === key ? "selected" : ""}>${escapeHtml(
+                        STATUS_LABELS[key]
+                      )}</option>`
+                  ).join("")}
+                </select>
+                <div class="cta-row import-actions">
+                  <button type="button" class="btn btn-primary" data-action="save-edit" data-id="${escapeHtml(card.id)}">Speichern</button>
+                  <button type="button" class="btn btn-secondary" data-action="cancel-edit">Abbrechen</button>
+                </div>
+              </div>
+            </li>
+          `;
+        }
+
         return `
           <li class="word-item ${selectedClass}" style="animation-delay: ${Math.min(index, 12) * 25}ms">
             <input
@@ -557,6 +622,10 @@
               <h3 class="word-de">${escapeHtml(card.german)}</h3>
               <p class="word-en">${escapeHtml(card.english)}</p>
               <p class="word-example">${escapeHtml(card.exampleDe)}</p>
+              <div class="word-actions">
+                <button type="button" class="btn btn-secondary btn-small" data-action="start-edit" data-id="${escapeHtml(card.id)}">Bearbeiten</button>
+                <button type="button" class="btn btn-danger btn-small" data-action="delete-one" data-id="${escapeHtml(card.id)}">Löschen</button>
+              </div>
             </div>
             <span class="status-pill ${statusClass(card.status)}">${escapeHtml(statusLabel(card.status))}</span>
           </li>
@@ -579,7 +648,7 @@
               data-action="delete-selected"
               ${selectedCount ? "" : "disabled"}
             >
-              Löschen${selectedCount ? ` (${selectedCount})` : ""}
+              Auswahl löschen${selectedCount ? ` (${selectedCount})` : ""}
             </button>
           </div>
         </div>
@@ -795,6 +864,56 @@
         render();
         break;
       }
+      case "start-edit": {
+        state.editingId = target.dataset.id || null;
+        state.browseNotice = "";
+        render();
+        break;
+      }
+      case "cancel-edit": {
+        state.editingId = null;
+        render();
+        break;
+      }
+      case "save-edit": {
+        const id = target.dataset.id;
+        const german = document.getElementById("edit-german");
+        const english = document.getElementById("edit-english");
+        const exampleDe = document.getElementById("edit-example-de");
+        const exampleEn = document.getElementById("edit-example-en");
+        const status = document.getElementById("edit-status");
+        const ok = saveEditedWord(
+          id,
+          {
+            german: german ? german.value : "",
+            english: english ? english.value : "",
+            exampleDe: exampleDe ? exampleDe.value : "",
+            exampleEn: exampleEn ? exampleEn.value : "",
+          },
+          status ? status.value : "new"
+        );
+        if (!ok) {
+          state.browseNotice = "Bitte Deutsch und Englisch ausfüllen.";
+          render();
+          return;
+        }
+        state.editingId = null;
+        state.browseNotice = "Wort gespeichert.";
+        render();
+        break;
+      }
+      case "delete-one": {
+        const id = target.dataset.id;
+        if (!id) return;
+        const card = state.cards.find((item) => item.id === id);
+        const label = card ? card.german : "dieses Wort";
+        const confirmed = window.confirm(`„${label}“ wirklich löschen?`);
+        if (!confirmed) return;
+        deleteCards([id]);
+        state.browseNotice = `„${label}“ gelöscht.`;
+        render();
+        break;
+      }
       case "import-words": {
         const area = document.getElementById("import-text");
         const entries = parseImportText(area ? area.value : "");
@@ -893,7 +1012,7 @@
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js?v=208").catch((error) => {
+      navigator.serviceWorker.register("./sw.js?v=209").catch((error) => {
         console.warn("Service worker registration failed:", error);
       });
     });

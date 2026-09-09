@@ -1,45 +1,22 @@
-# Wortkarte — Classroom share deck (free)
+# Wortkarte — Klassen-Stapel (öffentlich)
 
-Blank flashcard app your classmates can each use to build their own word bank.
+Kostenlose Flashcard-App für Mitschüler:innen. Jede Person erstellt ein Profil und baut den eigenen Wortschatz.
 
-## Share this link
+## Link zum Teilen
 
-https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/share/index.html
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/800b2bf409eb661d023ec7e609cbd3837731c4e5/share/index.html
 
-## Track profiles created
+## Enthaltene Features
 
-Open the teacher dashboard:
+- Deutsch-Oberfläche (Start / Lernen / Wörter)
+- Lernrichtungen: Deutsch→Englisch, Englisch→Deutsch, Gemischt
+- Status-Filter beim Lernen und in Wörter
+- Einzelne Wörter bearbeiten/löschen + Mehrfachauswahl löschen
+- Karte X/Y Fortschritt
+- Profil-Tracking für Lehrkräfte
 
-https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/share/admin.html
+## Tracker
 
-Or live feed:
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/800b2bf409eb661d023ec7e609cbd3837731c4e5/share/admin.html
 
-https://ntfy.sh/wortkarte-class-nicolaspicard
-
-When a classmate taps **Create my deck**, their name is posted to that free tracker.
-## How it works (free hosting)
-
-- Hosted as a static site (no paid backend)
-- Each classmate opens the link on their phone/laptop
-- They create a **profile with their name**
-- Words and study progress stay in that browser (`localStorage`)
-- Profiles on the same device stay separate; different phones never share data
-
-## Tips for class
-
-1. Send everyone the link above
-2. Each person taps **Create my deck** and enters their name
-3. Add words in Browse (`German – English` import works too)
-4. Use **Export** occasionally so clearing browser data doesn’t lose the deck
-
-## Limits
-
-- Free and private to the device/browser — there is no cloud sync or shared class server
-- To move words to another phone, Export on one device and Import on the other
-
-## Run locally
-
-```bash
-cd flashcard-share
-python3 -m http.server 8081
-```
+Live-Feed: https://ntfy.sh/wortkarte-class-nicolaspicard

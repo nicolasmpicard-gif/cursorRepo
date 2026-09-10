@@ -38,8 +38,11 @@ Set `required_domain` and `domain_fit`. **Hard DQ** when `domain_fit=mismatch` O
 | `defense` | Defense/aerospace regulated |
 | `medical_devices_deep` | Deep med-device/QMS specialist |
 | `automotive_oem` | Automotive OEM engineering depth |
+| `agtech_farmer_product` | Farmer/grower-facing product design (Klim-shaped); enterprise SC/ESG ≠ on-farm UX |
 
 **Nic domain strengths (match/adjacent OK):** `general_b2b_saas`, `solutions_impl`, `supply_chain_esg`, `climate_compliance`, `data_ai_internal`, `product_management`, `hr_enterprise_saas`, `logistics_tech`
+
+**Interview Comp notes:** Solutions/impl lane Comp stays high after NinjaOne (craft miss, not lane miss). Builder/climate founding PM Comp stays low (CEEZER). Salary rejects (SumSub) do not lower SC Comp.
 
 ### Other hard DQs
 - Seed or pre-seed stage

@@ -139,6 +139,12 @@ def test_domain_fintech_is_hard_dq():
     assert not jd_ranker.domain_is_hard_dq("supply_chain_esg", "match")
 
 
+def test_domain_agtech_farmer_product_is_hard_dq():
+    assert jd_ranker.domain_is_hard_dq("agtech_farmer_product", "match")
+    assert "agtech_farmer_product" in jd_ranker.DOMAIN_HARD_DQ
+    assert "Klim" in jd_ranker.PROFILE or "farmer" in jd_ranker.PROFILE.lower()
+
+
 def test_lane_precedence_implementations():
     final, *_ = jd_ranker.apply_bumps(
         65, days=None, contact="none", funding="unknown",

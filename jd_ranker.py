@@ -170,7 +170,8 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
   hybrid / <5 days per week in office / remote. Berlin roles and explicit hybrid/remote OK.
 - HARD DQ **required domain expertise Nic does not have** — e.g. deep financial/payments/fintech,
   electronics/semiconductor, manufacturing engineering, capital markets, oil & gas, machining/CNC,
-  defense, medical-device regulatory depth. Set domain_fit=mismatch or required_domain accordingly.
+  defense, medical-device regulatory depth, **farmer/grower-facing product design** (Klim-shaped).
+  Set domain_fit=mismatch or required_domain accordingly.
 - NOT seed-stage (or pre-seed). Hard DQ regardless of mission.
 - NOT founded in the last 2 years. Hard DQ. Headcount does NOT matter — small teams OK past gates.
 - NOT US-only or UK-only remote/hire when Nic is Berlin-based EU/US (must be EU-eligible or global remote)
@@ -192,6 +193,14 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
 - Oil & gas / heavy industrial / automotive OEM engineering depth
 - Defense / aerospace regulated product
 - Deep medical-device / QMS regulatory specialist (unless implementations-lite)
+- Farmer / grower-facing product design (Klim-shaped) — enterprise SC/ESG SaaS ≠ on-farm UX
+
+### Interview conversion notes (Comp calibration — Sep 2026):
+- NinjaOne Solutions Engineer reached round 2; fail was craft (questions, sharpness), NOT lane mismatch.
+  Keep solutions/impl competitiveness HIGH; do not penalize the lane for interview execution misses.
+- SumSub SC died on salary ask — not a role-family signal.
+- Klim Sr PM: explicit DQ for farmer product design experience.
+- CEEZER Builder PM late fail → keep builder/founding climate PM Comp low; not a broad PM ban.
 
 ### Strong preference (Fit factor — not hard DQ alone):
 - At least one product supervisor (Head/Director/VP Product, CPO) OR product peer — for PM roles especially.
@@ -204,6 +213,8 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
   enterprise B2B SaaS and a solutions or implementations role (Pulsora, OpenSC, IntegrityNext pattern).
 - Climate-first STARTUPS (seed, <2 years) are HARD DQ on maturity — not because climate is bad, but because
   Nic's interview data shows first rounds without offers there (Renew Earth, Sustaain, many Plan A/CEEZER/Regrow shapes).
+- Climate **builder / founding PM** (CEEZER-shaped): LOWER competitiveness_score (−8 to −15); product-sense/scaling
+  bar is high and history shows late fails — prefer solutions/impl at mature climate/ESG SaaS instead.
 - Climate **strategy consulting at industrials** (GEA-style) or **mission-only CS at young climate cos**:
   OK to apply if time, but LOWER competitiveness_score (−5 to −10 vs enterprise SaaS solutions) — interview
   activity without close history. Do NOT treat mission match as substitute for role family + maturity.
@@ -333,7 +344,8 @@ IMPORTANT RULES:
   **Location:** germany_work_mode=other_de_onsite (non-Berlin DE city, no hybrid/<5d office stated).
   **Domain:** domain_fit=mismatch OR required_domain in fintech_payments, financial_services,
   electronics_semiconductor, manufacturing_engineering, capital_markets, oil_gas, machining_hardware,
-  defense, medical_devices_deep, automotive_oem.
+  defense, medical_devices_deep, automotive_oem, agtech_farmer_product (Klim-shaped farmer/grower UX).
+  Solutions/impl Comp stays HIGH even if prior SE interviews failed on craft (NinjaOne-shaped).
   Also: seed/pre-seed; founded <2 years; US-only/UK-only without EU eligibility.
 - Language gate passes unless German is c2/native — eligible for lane/pm_domain bumps.
 - Lane precedence (post-processing): when language_gate_pass=true, solutions_pre_sales +6,
@@ -453,6 +465,7 @@ REQUIRED_DOMAINS = (
     "defense",
     "medical_devices_deep",
     "automotive_oem",
+    "agtech_farmer_product",
     "none",
     "unknown",
 )
@@ -466,7 +479,7 @@ NIC_STRONG_DOMAINS = {
 DOMAIN_HARD_DQ = {
     "fintech_payments", "financial_services", "electronics_semiconductor",
     "manufacturing_engineering", "capital_markets", "oil_gas", "machining_hardware",
-    "defense", "medical_devices_deep", "automotive_oem",
+    "defense", "medical_devices_deep", "automotive_oem", "agtech_farmer_product",
 }
 
 VALID_DOMAIN_FIT = {"match", "adjacent", "mismatch", "unknown"}

@@ -3,19 +3,25 @@
 Use `jd_ranker.py` as the source of truth.
 
 ## Formula
-`base = 0.5 * competitiveness + 0.5 * fit`  
+`base = 0.7 * competitiveness + 0.3 * fit`  
 `final = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + pm_domain + language_pen)`
 
 ## Hard DQs (cap base at 30, skip)
 
-### German (only none / plus / B2 max pass)
+### German (only C2 / native)
 | `german_requirement` | Verdict |
 |---|---|
-| none / unknown / plus / b2 | OK — passes language gate |
-| **proficiency** | **HARD DQ** |
-| **business_professional** | **HARD DQ** (professional/business working proficiency) |
-| **fluent** | **HARD DQ** |
-| **c1 / c2 / native** | **HARD DQ** |
+| none / unknown / plus / b2 / proficiency / business_professional / fluent / c1 | OK — passes language gate |
+| **c2 / native** | **HARD DQ** |
+
+### Germany office (Berlin-based Nic)
+| `germany_work_mode` | Verdict |
+|---|---|
+| `berlin` | OK (hybrid or office) |
+| `remote` | OK (fully remote / remote-in-Germany) |
+| `other_de_hybrid` | OK — other DE city **and** JD states hybrid / &lt;5 days in office |
+| **`other_de_onsite`** | **HARD DQ** — Hamburg/Munich/etc. with **no** hybrid/remote stated |
+| `outside_de` / `unknown` | OK (no Germany-office DQ) |
 
 ### Domain expertise (required background Nic does not have)
 Set `required_domain` and `domain_fit`. **Hard DQ** when `domain_fit=mismatch` OR `required_domain` is:
@@ -41,7 +47,8 @@ Set `required_domain` and `domain_fit`. **Hard DQ** when `domain_fit=mismatch` O
 - US-only or UK-only hire (no EU eligibility)
 
 ## Language gate (lane / pm_domain bumps)
-Only roles with `german_requirement` in **none / plus / b2 / unknown** get lane (+6/+6/+4) and pm_domain (+4/+3) bumps.
+Passes unless `german_requirement` is **c2** or **native**.  
+Proficiency / fluent / C1 still get lane and PM-domain bumps.
 
 ## Lane precedence (when language gate passes)
 
@@ -76,24 +83,26 @@ Only roles with `german_requirement` in **none / plus / b2 / unknown** get lane 
     "funding_stage": "profitable",
     "applicant_volume": "low",
     "german_requirement": "none",
+    "germany_work_mode": "remote",
     "required_domain": "solutions_impl",
     "domain_fit": "match",
     "role_family": "solutions_pre_sales"
   },
-  "aci_sc": {
-    "german_requirement": "none",
-    "required_domain": "fintech_payments",
-    "domain_fit": "mismatch"
-  },
-  "personio_ps": {
-    "german_requirement": "proficiency",
-    "required_domain": "hr_enterprise_saas",
+  "eqs_c2": {
+    "german_requirement": "c2",
+    "germany_work_mode": "remote",
+    "required_domain": "climate_compliance",
     "domain_fit": "match"
+  },
+  "beiersdorf_hamburg": {
+    "germany_work_mode": "other_de_onsite",
+    "german_requirement": "none"
   }
 }
 ```
 
 `german_requirement`: `none` | `plus` | `b2` | `proficiency` | `business_professional` | `fluent` | `c1` | `c2` | `native` | `unknown`  
+`germany_work_mode`: `berlin` | `remote` | `other_de_hybrid` | `other_de_onsite` | `outside_de` | `unknown`  
 `required_domain`: see `REQUIRED_DOMAINS` in `jd_ranker.py`  
 `domain_fit`: `match` | `adjacent` | `mismatch` | `unknown`  
 `pm_domain`: `none` | `data_ai_internal` | `data_ai_product` | `unknown`  

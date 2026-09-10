@@ -20,24 +20,29 @@ def test_funding_bumps_seed_not_series_a():
     assert jd_ranker.FUNDING_BUMPS["series_a"][0] == 5
 
 
+def test_base_is_seventy_thirty():
+    assert jd_ranker.compute_base(82, 42) == 70  # 0.7*82 + 0.3*42 = 70
+    assert jd_ranker.compute_base(82, 42, hard_dq=True) == 30
+
+
 def test_searoutes_style_score_does_not_inflate_fit_into_base():
-    """Comp can be excellent while fit is poor; base must average them."""
+    """Comp can be excellent while fit is poor; base must weight Comp 70%."""
     comp, fit = 82, 42
-    base = int(round(0.5 * comp + 0.5 * fit))
-    assert base == 62
+    base = jd_ranker.compute_base(comp, fit)
+    assert base == 70
     final, r, c, f, a, fr, lane, lang, *_ = jd_ranker.apply_bumps(
         base, days=None, contact="none", funding="seed", applicants="unknown"
     )
     assert f == -5
-    assert final == 57  # 62 - 5
+    assert final == 65  # 70 - 5
 
 
 def test_searoutes_with_fresh_posting_and_low_apps():
-    base = 62
+    base = 70
     final, *_ = jd_ranker.apply_bumps(
         base, days=0, contact="none", funding="seed", applicants="low"
     )
-    assert final == 72  # 62 - 5 + 10 + 5
+    assert final == 80  # 70 - 5 + 10 + 5
 
 
 def test_validate_metadata_rejects_upgraded_funding_typo():
@@ -72,6 +77,12 @@ def test_validate_metadata_flags_young_company():
     assert any("younger than 2 years" in w for w in warnings)
 
 
+def test_validate_metadata_flags_other_de_onsite():
+    meta = {"co": {"germany_work_mode": "other_de_onsite", "contact_status": "none"}}
+    warnings = jd_ranker.validate_metadata(meta)
+    assert any("other_de_onsite" in w and "HARD DQ" in w for w in warnings)
+
+
 def test_french_bump_required():
     final, r, c, f, a, fr, lane, lang, *_labels = jd_ranker.apply_bumps(
         60, days=None, contact="none", funding="unknown", french="required"
@@ -89,65 +100,78 @@ def test_french_bump_preferred():
 
 
 def test_lane_precedence_solutions_passes_gate():
-  final, *_ = jd_ranker.apply_bumps(
-      70, days=None, contact="none", funding="unknown",
-      role_family="solutions_pre_sales", german_req="none"
-  )
-  assert final == 76  # 70 + 6 lane
+    final, *_ = jd_ranker.apply_bumps(
+        70, days=None, contact="none", funding="unknown",
+        role_family="solutions_pre_sales", german_req="none"
+    )
+    assert final == 76  # 70 + 6 lane
 
 
-def test_lane_precedence_blocked_when_german_fluent():
-  final, *_ = jd_ranker.apply_bumps(
-      70, days=None, contact="none", funding="unknown",
-      role_family="solutions_pre_sales", german_req="fluent"
-  )
-  assert final == 70  # no lane bump; fluent is hard DQ at base-cap layer, not a penalty
+def test_lane_precedence_allowed_when_german_fluent():
+    final, *_ = jd_ranker.apply_bumps(
+        70, days=None, contact="none", funding="unknown",
+        role_family="solutions_pre_sales", german_req="fluent"
+    )
+    assert final == 76  # fluent no longer hard DQ; lane bump applies
 
 
-def test_german_proficiency_is_hard_dq():
-  assert jd_ranker.german_is_hard_dq("proficiency")
-  assert jd_ranker.german_is_hard_dq("business_professional")
-  assert jd_ranker.german_is_hard_dq("fluent")
-  assert not jd_ranker.german_is_hard_dq("plus")
-  assert not jd_ranker.german_is_hard_dq("b2")
+def test_german_only_c2_native_hard_dq():
+    assert jd_ranker.german_is_hard_dq("c2")
+    assert jd_ranker.german_is_hard_dq("native")
+    assert not jd_ranker.german_is_hard_dq("proficiency")
+    assert not jd_ranker.german_is_hard_dq("business_professional")
+    assert not jd_ranker.german_is_hard_dq("fluent")
+    assert not jd_ranker.german_is_hard_dq("c1")
+    assert not jd_ranker.german_is_hard_dq("plus")
+    assert not jd_ranker.german_is_hard_dq("b2")
+
+
+def test_germany_location_onsite_hard_dq():
+    assert jd_ranker.germany_location_is_hard_dq("other_de_onsite")
+    assert not jd_ranker.germany_location_is_hard_dq("other_de_hybrid")
+    assert not jd_ranker.germany_location_is_hard_dq("berlin")
+    assert not jd_ranker.germany_location_is_hard_dq("remote")
 
 
 def test_domain_fintech_is_hard_dq():
-  assert jd_ranker.domain_is_hard_dq("fintech_payments", "match")
-  assert jd_ranker.domain_is_hard_dq("general_b2b_saas", "mismatch")
-  assert not jd_ranker.domain_is_hard_dq("supply_chain_esg", "match")
+    assert jd_ranker.domain_is_hard_dq("fintech_payments", "match")
+    assert jd_ranker.domain_is_hard_dq("general_b2b_saas", "mismatch")
+    assert not jd_ranker.domain_is_hard_dq("supply_chain_esg", "match")
 
 
 def test_lane_precedence_implementations():
-  final, *_ = jd_ranker.apply_bumps(
-      65, days=None, contact="none", funding="unknown",
-      role_family="implementations", german_req="plus"
-  )
-  assert final == 71  # 65 + 6
+    final, *_ = jd_ranker.apply_bumps(
+        65, days=None, contact="none", funding="unknown",
+        role_family="implementations", german_req="plus"
+    )
+    assert final == 71  # 65 + 6
 
 
 def test_lane_precedence_project_management():
-  final, *_ = jd_ranker.apply_bumps(
-      64, days=None, contact="none", funding="unknown",
-      role_family="project_management", german_req="b2"
-  )
-  assert final == 68  # 64 + 4
+    final, *_ = jd_ranker.apply_bumps(
+        64, days=None, contact="none", funding="unknown",
+        role_family="project_management", german_req="b2"
+    )
+    assert final == 68  # 64 + 4
 
 
-def test_language_gate_passes_b2():
-  assert jd_ranker.passes_language_gate("b2")
-  assert jd_ranker.passes_language_gate("plus")
-  assert not jd_ranker.passes_language_gate("fluent")
-  assert not jd_ranker.passes_language_gate("c1")
+def test_language_gate_passes_fluent_and_c1():
+    assert jd_ranker.passes_language_gate("b2")
+    assert jd_ranker.passes_language_gate("plus")
+    assert jd_ranker.passes_language_gate("fluent")
+    assert jd_ranker.passes_language_gate("c1")
+    assert jd_ranker.passes_language_gate("proficiency")
+    assert not jd_ranker.passes_language_gate("c2")
+    assert not jd_ranker.passes_language_gate("native")
 
 
 def test_gls_nxt_rescore():
-  """GLS/NXT CSE: base 67 + lane +6 = 73."""
-  final, *_ = jd_ranker.apply_bumps(
-      67, days=None, contact="none", funding="unknown",
-      role_family="solutions_pre_sales", german_req="none"
-  )
-  assert final == 73
+    """GLS/NXT CSE: base 68 + lane +6 = 74 under 70/30."""
+    final, *_ = jd_ranker.apply_bumps(
+        68, days=None, contact="none", funding="unknown",
+        role_family="solutions_pre_sales", german_req="none"
+    )
+    assert final == 74
 
 
 def test_holidu_venture_up_rescore():
@@ -160,13 +184,13 @@ def test_holidu_venture_up_rescore():
     assert final == 90
 
 
-def test_pm_domain_blocked_when_german_fluent():
+def test_pm_domain_allowed_when_german_fluent():
     final, *_ = jd_ranker.apply_bumps(
         70, days=None, contact="none", funding="unknown",
         role_family="product_manager", german_req="fluent",
         pm_domain="data_ai_internal",
     )
-    assert final == 70  # no pm bump when fluent (hard DQ)
+    assert final == 74  # pm bump applies under new German rule
 
 
 def test_neuronation_rescore():
@@ -202,8 +226,9 @@ def test_hard_dq_cap_logic_in_build_path():
     }
     for ev in evaluations.values():
         if ev.get("hard_disqualifiers"):
-            expected = int(round(0.5 * ev["competitiveness_score"] + 0.5 * ev["fit_score"]))
-            ev["base_score"] = min(expected, 30)
+            ev["base_score"] = jd_ranker.compute_base(
+                ev["competitiveness_score"], ev["fit_score"], hard_dq=True
+            )
     assert evaluations["bad"]["base_score"] == 30
 
 
@@ -215,7 +240,7 @@ def test_profile_drops_autopilot_must_and_headcount_gate():
     assert "≤25 employees, assume this is unmet" not in jd_ranker.PROFILE
     assert "solutions_pre_sales" in jd_ranker.SYSTEM_PROMPT
     assert "Climate: NEVER hard-DQ climate mission alone" in jd_ranker.SYSTEM_PROMPT
-    assert "German proficiency/fluent/business/C1+" in jd_ranker.SYSTEM_PROMPT
+    assert "German C2 or native" in jd_ranker.PROFILE or "c2 or native" in jd_ranker.SYSTEM_PROMPT
     assert "recommended_cv" not in jd_ranker.SYSTEM_PROMPT
 
 
@@ -233,7 +258,8 @@ def test_role_families_tuple():
 
 def test_profile_lane_precedence_protocol():
     assert "highest precedence" in jd_ranker.PROFILE
-    assert "B2 at most" in jd_ranker.PROFILE
+    assert "C2/native" in jd_ranker.PROFILE or "c2/native" in jd_ranker.SYSTEM_PROMPT
     assert "do NOT discount PM" in jd_ranker.PROFILE
     assert "data_ai_internal" in jd_ranker.SYSTEM_PROMPT
     assert "pm_domain" in jd_ranker.SYSTEM_PROMPT
+    assert "0.7 * competitiveness" in jd_ranker.SYSTEM_PROMPT

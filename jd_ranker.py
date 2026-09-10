@@ -37,6 +37,8 @@ USAGE
    founded_year          : integer if known (HARD DQ if company age < 2 years)
    work_region           : "eu" | "global" | "us_only" | "uk_only" | "unknown"
                          — us_only/uk_only when JD restricts hire to that region (HARD DQ for Berlin-based Nic)
+   germany_work_mode     : "berlin" | "remote" | "other_de_hybrid" | "other_de_onsite" | "outside_de" | "unknown"
+                         — other_de_onsite = German city outside Berlin with no hybrid (<5 days office) stated → HARD DQ
    role_family           : optional override — see ROLE_FAMILIES in jd_ranker.py
    prior_interview       : true if Nic had prior interview pipeline at this company
    last_raise_date       : ISO date string if known (informational)
@@ -49,7 +51,7 @@ Output: ranked table + per-JD detail printed to stdout,
 
 SCORING FORMULA
 ---------------
-base_score     = 0.5 * competitiveness_score + 0.5 * fit_score
+base_score     = 0.7 * competitiveness_score + 0.3 * fit_score
   competitiveness_score : how likely Nic is to get the interview/offer
   fit_score              : preference fit (product peer/supervisor, pace/culture, stage/age
                            gates) + workplace-style sustainability (structure/autonomy/feedback)
@@ -66,7 +68,7 @@ applicant_bump : -5 to +5 pts (low competition → +5, high (100+) → -5)
 french_bump    : 0-7 pts (required/fluent → +7, preferred/plus → +4, none → 0)
 lane_bump      : 0-6 pts when language gate passes (solutions/impl +6, delivery PM/TPM +4; PM gets 0)
 pm_domain_bump : 0-4 pts for PM roles in Nic's strength domains when language gate passes
-language_pen   : 0 pts (German proficiency/fluent/business/C1+ = hard DQ, not a penalty bump)
+language_pen   : 0 pts (German C2/native = hard DQ, not a penalty bump)
 final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + pm_domain + language_pen)
 
 CRITICAL SCORING DISCIPLINE (read before every evaluation)
@@ -79,9 +81,9 @@ CRITICAL SCORING DISCIPLINE (read before every evaluation)
    Headcount is NOT a DQ — small teams are fine past those gates.
 4. Product supervisor OR peer is a strong Fit preference (not a hard DQ alone).
    Eng-only leadership + founders does not count as product peer/supervisor.
-5. Location (country/city) must NOT raise or lower Fit/Comp scores — but
-   work_region=us_only or uk_only when Nic cannot legally/ practically work there
-   is a HARD DQ (metadata or JD text).
+5. Location (country/city) must NOT raise or lower Fit/Comp scores — except hard DQs:
+   work_region=us_only/uk_only, and germany_work_mode=other_de_onsite (non-Berlin DE office
+   without hybrid / <5 days in office stated).
 6. Role family interview signals (see PROFILE) adjust competitiveness_score only —
    mission match must not override weak role-family signal.
 """
@@ -134,8 +136,8 @@ Nicolas Picard — French-American, based in Berlin (EU/US work auth).
 
 **Protocol (Sep 2026):** Solutions consulting, implementation management, and delivery
 project management roles that pass the language gate take **highest precedence** — even above
-product manager roles. Language gate: English/French native OK; German requirement must be
-**none, plus, or B2 at most** (fluent/C1/C2/native fails gate and loses lane bump).
+product manager roles. Language gate: English/French native OK; German C2/native fails gate
+(and is a hard DQ). Proficiency/fluent/C1 still pass the gate for lane/pm bumps.
 
 1. **Solutions / Pre-Sales / Engagement (technical-commercial)** — STRONGEST interview signal
    Titles: Solutions Consultant, Pre-Sales Solutions, Technical Pre-Sales, Engagement Manager,
@@ -162,8 +164,10 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
 ## What Nic is looking for RIGHT NOW
 
 ### Hard requirements (must-haves — failure = hard disqualifier):
-- HARD DQ **any German language requirement beyond plus/bonus**: proficiency, fluent, business/professional
-  working proficiency, C1, C2, native/Muttersprache. Only **none / plus / B2 max** pass.
+- HARD DQ **German C2 or native/Muttersprache only**. Proficiency / fluent / business / C1 are NOT hard DQs
+  (they still pass the language gate for lane/pm bumps).
+- HARD DQ **non-Berlin Germany office without hybrid** — e.g. Hamburg/Munich listed and JD does not say
+  hybrid / <5 days per week in office / remote. Berlin roles and explicit hybrid/remote OK.
 - HARD DQ **required domain expertise Nic does not have** — e.g. deep financial/payments/fintech,
   electronics/semiconductor, manufacturing engineering, capital markets, oil & gas, machining/CNC,
   defense, medical-device regulatory depth. Set domain_fit=mismatch or required_domain accordingly.
@@ -207,7 +211,8 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
 
 ### Nice-to-have (bonus_flags only — do NOT affect fit_score):
 - EU remote or hybrid | French required/preferred | 4-day week mentioned
-- Location (city/country) is NEVER a score factor except work_region hard DQ above
+- Location (city/country) is NEVER a Fit/Comp score factor except hard DQs:
+  work_region us/uk-only, germany_work_mode other_de_onsite
 
 ### Competitiveness boosters (interview probability — adjust Comp, not Fit):
 - Role family: solutions/pre-sales/engagement (+8 to +12 Comp vs baseline)
@@ -295,7 +300,8 @@ For each JD produce a JSON evaluation object:
 - "required_domain": one of REQUIRED_DOMAINS (see jd_ranker.py) — infer from JD required experience
 - "domain_fit": "match" | "adjacent" | "mismatch" — mismatch when JD requires deep expertise Nic lacks
 - "pm_domain": "none" | "data_ai_internal" | "data_ai_product" — internal BI/data platform/tooling vs external data/AI SaaS PM
-- "language_gate_pass": true only if german_requirement is none/plus/b2/unknown
+- "language_gate_pass": true unless german_requirement is c2 or native
+- "germany_work_mode": "berlin" | "remote" | "other_de_hybrid" | "other_de_onsite" | "outside_de" | "unknown"
 - "interview_signal": "strong" | "moderate" | "weak"
 - "french_language": "required" | "preferred" | "none" — from JD text (required/fluent/mandatory vs plus/preferred)
 - "base_score": integer 0-100
@@ -308,8 +314,8 @@ For each JD produce a JSON evaluation object:
   (b) WORKPLACE STYLE FIT: structure + autonomy, feedback loops, scaffolding vs blank-page chaos.
   Low structure + low autonomy together → Fit −20 to −25.
 - "maturity_notes": founding year / funding stage vs hard gates; note if climate startup fails gates
-- "hard_disqualifiers": list — German proficiency/fluent/business/C1+; domain_fit=mismatch or required_domain
-  outside Nic strengths; seed/pre-seed; founded <2 years; US-only/UK-only hire
+- "hard_disqualifiers": list — German c2/native; germany_work_mode=other_de_onsite; domain_fit=mismatch
+  or required_domain outside Nic strengths; seed/pre-seed; founded <2 years; US-only/UK-only hire
 - "fit_highlights", "fit_concerns", "bonus_flags" (max 5 each)
 - "recommended_action": "apply_now" | "apply_soon" | "apply_if_time" | "skip"
   — apply_now: strong role_family + passes maturity + no hard DQ
@@ -319,16 +325,17 @@ For each JD produce a JSON evaluation object:
 - "one_line_verdict": single sentence
 - "funding_stage_inferred": pre_seed|seed|series_a|series_b_plus|profitable|unknown
 
-base_score = 0.5 * competitiveness_score + 0.5 * fit_score
+base_score = 0.7 * competitiveness_score + 0.3 * fit_score
 
 IMPORTANT RULES:
 - Hard DQs → cap base_score at 30, recommend skip:
-  **German:** proficiency, business_professional, fluent, c1, c2, native (only none/plus/b2 OK).
+  **German:** c2 or native only (proficiency/fluent/business/c1 are NOT hard DQs).
+  **Location:** germany_work_mode=other_de_onsite (non-Berlin DE city, no hybrid/<5d office stated).
   **Domain:** domain_fit=mismatch OR required_domain in fintech_payments, financial_services,
   electronics_semiconductor, manufacturing_engineering, capital_markets, oil_gas, machining_hardware,
   defense, medical_devices_deep, automotive_oem.
   Also: seed/pre-seed; founded <2 years; US-only/UK-only without EU eligibility.
-- German plus/bonus or B2 max → passes language gate; eligible for lane/pm_domain bumps.
+- Language gate passes unless German is c2/native — eligible for lane/pm_domain bumps.
 - Lane precedence (post-processing): when language_gate_pass=true, solutions_pre_sales +6,
   implementations +6, project_management +4. product_manager gets 0 lane bump but may get pm_domain bump.
 - PM domain (post-processing): when language_gate_pass=true, data_ai_internal +4, data_ai_product +3.
@@ -396,30 +403,34 @@ FRENCH_BUMPS = {
     "unknown":   (0,  "French requirement unknown"),
 }
 
-# German requirement levels — hard DQ beyond plus/B2
+# German requirement levels — hard DQ only C2 / native
 VALID_GERMAN = {
     "none", "plus", "b2", "proficiency", "business_professional",
     "fluent", "c1", "c2", "native", "unknown",
 }
 
-LANGUAGE_GATE_PASS = {"none", "plus", "b2", "unknown"}
+# Hard DQ: C2 or native only (Sep 2026 update)
+GERMAN_HARD_DQ = {"c2", "native"}
 
-# Hard DQ: any German beyond plus/B2 ceiling (proficiency = Personio-shaped)
-GERMAN_HARD_DQ = {
-    "proficiency", "business_professional", "fluent", "c1", "c2", "native",
-}
+# Language gate = not hard-DQ German (proficiency/fluent/C1 still get lane/pm bumps)
+LANGUAGE_GATE_PASS = VALID_GERMAN - GERMAN_HARD_DQ
 
 LANGUAGE_PENALTIES = {
     "none":    (0,  "no German requirement"),
     "plus":    (0,  "German plus/bonus only"),
-    "b2":      (0,  "German B2 max — passes language gate"),
+    "b2":      (0,  "German B2 — passes language gate"),
     "unknown": (0,  "German requirement unknown"),
-    "proficiency": (0, "German proficiency required — HARD DQ"),
-    "business_professional": (0, "German business/professional proficiency — HARD DQ"),
-    "fluent":  (0,  "fluent German required — HARD DQ"),
-    "c1":      (0,  "German C1 required — HARD DQ"),
+    "proficiency": (0, "German proficiency — passes gate (not hard DQ)"),
+    "business_professional": (0, "German business/professional — passes gate (not hard DQ)"),
+    "fluent":  (0,  "fluent German — passes gate (not hard DQ)"),
+    "c1":      (0,  "German C1 — passes gate (not hard DQ)"),
     "c2":      (0,  "German C2 required — HARD DQ"),
     "native":  (0,  "native German required — HARD DQ"),
+}
+
+# Germany office mode — non-Berlin onsite without hybrid is hard DQ
+VALID_GERMANY_WORK_MODES = {
+    "berlin", "remote", "other_de_hybrid", "other_de_onsite", "outside_de", "unknown",
 }
 
 # Domain expertise — hard DQ when required domain is outside Nic's background
@@ -497,14 +508,27 @@ ROLE_FAMILIES = (
 )
 
 
+def compute_base(comp, fit, hard_dq=False):
+    """Weighted base: 70% competitiveness, 30% fit; hard DQs capped at 30."""
+    base = int(round(0.7 * float(comp) + 0.3 * float(fit)))
+    if hard_dq:
+        return min(base, 30)
+    return base
+
+
 def passes_language_gate(german_req):
-    """True when German requirement is none/plus/b2/unknown (English/French native OK)."""
-    return german_req in LANGUAGE_GATE_PASS and not german_is_hard_dq(german_req)
+    """True unless German is C2 or native (hard DQ)."""
+    return not german_is_hard_dq(german_req)
 
 
 def german_is_hard_dq(german_req):
-    """Hard DQ for German proficiency, business proficiency, fluent, C1+."""
+    """Hard DQ for German C2 or native only."""
     return german_req in GERMAN_HARD_DQ
+
+
+def germany_location_is_hard_dq(germany_work_mode):
+    """Hard DQ when non-Berlin Germany office and hybrid not specified."""
+    return germany_work_mode == "other_de_onsite"
 
 
 def domain_is_hard_dq(required_domain, domain_fit):
@@ -577,7 +601,15 @@ def validate_metadata(metadata):
             meta["german_requirement"] = "unknown"
         elif german_is_hard_dq(german):
             warnings.append(
-                f"{key}: german_requirement={german} — HARD DQ (German proficiency/fluent/C1+ required)"
+                f"{key}: german_requirement={german} — HARD DQ (German C2/native required)"
+            )
+        gwm = meta.get("germany_work_mode", "unknown")
+        if gwm not in VALID_GERMANY_WORK_MODES:
+            warnings.append(f"{key}: invalid germany_work_mode={gwm!r} → treating as unknown")
+            meta["germany_work_mode"] = "unknown"
+        elif germany_location_is_hard_dq(gwm):
+            warnings.append(
+                f"{key}: germany_work_mode={gwm} — HARD DQ (non-Berlin DE office without hybrid)"
             )
         req_dom = meta.get("required_domain", "unknown")
         if req_dom not in REQUIRED_DOMAINS:
@@ -663,8 +695,8 @@ def evaluate_jds(jds):
         f"## Candidate Profile\n{PROFILE}\n\n## Job Descriptions\n{jd_block}\n\n"
         f"Evaluate all {len(jds)} JDs and return JSON.\n\n"
         "REMINDER: Keep competitiveness_score and fit_score independent. "
-        "Hard DQs: German proficiency/fluent/business/C1+; domain mismatch or fintech/electronics/etc; "
-        "seed/pre-seed; founded <2 years; US-only/UK-only hire. "
+        "Hard DQs: German C2/native; non-Berlin DE onsite without hybrid; domain mismatch or "
+        "fintech/electronics/etc; seed/pre-seed; founded <2 years; US-only/UK-only hire. "
         "Score role_family interview signal on Comp (solutions/impl strong; AM/PMO weak). "
         "Climate mission is NOT a DQ — maturity gates are. Climate-only weak roles → apply_if_time."
     )
@@ -690,12 +722,13 @@ def evaluate_jds(jds):
                 ev["base_score"] = capped
         # Recompute base from components if present (guards Comp/Fit inflation mismatch)
         if "competitiveness_score" in ev and "fit_score" in ev:
-            expected = int(round(0.5 * ev["competitiveness_score"] + 0.5 * ev["fit_score"]))
-            if ev.get("hard_disqualifiers"):
-                expected = min(expected, 30)
+            expected = compute_base(
+                ev["competitiveness_score"], ev["fit_score"],
+                hard_dq=bool(ev.get("hard_disqualifiers")),
+            )
             if abs(expected - int(ev.get("base_score", expected))) > 1:
                 print(
-                    f"⚠ {key}: base_score {ev.get('base_score')} ≠ 0.5*comp+0.5*fit "
+                    f"⚠ {key}: base_score {ev.get('base_score')} ≠ 0.7*comp+0.3*fit "
                     f"({expected}) — correcting",
                     file=sys.stderr,
                 )
@@ -739,10 +772,17 @@ def build_rankings(evaluations, metadata):
         dom_fit     = meta.get("domain_fit") or ev.get("domain_fit") or "unknown"
         if dom_fit not in VALID_DOMAIN_FIT:
             dom_fit = "unknown"
-        # Enforce German + domain hard DQs locally
+        gwm = meta.get("germany_work_mode") or ev.get("germany_work_mode") or "unknown"
+        if gwm not in VALID_GERMANY_WORK_MODES:
+            gwm = "unknown"
+        # Enforce German + location + domain hard DQs locally
         hard_dqs = list(ev.get("hard_disqualifiers") or [])
         if german_is_hard_dq(german):
             label = f"German {german} required"
+            if label not in hard_dqs:
+                hard_dqs.append(label)
+        if germany_location_is_hard_dq(gwm):
+            label = "Non-Berlin Germany office without hybrid"
             if label not in hard_dqs:
                 hard_dqs.append(label)
         if domain_is_hard_dq(req_domain, dom_fit):
@@ -770,6 +810,7 @@ def build_rankings(evaluations, metadata):
                         "pm_domain_label": pm_label, "language_label": lang_label,
                         "german_requirement": german, "pm_domain": pm_domain,
                         "required_domain": req_domain, "domain_fit": dom_fit,
+                        "germany_work_mode": gwm,
                         "language_gate_pass": passes_language_gate(german),
                         "funding_stage": funding, "employees": employees, "role_family": role_family})
     results.sort(key=lambda x: x["final_score"], reverse=True)

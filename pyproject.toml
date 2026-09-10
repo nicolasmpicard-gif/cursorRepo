@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "linkedin-jd-bot"
+version = "0.1.0"
+description = "Paste-first LinkedIn job description extractor with optional browser fetch"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "beautifulsoup4>=4.12",
+  "httpx>=0.27",
+  "lxml>=5.0",
+  "pydantic>=2.0",
+  "typer>=0.12",
+  "rich>=13.0",
+]
+
+[project.optional-dependencies]
+browser = ["playwright>=1.40"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+jd-bot = "linkedin_jd_bot.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["linkedin_jd_bot*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

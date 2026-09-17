@@ -161,6 +161,22 @@ def test_lane_precedence_project_management():
     assert final == 68  # 64 + 4
 
 
+def test_lane_precedence_grants_and_ngo():
+    final, *_ = jd_ranker.apply_bumps(
+        70, days=None, contact="none", funding="unknown",
+        role_family="grants_admin", german_req="none"
+    )
+    assert final == 75  # 70 + 5
+    final2, *_ = jd_ranker.apply_bumps(
+        70, days=None, contact="none", funding="unknown",
+        role_family="international_development", german_req="none"
+    )
+    assert final2 == 75
+    assert "international_development" in jd_ranker.NIC_STRONG_DOMAINS
+    assert "ngo_grants" in jd_ranker.NIC_STRONG_DOMAINS
+    assert "grants_admin" in jd_ranker.ROLE_FAMILIES
+
+
 def test_language_gate_passes_fluent_and_c1():
     assert jd_ranker.passes_language_gate("b2")
     assert jd_ranker.passes_language_gate("plus")
@@ -260,12 +276,14 @@ def test_role_families_tuple():
     assert "solutions_pre_sales" in jd_ranker.ROLE_FAMILIES
     assert "implementations" in jd_ranker.ROLE_FAMILIES
     assert "project_management" in jd_ranker.ROLE_FAMILIES
+    assert "ngo_program" in jd_ranker.ROLE_FAMILIES
 
 
 def test_profile_lane_precedence_protocol():
-    assert "highest precedence" in jd_ranker.PROFILE
+    assert "international development" in jd_ranker.PROFILE.lower() or "International development" in jd_ranker.PROFILE
+    assert "stronger than product" in jd_ranker.PROFILE.lower() or "deeper than product" in jd_ranker.PROFILE.lower()
     assert "C2/native" in jd_ranker.PROFILE or "c2/native" in jd_ranker.SYSTEM_PROMPT
-    assert "do NOT discount PM" in jd_ranker.PROFILE
     assert "data_ai_internal" in jd_ranker.SYSTEM_PROMPT
     assert "pm_domain" in jd_ranker.SYSTEM_PROMPT
     assert "0.7 * competitiveness" in jd_ranker.SYSTEM_PROMPT
+    assert "Do **NOT** penalize NGO" in jd_ranker.PROFILE or "Do NOT soft-penalize" in jd_ranker.SYSTEM_PROMPT or "do not soft-penalize" in jd_ranker.SYSTEM_PROMPT

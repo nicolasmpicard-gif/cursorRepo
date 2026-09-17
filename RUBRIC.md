@@ -40,7 +40,7 @@ Set `required_domain` and `domain_fit`. **Hard DQ** when `domain_fit=mismatch` O
 | `automotive_oem` | Automotive OEM engineering depth |
 | `agtech_farmer_product` | Farmer/grower-facing product design (Klim-shaped); enterprise SC/ESG ≠ on-farm UX |
 
-**Nic domain strengths (match/adjacent OK):** `general_b2b_saas`, `solutions_impl`, `supply_chain_esg`, `climate_compliance`, `data_ai_internal`, `product_management`, `hr_enterprise_saas`, `logistics_tech`
+**Nic domain strengths (match/adjacent OK):** `international_development`, `ngo_grants`, `general_b2b_saas`, `solutions_impl`, `supply_chain_esg`, `climate_compliance`, `data_ai_internal`, `product_management`, `hr_enterprise_saas`, `logistics_tech`
 
 **Interview Comp notes:** Solutions/impl lane Comp stays high after NinjaOne (craft miss, not lane miss). Builder/climate founding PM Comp stays low (CEEZER). Salary rejects (SumSub) do not lower SC Comp.
 
@@ -59,8 +59,11 @@ Proficiency / fluent / C1 still get lane and PM-domain bumps.
 |---|---:|
 | `solutions_pre_sales` | +6 |
 | `implementations` | +6 |
-| `project_management` (TPM, delivery PM — not PMO) | +4 |
+| `international_development` / `grants_admin` / `ngo_program` | +5 |
+| `project_management` (TPM, delivery PM — not corporate PMO) | +4 |
 | `product_manager` | 0 |
+
+**Experience depth note (Sep 2026):** International development, NGO ops, and grants administration (Asia Foundation, WEConnect; OpenSC mission-adjacent) are **stronger Comp than product**. Do not soft-penalize NGO/grants/foundation roles. Solutions/impl still lead on interview *conversion*.
 
 ## PM domain bumps (when language gate passes)
 

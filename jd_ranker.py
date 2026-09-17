@@ -66,7 +66,8 @@ funding_bump   : -10 to +8 pts
   unknown      →   0
 applicant_bump : -5 to +5 pts (low competition → +5, high (100+) → -5)
 french_bump    : 0-7 pts (required/fluent → +7, preferred/plus → +4, none → 0)
-lane_bump      : 0-6 pts when language gate passes (solutions/impl +6, delivery PM/TPM +4; PM gets 0)
+lane_bump      : 0-6 pts when language gate passes (solutions/impl +6, NGO/intl-dev/grants +5,
+                   delivery PM/TPM +4; PM gets 0)
 pm_domain_bump : 0-4 pts for PM roles in Nic's strength domains when language gate passes
 language_pen   : 0 pts (German C2/native = hard DQ, not a penalty bump)
 final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + pm_domain + language_pen)
@@ -114,14 +115,15 @@ Nicolas Picard — French-American, based in Berlin (EU/US work auth).
 - Applied: Deel Product Ops, Insider One Solutions Consultant DACH, Paradox (French)
 
 ### Key experience areas (in rough order of depth):
+- International development / NGO program & grants operations (Asia Foundation, WEConnect International) — **deeper than product**
 - Solutions consulting & pre-sales (Oracle, OpenSC pitching, Pulsora offer-path)
 - Software implementations & onboarding (OpenSC, LeanIX-shaped)
-- B2B SaaS product management (IntegrityNext, OpenSC, Oracle Utilities)
-- Supply chain / agri-food traceability & ESG compliance SaaS
+- Supply chain / agri-food traceability & ESG compliance (OpenSC; WEConnect supplier diversity)
+- B2B SaaS product management (IntegrityNext, OpenSC, Oracle Utilities) — **shallower than NGO/intl-dev & solutions**
 - AI-assisted prototyping & workflow design (AstroFinance, IntegrityNext AI feature) — differentiator inside solutions/impl/PM, not a standalone "AI builder" title
 - Product ops: KPI dashboards, Jira/Notion/Airtable, Agile/Kanban
 - Data tools: SQL, QuickSight, basic Python
-- Public-sector proposals (Asia Foundation, WEConnect)
+- Public-sector / donor proposals and stakeholder workshops (Asia Foundation, WEConnect)
 
 ### Languages:
 - English: Native | French: Native | German: B1-B2 (actively studying) | Spanish: B2
@@ -132,32 +134,37 @@ Nicolas Picard — French-American, based in Berlin (EU/US work auth).
 
 ---
 
-## Primary role lanes (Aug 2026 — rank and apply in this order)
+## Primary role lanes (Sep 2026 — rank and apply in this order)
 
-**Protocol (Sep 2026):** Solutions consulting, implementation management, and delivery
-project management roles that pass the language gate take **highest precedence** — even above
-product manager roles. Language gate: English/French native OK; German C2/native fails gate
-(and is a hard DQ). Proficiency/fluent/C1 still pass the gate for lane/pm bumps.
+**Protocol (Sep 2026):** Solutions/impl still lead on *interview conversion*. International
+development, NGO ops, and grants administration are Nic's **deepest experience wells** — stronger
+than product — and take precedence over PM when the language gate passes.
+Language gate: English/French native OK; German C2/native fails gate (hard DQ).
+Proficiency/fluent/C1 still pass the gate for lane/pm bumps.
 
-1. **Solutions / Pre-Sales / Engagement (technical-commercial)** — STRONGEST interview signal
+1. **Solutions / Pre-Sales / Engagement (technical-commercial)** — STRONGEST interview conversion
    Titles: Solutions Consultant, Pre-Sales Solutions, Technical Pre-Sales, Engagement Manager,
    Solutions Engineer (discovery/scoping-heavy), AI Solution Strategist, Customer Solutions Engineer
 
-2. **Software Implementations / Onboarding / CS delivery** — STRONG second signal
+2. **Software Implementations / Onboarding / CS delivery** — STRONG second conversion signal
    Titles: Implementation Manager, Lead Implementation, Onboarding Manager, CS Onboarding,
    Implementation Consultant, Deployment Strategist (if maturity gates pass), Technical CSE (integration-heavy)
 
-3. **Delivery project management** — third priority lane (above PM)
-   Titles: Technical Project Manager, Implementation PM, Delivery PM (NOT PMO / program coordinator)
+3. **International development / NGO programs / grants administration** — deepest experience depth
+   (Asia Foundation, WEConnect; OpenSC as mission-adjacent). Stronger Comp than product roles.
+   Titles: Grants Officer/Manager, NGO Program Manager, Donor-funded Project Manager,
+   Humanitarian / intl-dev supply-chain program roles, foundation grants ops
 
-4. **Product Manager** — parallel track; do NOT discount PM roles entirely.
-   **Strong PM sub-lane (Nic strengths):** internal tooling, data platform / BI-as-product,
-   and AI product PM (Trade Republic data/PM final round, IBM AI PM cert, IntegrityNext AI feature).
-   Titles: Data & AI PM, Technical PM (data), Product Ops at mature SaaS, AI PM at mature orgs (n8n, Typeform)
+4. **Delivery project management** — software delivery PM/TPM (NOT generic corporate PMO)
+   Titles: Technical Project Manager, Implementation PM, Delivery PM
+
+5. **Product Manager** — shallower than NGO/intl-dev & solutions; do NOT over-rank generic Sr PM.
+   **Stronger PM sub-lane:** internal tooling, data/AI platform (still below NGO/intl-dev Comp).
 
 WEAKER interview signal (deprioritize unless exceptional JD): pure Account Manager, Strategic AM,
-PMO / Program Manager / prof-services coordinator, org-transformation consulting, sales-ops,
-monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM.
+corporate PMO without NGO/donor context, org-transformation consulting, sales-ops,
+monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM,
+HR enablement / growth PM.
 
 ---
 
@@ -178,9 +185,10 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
 - Not a high-burn "always-on" culture explicitly requiring 9-5+ intensity with no structure (Almedia-style)
 
 ### Nic domain strengths (match or adjacent OK — do NOT hard DQ):
+- International development / NGO program operations / grants administration (Asia Foundation, WEConnect)
 - B2B SaaS solutions / pre-sales / implementations / onboarding
-- Product management (incl. internal tooling, data platform, AI product)
-- Supply chain / agri-food traceability / ESG & climate compliance SaaS
+- Supply chain / agri-food traceability / ESG & climate compliance (OpenSC; WEConnect)
+- Product management (incl. internal tooling, data platform, AI product) — secondary to NGO/intl-dev depth
 - Enterprise HR / people software (Personio-shaped, minus German gate)
 - Logistics / e-commerce tech (general, not deep payments)
 - Product ops, workflow tooling, compliance/regtech (IntegrityNext, Pulsora pattern)
@@ -226,21 +234,25 @@ monitoring/eval ops, venture-builder biz dev, manufacturing/industrial domain PM
   work_region us/uk-only, germany_work_mode other_de_onsite
 
 ### Competitiveness boosters (interview probability — adjust Comp, not Fit):
-- Role family: solutions/pre-sales/engagement (+8 to +12 Comp vs baseline)
+- Role family: solutions/pre-sales/engagement (+8 to +12 Comp vs baseline) — best conversion
 - Role family: implementations/onboarding (+5 to +8 Comp)
-- Role family: PM at mature B2B SaaS with product org (+3 to +6 Comp)
-- PM sub-domain data/AI/internal tooling: strong Fit (+5 to +8 Fit) and pm_domain_bump (+4 internal, +3 external data/AI)
+- Role family: international development / NGO programs / grants admin (+8 to +12 Comp) —
+  Asia Foundation, WEConnect depth; **stronger than product**
+- Role family: delivery project management / donor-funded PM (+4 to +8 Comp when intl-dev/NGO context)
+- Role family: PM at mature B2B SaaS with product org (+2 to +5 Comp) — do not inflate above NGO/intl-dev
+- PM sub-domain data/AI/internal tooling: Fit bump + pm_domain_bump (+4/+3); Comp still below NGO/intl-dev
 - French required or strongly preferred (+5 to +8 Comp)
-- B2B SaaS | compliance/regtech/ESG/supply chain domain (+5 Comp if role family also strong)
+- B2B SaaS | compliance/regtech/ESG/supply chain | humanitarian SC program (+5 Comp if role family also strong)
 - Prior interview at company (metadata prior_interview=true): +5 Comp via contact bump path
 - AI-assisted prototyping / evals / workflow scoping as candidate quality (+5 to +8 Comp)
 
 ### Competitiveness reducers (lower Comp, not automatic skip):
 - Pure Account Manager / quota-carrying AM (−8 to −12 Comp) — NinjaOne AM vs SE lesson
-- Program Manager / PMO / prof-services coordinator (−5 to −10 Comp)
-- Org transformation / NGO ops / strategy consulting without SaaS product (−5 to −10 Comp)
+- Corporate PMO / prof-services coordinator **without** NGO/donor/intl-dev context (−5 to −10 Comp)
+- Org transformation / strategy consulting without SaaS **or** NGO/intl-dev context (−5 to −10 Comp)
+- Do **NOT** penalize NGO ops / grants / foundation / donor-funded PM — those are Comp strengths
 - "AI builder" / founding PM / solo product at seed — weak interview history (−5 Comp unless mature org)
-- Climate mission-only at non-SaaS employer (−5 Comp; see climate nuance above)
+- Generic Sr PM outside ESG/SC/NGO context (−3 to −8 Comp vs NGO/intl-dev baseline)
 - Intensity culture ("not 9-5", perpetual urgency, venture builder) (−5 to −10 Fit and −3 Comp)
 
 ### Things that reduce fit (soft):
@@ -300,12 +312,15 @@ For each JD produce a JSON evaluation object:
                           Solutions Engineer (scoping/demo-heavy), AI Solution Strategist, Customer Solutions Engineer
     implementations      — Implementation Manager, Lead Implementation, Onboarding, CS Onboarding, CSE (integration-heavy),
                           Implementation Consultant
+    international_development — donor-funded / intl-dev project or program roles (Luvent-shaped)
+    grants_admin         — Grants Officer/Manager, foundation grants operations (OSF-shaped)
+    ngo_program          — NGO/humanitarian program manager (not corporate PMO); IRC-shaped SC program OK here
     project_management   — Technical Project Manager, Implementation PM, Delivery PM (software delivery; NOT PMO)
     product_manager      — Product Manager, Product Ops (with product org)
     customer_success     — generic CSM / AM without solutions or implementation depth
     account_manager      — quota-carrying AM / Strategic AM
-    program_manager      — PMO, Program Manager, Prof Services coordinator (no lane bump)
-    consulting_other     — org transformation, strategy consulting, NGO ops, sales ops
+    program_manager      — corporate PMO / Prof Services coordinator without NGO/donor context (no lane bump)
+    consulting_other     — org transformation, strategy consulting, sales ops (NGO ops → use ngo_program/grants_admin)
     other
 - "german_requirement": "none" | "plus" | "b2" | "proficiency" | "business_professional" | "fluent" | "c1" | "c2" | "native"
 - "required_domain": one of REQUIRED_DOMAINS (see jd_ranker.py) — infer from JD required experience
@@ -349,7 +364,9 @@ IMPORTANT RULES:
   Also: seed/pre-seed; founded <2 years; US-only/UK-only without EU eligibility.
 - Language gate passes unless German is c2/native — eligible for lane/pm_domain bumps.
 - Lane precedence (post-processing): when language_gate_pass=true, solutions_pre_sales +6,
-  implementations +6, project_management +4. product_manager gets 0 lane bump but may get pm_domain bump.
+  implementations +6, international_development/grants_admin/ngo_program +5, project_management +4.
+  product_manager gets 0 lane bump but may get pm_domain bump.
+- NGO/intl-dev/grants Comp is HIGH (Asia Foundation, WEConnect) — stronger than product; do not soft-penalize.
 - PM domain (post-processing): when language_gate_pass=true, data_ai_internal +4, data_ai_product +3.
   Internal tooling / BI / data platform PM is a Nic strength — do NOT penalize for being internal.
 - french_language "required" → +7 competitiveness worth (applied as french_bump in post-processing).
@@ -451,6 +468,8 @@ REQUIRED_DOMAINS = (
     "solutions_impl",
     "supply_chain_esg",
     "climate_compliance",
+    "international_development",
+    "ngo_grants",
     "data_ai_internal",
     "product_management",
     "hr_enterprise_saas",
@@ -472,6 +491,7 @@ REQUIRED_DOMAINS = (
 
 NIC_STRONG_DOMAINS = {
     "general_b2b_saas", "solutions_impl", "supply_chain_esg", "climate_compliance",
+    "international_development", "ngo_grants",
     "data_ai_internal", "product_management", "hr_enterprise_saas", "logistics_tech",
     "none", "unknown",
 }
@@ -486,9 +506,12 @@ VALID_DOMAIN_FIT = {"match", "adjacent", "mismatch", "unknown"}
 
 # Lane precedence bumps when language gate passes (Sep 2026 protocol)
 LANE_PRECEDENCE_BUMPS = {
-    "solutions_pre_sales": (6, "solutions/pre-sales lane — highest precedence"),
-    "implementations":     (6, "implementations lane — highest precedence"),
-    "project_management":  (4, "delivery project management lane"),
+    "solutions_pre_sales":        (6, "solutions/pre-sales lane — highest interview conversion"),
+    "implementations":            (6, "implementations lane — highest interview conversion"),
+    "international_development":  (5, "intl-dev / donor-funded program lane — deep experience"),
+    "grants_admin":               (5, "grants administration lane — Asia Foundation/WEConnect depth"),
+    "ngo_program":                (5, "NGO/humanitarian program lane — deep experience"),
+    "project_management":         (4, "delivery project management lane"),
 }
 
 # PM domain bumps — Nic strengths in internal tooling / data / AI product (Sep 2026)
@@ -511,6 +534,9 @@ VALID_WORK_REGIONS = {"eu", "global", "us_only", "uk_only", "unknown"}
 ROLE_FAMILIES = (
     "solutions_pre_sales",
     "implementations",
+    "international_development",
+    "grants_admin",
+    "ngo_program",
     "project_management",
     "product_manager",
     "customer_success",

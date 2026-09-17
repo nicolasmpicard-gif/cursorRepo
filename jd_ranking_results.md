@@ -1,28 +1,28 @@
 # JD Ranking Results — active top 5 only
-_Date: 2026-09-16_
+_Date: 2026-09-17_
 
 **Rubric:** `base = 0.7·Comp + 0.3·Fit`. Hard DQ = German C2/native · non-Berlin DE onsite without hybrid · domain gap (incl. `agtech_farmer_product`) · seed/&lt;2y · US/UK-only · Almedia-style always-on intensity. Lane +6/+6/+4 when language gate passes. French +7/+4.
 
-**Applied (off chart):** Ashby, osapiens, LimeFlight, EPAM, EQS, Beiersdorf, Bonial Sr PM, Doctolib, Docker/Poka/NiCE/Kainos/NeuroNation/…  
+**Applied (off chart):** Ashby, osapiens, LimeFlight, EPAM, EQS, Beiersdorf, Bonial Sr PM, Doctolib, Docker/Poka/NiCE/Kainos/NeuroNation/…, **Wellspring Solutions Consultant**, **Intellect Senior Implementation Analyst**.  
 **Tracker insight:** solutions/impl converts; generic PM / growth / product ops mostly X.
 
 #    Score   Apps   Company — Role
 ------------------------------------------------------------------------------------------
-1    100    <25    Wellspring — Solutions Consultant (Europe remote)
-2    72     96     Intellect — Senior Implementation Analyst
-3    71     30     Whatnot — Category Associate (French)
-4    68     96     Leapsome — CS Enablement Manager
-5    68     —      IRC — Sr Manager, SC Digitalization Benchmarking & Pilots
+1    71     30     Whatnot — Category Associate (French)
+2    68     96     Leapsome — CS Enablement Manager
+3    68     —      IRC — Sr Manager, SC Digitalization Benchmarking & Pilots
+4    67     31     Recyda — Solution Architect
+5    66     —      Cohere — Product Manager, Managed North
 
 ---
 ## Top 5 links
 | # | Score | Apps | Role | Link |
 |---|------:|-----:|------|------|
-| 1 | **100** | <25 | **Wellspring — Solutions Consultant** | https://www.linkedin.com/jobs/view/4466117186/ |
-| 2 | 72 | 96 | Intellect — Senior Implementation Analyst | https://www.intellect.com/careers/ |
-| 3 | 71 | 30 | Whatnot — Category Associate (French) | https://www.linkedin.com/jobs/view/4462341924/ |
-| 4 | 68 | 96 | Leapsome — CS Enablement Manager | https://www.linkedin.com/jobs/view/4454996405/ |
-| 5 | 68 | — | IRC — Sr Manager, SC Digitalization Benchmarking & Pilots | https://www.linkedin.com/jobs/view/4465866437/ |
+| 1 | 71 | 30 | Whatnot — Category Associate (French) | https://www.linkedin.com/jobs/view/4462341924/ |
+| 2 | 68 | 96 | Leapsome — CS Enablement Manager | https://www.linkedin.com/jobs/view/4454996405/ |
+| 3 | 68 | — | IRC — Sr Manager, SC Digitalization Benchmarking & Pilots | https://www.linkedin.com/jobs/view/4465866437/ |
+| 4 | 67 | 31 | Recyda — Solution Architect | https://www.recyda.com/careers |
+| 5 | 66 | — | Cohere — Product Manager, Managed North | https://euremotejobs.com/job/product-manager-managed-north/ |
 
 ---
 ## Sep 16 batch — full scoring
@@ -48,8 +48,6 @@ _Date: 2026-09-16_
 ## Next 10
 | Score | Apps | Company — Role | Link |
 |------:|-----:|----------------|------|
-| 67 | 31 | Recyda — Solution Architect | https://www.recyda.com/careers |
-| 66 | — | Cohere — Product Manager, Managed North | https://euremotejobs.com/job/product-manager-managed-north/ |
 | 65 | 46 | Essity — Senior PM, Digital Solutions | https://www.essity.com/careers/ |
 | 65 | — | KoRo — Sr PM, Outbound Logistics & Returns | https://www.korodrogerie.de/karriere |
 | 61 | — | Uvation — Product Owner (Marketplace) | https://euremotejobs.com/job/product-owner-7/ |
@@ -62,8 +60,14 @@ _Date: 2026-09-16_
 ## Active full ranking (abbrev)
 | Rank | Score | Verdict | Role |
 |------|------:|---------|------|
-| 1 | **100** | 🟢 Apply now | **Wellspring — Solutions Consultant** |
-| 2 | 72 | 🟡 Apply soon | Intellect — Senior Implementation Analyst |
-| 3 | 71 | 🟠 Apply if time | Whatnot — Category Associate (French) |
-| 4–5 | 68 | 🟠 | Leapsome Enablement / IRC SC Digitalization |
-| 6+ | ≤67 | 🟠 | Recyda → Cohere → Essity → KoRo → … |
+| 1 | 71 | 🟠 Apply if time | Whatnot — Category Associate (French) |
+| 2–3 | 68 | 🟠 | Leapsome Enablement / IRC SC Digitalization |
+| 4 | 67 | 🟠 | Recyda — Solution Architect |
+| 5 | 66 | 🟠 | Cohere — PM Managed North |
+| 6+ | ≤65 | 🟠 | Essity → KoRo → … |
+
+## Recently applied
+| Score | Role |
+|------:|------|
+| 100 | Wellspring — Solutions Consultant |
+| 72 | Intellect — Senior Implementation Analyst |

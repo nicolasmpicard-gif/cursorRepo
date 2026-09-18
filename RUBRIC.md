@@ -4,7 +4,19 @@ Use `jd_ranker.py` as the source of truth.
 
 ## Formula
 `base = 0.7 * competitiveness + 0.3 * fit`  
-`final = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + pm_domain + language_pen)`
+`raw_bumps = recency + contact + funding + applicants + french + lane + pm_domain + language_pen`  
+`bump_index = map raw_bumps → 0–100` (raw 0 → 50; max ≈+55 → 100; min ≈−15 → 0)  
+`final = base + MAX_BUMP_SHIFT * (bump_index - 50) / 50` with `MAX_BUMP_SHIFT = 12`
+
+### Why not `clamp(base + bumps)` (Sep 2026 fix)
+Additive stacking (interview +15, fresh +10, lane +6, …) routinely blew past 100 and collapsed distinct roles into identical perfect scores.  
+
+Now bumps shift final by **at most ±12** from base. Neutral bumps leave `final == base`. A true 100 needs base already near the ceiling (≈88+) **plus** near-max bumps — not just a contact stack.
+
+| Role | Base | Raw bumps | Bump index | Final |
+|------|-----:|----------:|-----------:|------:|
+| Workiva Sr SC | 84 | +44 | ~90 | **94** |
+| osapiens Sr SE | 72 | +48 | ~94 | **82** |
 
 ## Hard DQs (cap base at 30, skip)
 

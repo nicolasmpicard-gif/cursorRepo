@@ -55,6 +55,8 @@ base_score     = 0.7 * competitiveness_score + 0.3 * fit_score
   competitiveness_score : how likely Nic is to get the interview/offer
   fit_score              : preference fit (product peer/supervisor, pace/culture, stage/age
                            gates) + workplace-style sustainability (structure/autonomy/feedback)
+
+Nominal bump points (interpretability — NOT added 1:1 to final):
 recency_bump   : 0-10 pts  (0-7d → +10, 8-14d → +6, 15-30d → +3, 31-60d → +1, >60d/unknown → 0)
 contact_bump   : 0-15 pts  (none → 0, positive_contact → +7, interview → +15)
 funding_bump   : -10 to +8 pts
@@ -70,7 +72,15 @@ lane_bump      : 0-6 pts when language gate passes (solutions/impl +6, NGO/intl-
                    delivery PM/TPM +4; PM gets 0)
 pm_domain_bump : 0-4 pts for PM roles in Nic's strength domains when language gate passes
 language_pen   : 0 pts (German C2/native = hard DQ, not a penalty bump)
-final_score    = clamp(0, 100, base + recency + contact + funding + applicants + french + lane + pm_domain + language_pen)
+
+raw_bumps      = sum of nominal bumps above
+final_score    = base + MAX_BUMP_SHIFT * (bump_index - 50) / 50
+  bump_index maps raw_bumps onto 0–100 (neutral raw=0 → 50;
+    max positive raw ≈55 → 100; max negative raw ≈−15 → 0)
+  MAX_BUMP_SHIFT = 12  → bumps move final by at most ±12 from base
+  Neutral bumps leave final == base. Max stack on base 90 → 102 → safety-clamped to 100
+  (only extreme+high-base cases hit the clamp; typical best roles land low–mid 90s).
+  Replaces `clamp(base + sum(bumps))` which minted multiple fake 100s.
 
 CRITICAL SCORING DISCIPLINE (read before every evaluation)
 ---------------------------------------------------------
@@ -352,6 +362,7 @@ For each JD produce a JSON evaluation object:
 - "funding_stage_inferred": pre_seed|seed|series_a|series_b_plus|profitable|unknown
 
 base_score = 0.7 * competitiveness_score + 0.3 * fit_score
+# Post-process: final = base + bounded bump shift (±MAX_BUMP_SHIFT). Neutral raw → final==base.
 
 IMPORTANT RULES:
 - Hard DQs → cap base_score at 30, recommend skip:
@@ -599,6 +610,34 @@ def pm_domain_bump(pm_domain, german_req):
     return PM_DOMAIN_BUMPS.get(pm_domain, (0, "PM domain unknown"))
 
 
+# Bounded bump shift — nominal points map to a 0–100 index; final moves at most
+# ±MAX_BUMP_SHIFT from base. Neutral (raw=0) leaves final == base.
+MAX_BUMP_SHIFT = 12
+RAW_BUMP_MAX = 55   # 10+15+8+5+7+6+4
+RAW_BUMP_MIN = -15  # pre_seed -10 + high apps -5
+
+
+def bump_index_from_raw(raw_bumps):
+    """Map nominal bump sum to 0–100. Neutral (raw=0) → 50."""
+    raw = float(raw_bumps)
+    if raw >= 0:
+        idx = 50.0 + 50.0 * (raw / RAW_BUMP_MAX)
+    else:
+        idx = 50.0 + 50.0 * (raw / abs(RAW_BUMP_MIN))
+    return max(0.0, min(100.0, idx))
+
+
+def combine_base_and_bumps(base, raw_bumps):
+    """Shift base by a bounded function of bumps. Neutral bumps → no change."""
+    idx = bump_index_from_raw(raw_bumps)
+    delta = MAX_BUMP_SHIFT * ((idx - 50.0) / 50.0)
+    final = float(base) + delta
+    final_i = int(round(final))
+    # Safety clamp — only binds for extreme bump stacks on already-high bases.
+    final_i = max(0, min(100, final_i))
+    return final_i, idx, delta
+
+
 def apply_bumps(base, days, contact, funding, applicants="unknown", french="unknown",
                 role_family="other", german_req="unknown", pm_domain="unknown"):
     r_pts, r_label = recency_bump(days)
@@ -609,9 +648,11 @@ def apply_bumps(base, days, contact, funding, applicants="unknown", french="unkn
     lane_pts, lane_label = lane_precedence_bump(role_family, german_req)
     pm_pts, pm_label = pm_domain_bump(pm_domain, german_req)
     lang_pts, lang_label = language_penalty(german_req)
-    final = max(0, min(100, base + r_pts + c_pts + f_pts + a_pts + fr_pts + lane_pts + pm_pts + lang_pts))
+    raw = r_pts + c_pts + f_pts + a_pts + fr_pts + lane_pts + pm_pts + lang_pts
+    final, bump_idx, contrib = combine_base_and_bumps(base, raw)
     return (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, pm_pts, lang_pts,
-            r_label, c_label, f_label, a_label, fr_label, lane_label, pm_label, lang_label)
+            r_label, c_label, f_label, a_label, fr_label, lane_label, pm_label, lang_label,
+            raw, contrib, bump_idx)
 
 
 def validate_metadata(metadata):
@@ -837,12 +878,15 @@ def build_rankings(evaluations, metadata):
             ev.get("base_score", 0), days, contact, funding, applicants, french,
             role_family=role_family, german_req=german, pm_domain=pm_domain)
         (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, pm_pts, lang_pts,
-         r_label, c_label, f_label, a_label, fr_label, lane_label, pm_label, lang_label) = bump_result
+         r_label, c_label, f_label, a_label, fr_label, lane_label, pm_label, lang_label,
+         raw_bumps, bump_contrib, bump_idx) = bump_result
         results.append({**ev, "jd_key": key, "final_score": final,
                         "recency_pts": r_pts, "contact_pts": c_pts,
                         "funding_pts": f_pts, "applicant_pts": a_pts,
                         "french_pts": fr_pts, "lane_pts": lane_pts,
                         "pm_domain_pts": pm_pts, "language_pts": lang_pts,
+                        "raw_bumps": raw_bumps, "bump_contrib": round(bump_contrib, 2),
+                        "bump_index": round(bump_idx, 1),
                         "recency_label": r_label, "contact_label": c_label,
                         "funding_label": f_label, "applicant_label": a_label,
                         "french_label": fr_label, "lane_label": lane_label,
@@ -904,9 +948,10 @@ def format_results(rankings):
         emp_str = f"  |  👥 {r['employees']}" if r.get("employees") else ""
         lines.append(
             f"**Final score**: {r['final_score']}/100  "
-            f"(base {r.get('base_score',0)} + recency +{r['recency_pts']} "
-            f"+ contact +{r['contact_pts']} + funding {f_str} + applicants {a_str} "
-            f"+ french {fr_str} + lane {lane_str} + pm_domain {pm_str} + language {lang_str})"
+            f"(base {r.get('base_score',0)} {r.get('bump_contrib',0):+g} bump-shift; "
+            f"bump_index {r.get('bump_index',50)}; nominal raw {r.get('raw_bumps',0):+g}; "
+            f"recency +{r['recency_pts']} contact +{r['contact_pts']} funding {f_str} "
+            f"apps {a_str} french {fr_str} lane {lane_str} pm {pm_str})"
         )
         lines.append(
             f"Fit: {r.get('fit_score',0)}/100  |  "

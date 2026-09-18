@@ -34,7 +34,7 @@ def test_searoutes_style_score_does_not_inflate_fit_into_base():
         base, days=None, contact="none", funding="seed", applicants="unknown"
     )
     assert f == -5
-    assert final == 65  # 70 - 5
+    assert final == 66  # bounded negative shift from seed
 
 
 def test_searoutes_with_fresh_posting_and_low_apps():
@@ -42,7 +42,17 @@ def test_searoutes_with_fresh_posting_and_low_apps():
     final, *_ = jd_ranker.apply_bumps(
         base, days=0, contact="none", funding="seed", applicants="low"
     )
-    assert final == 80  # 70 - 5 + 10 + 5
+    # raw = +10 → small positive shift → 72 (not additive 80)
+    assert final == 72
+
+
+def test_neutral_bumps_leave_base_unchanged():
+    final, *rest = jd_ranker.apply_bumps(
+        70, days=None, contact="none", funding="unknown"
+    )
+    raw, delta, idx = rest[-3], rest[-2], rest[-1]
+    assert raw == 0 and idx == 50.0 and delta == 0.0
+    assert final == 70
 
 
 def test_validate_metadata_rejects_upgraded_funding_typo():
@@ -88,7 +98,7 @@ def test_french_bump_required():
         60, days=None, contact="none", funding="unknown", french="required"
     )
     assert fr == 7
-    assert final == 67
+    assert final == 62
 
 
 def test_french_bump_preferred():
@@ -96,7 +106,7 @@ def test_french_bump_preferred():
         60, days=None, contact="none", funding="unknown", french="preferred"
     )
     assert fr == 4
-    assert final == 64
+    assert final == 61
 
 
 def test_lane_precedence_solutions_passes_gate():
@@ -104,7 +114,7 @@ def test_lane_precedence_solutions_passes_gate():
         70, days=None, contact="none", funding="unknown",
         role_family="solutions_pre_sales", german_req="none"
     )
-    assert final == 76  # 70 + 6 lane
+    assert final == 71
 
 
 def test_lane_precedence_allowed_when_german_fluent():
@@ -112,7 +122,7 @@ def test_lane_precedence_allowed_when_german_fluent():
         70, days=None, contact="none", funding="unknown",
         role_family="solutions_pre_sales", german_req="fluent"
     )
-    assert final == 76  # fluent no longer hard DQ; lane bump applies
+    assert final == 71
 
 
 def test_german_only_c2_native_hard_dq():
@@ -150,7 +160,7 @@ def test_lane_precedence_implementations():
         65, days=None, contact="none", funding="unknown",
         role_family="implementations", german_req="plus"
     )
-    assert final == 71  # 65 + 6
+    assert final == 66
 
 
 def test_lane_precedence_project_management():
@@ -158,7 +168,7 @@ def test_lane_precedence_project_management():
         64, days=None, contact="none", funding="unknown",
         role_family="project_management", german_req="b2"
     )
-    assert final == 68  # 64 + 4
+    assert final == 65
 
 
 def test_lane_precedence_grants_and_ngo():
@@ -166,12 +176,12 @@ def test_lane_precedence_grants_and_ngo():
         70, days=None, contact="none", funding="unknown",
         role_family="grants_admin", german_req="none"
     )
-    assert final == 75  # 70 + 5
+    assert final == 71
     final2, *_ = jd_ranker.apply_bumps(
         70, days=None, contact="none", funding="unknown",
         role_family="international_development", german_req="none"
     )
-    assert final2 == 75
+    assert final2 == 71
     assert "international_development" in jd_ranker.NIC_STRONG_DOMAINS
     assert "ngo_grants" in jd_ranker.NIC_STRONG_DOMAINS
     assert "grants_admin" in jd_ranker.ROLE_FAMILIES
@@ -188,22 +198,20 @@ def test_language_gate_passes_fluent_and_c1():
 
 
 def test_gls_nxt_rescore():
-    """GLS/NXT CSE: base 68 + lane +6 = 74 under 70/30."""
     final, *_ = jd_ranker.apply_bumps(
         68, days=None, contact="none", funding="unknown",
         role_family="solutions_pre_sales", german_req="none"
     )
-    assert final == 74
+    assert final == 69
 
 
 def test_holidu_venture_up_rescore():
-    """Holidu/Venture Up Data & AI PM: base 77 + recency +6 + funding +8 - apps -5 + pm +4 = 90."""
     final, *_ = jd_ranker.apply_bumps(
         77, days=14, contact="none", funding="series_b_plus",
         applicants="high", role_family="product_manager",
         german_req="none", pm_domain="data_ai_internal",
     )
-    assert final == 90
+    assert final == 80
 
 
 def test_pm_domain_allowed_when_german_fluent():
@@ -212,16 +220,15 @@ def test_pm_domain_allowed_when_german_fluent():
         role_family="product_manager", german_req="fluent",
         pm_domain="data_ai_internal",
     )
-    assert final == 74  # pm bump applies under new German rule
+    assert final == 71
 
 
 def test_neuronation_rescore():
-    """NeuroNation TPM: base 64 + lane +4 = 68."""
     final, *_ = jd_ranker.apply_bumps(
         64, days=None, contact="none", funding="unknown",
         role_family="project_management", german_req="plus"
     )
-    assert final == 68
+    assert final == 65
 
 
 def test_pm_domain_internal():
@@ -230,7 +237,28 @@ def test_pm_domain_internal():
         role_family="product_manager", german_req="none",
         pm_domain="data_ai_internal",
     )
-    assert final == 74  # 70 + 4
+    assert final == 71
+
+
+def test_bounded_bumps_differentiate_workiva_osapiens():
+    """Contact stacks must not mint twin 100s — base quality still ranks."""
+    workiva = jd_ranker.apply_bumps(
+        84, days=1, contact="interview", funding="profitable",
+        applicants="low", role_family="solutions_pre_sales", german_req="none",
+    )[0]
+    osapiens = jd_ranker.apply_bumps(
+        72, days=5, contact="interview", funding="series_b_plus",
+        applicants="low", french="preferred",
+        role_family="solutions_pre_sales", german_req="fluent",
+    )[0]
+    assert workiva == 94
+    assert osapiens == 82
+    assert workiva > osapiens
+    assert workiva < 100
+
+
+def test_max_bump_shift_constant():
+    assert jd_ranker.MAX_BUMP_SHIFT == 12
 
 
 def test_hard_dq_cap_logic_in_build_path():
@@ -287,3 +315,4 @@ def test_profile_lane_precedence_protocol():
     assert "pm_domain" in jd_ranker.SYSTEM_PROMPT
     assert "0.7 * competitiveness" in jd_ranker.SYSTEM_PROMPT
     assert "Do **NOT** penalize NGO" in jd_ranker.PROFILE or "Do NOT soft-penalize" in jd_ranker.SYSTEM_PROMPT or "do not soft-penalize" in jd_ranker.SYSTEM_PROMPT
+    assert "MAX_BUMP_SHIFT" in jd_ranker.__doc__

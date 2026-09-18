@@ -1,92 +1,112 @@
 # JD Ranking Results — active top 5 only
-_Date: 2026-09-17 (NGO/intl-dev Comp uplift)_
+_Date: 2026-09-18 (IRC applied · drop OSF/Recyda/Whatnot · Workiva/osapiens contact bump)_
 
 **Rubric:** `base = 0.7·Comp + 0.3·Fit`. Hard DQ = German C2/native · non-Berlin DE onsite without hybrid · domain gap · seed/&lt;2y · US/UK-only · Almedia intensity.  
 **Lane bumps:** solutions/impl +6 · **intl-dev / grants / NGO program +5** · delivery PM +4 · PM 0.  
-**Experience depth:** Asia Foundation / WEConnect / grants & NGO ops are **stronger Comp than product**; solutions/impl still lead on interview conversion.
+**Contact:** prior interview pipeline → **+15** (Workiva, osapiens — reach out to HR).
 
-**Applied:** Ashby, osapiens, LimeFlight, EPAM, EQS, Beiersdorf, Bonial, Doctolib, Wellspring, Intellect, …
+**Applied:** Ashby, osapiens (earlier pipeline), LimeFlight, EPAM, EQS, Beiersdorf, Bonial, Doctolib, Wellspring, Intellect, **IRC**, …
 
 #    Score   Apps   Company — Role
 ------------------------------------------------------------------------------------------
-1    100    —      IRC — Sr Manager, SC Digitalization Benchmarking & Pilots
-2    91     —      OSF — Grants Officer (Berlin hybrid)
+1    100    <25    Workiva — Sr Solution Consultant, Sustainability (Sweden)
+2    100    <25    osapiens — Sr Solution Engineer (Munich hybrid) — HR outreach
 3    87     —      Luvent — Project Manager (French / donor-funded)
-4    71     30     Whatnot — Category Associate (French)
-5    68     96     Leapsome — CS Enablement Manager
+4    79     —      Constructor — Sr Customer Success Manager, DACH
+5    78     45     Haiilo — Sr Product Manager, Analytics (Hamburg hybrid)
 
 ---
 ## Top 5 links
 | # | Score | Apps | Role | Link |
 |---|------:|-----:|------|------|
-| 1 | **100** | — | **IRC — Sr Manager, SC Digitalization Benchmarking & Pilots** | https://www.linkedin.com/jobs/view/4465866437/ |
-| 2 | **91** | — | **OSF — Grants Officer** | https://unjobs.org/vacancies/1788697557228 |
+| 1 | **100** | &lt;25 | **Workiva — Sr Solution Consultant, Sustainability** | https://www.linkedin.com/jobs/view/4468383592/ |
+| 2 | **100** | &lt;25 | **osapiens — Sr Solution Engineer (Munich)** | https://www.linkedin.com/jobs/view/4452991003/ |
 | 3 | **87** | — | **Luvent — Project Manager (French)** | https://www.luvent-consulting.com/jobs/project-manager/ |
-| 4 | 71 | 30 | Whatnot — Category Associate (French) | https://www.linkedin.com/jobs/view/4462341924/ |
-| 5 | 68 | 96 | Leapsome — CS Enablement Manager | https://www.linkedin.com/jobs/view/4454996405/ |
+| 4 | 79 | — | Constructor — Sr CSM DACH | https://euremotejobs.com/job/senior-customer-success-manager-dach/ |
+| 5 | 78 | 45 | Haiilo — Sr PM Analytics | https://www.linkedin.com/jobs/view/4467509479/ |
 
 ---
-## Rubric change — NGO / intl-dev uplift
-| Role | Old → New | Drivers |
-|------|----------:|---------|
-| IRC SC Digitalization | 68 → **100** | Comp 78 / Fit 74; `ngo_program` +5; FR preferred +4; funding +8; recency +10 |
-| OSF Grants Officer | 41 → **91** | Comp 80 / Fit 74; `grants_admin` +5; funding +8 (was wrongly treated as wrong-lane) |
-| Luvent PM French | 55 → **87** | Comp 76 / Fit 72; `international_development` +5; FR required +7 |
-| KWS Procurement Sustain | 55 → **62** | Mild lift only — corporate procurement ≠ NGO/grants depth |
-| Cohere / Essity / KoRo | slight ↓ | Product Comp capped relative to NGO/intl-dev |
+## This batch — scoring notes
+| Role | Score | Comp | Fit | Key drivers | Action |
+|------|------:|-----:|----:|-------------|--------|
+| **Workiva Sr SC Sustainability** | **100** | 86 | 78 | Solutions lane +6; ESG/sustainability match (Pulsora/OpenSC); **contact +15**; profitable +8; &lt;25 apps +5; rec +10 | **Email HR now** — best fit in batch |
+| **osapiens Sr SE Munich** | **100** | 74 | 68 | Solutions +6; SC/ESG HUB; **contact +15**; Series B+ +8; &lt;25 +5; FR preferred +4; fluent DE (not C2 DQ); hybrid Munich | **HR outreach** — technical SE craft bar (NinjaOne lesson); DE fluent expected |
+| Constructor Sr CSM DACH | 79 | 60 | 64 | Enterprise CS/QBR shape; DE *plus* only; remote EMEA; Series B+ +8; rec +10; **no lane bump** (CS ≠ solutions/impl) | Apply if time after top 3 |
+| Haiilo Sr PM Analytics | 78 | 56 | 60 | Data/AI PM +3; hybrid Hamburg OK; DE plus; Series B+ +8; rec +10 | Stretch PM — analytics strength |
+| Talon.One PM Berlin | 74 | 54 | 62 | Mature B2B SaaS (2015); Berlin hybrid; product org; Series B+ +8 | Solid generic PM — below solutions |
+| Clay TPM | 71 | 56 | 60 | Delivery PM +4; global remote; agency client TPM | Apply if bandwidth |
+| SupportYourApp AI Solutions Spec | 69 | 52 | 55 | Solutions lane +6 but chatbot/BPO craft; thin vs enterprise SC | Low priority |
+| Otera TPM Agentic AI | 68 | 48 | 56 | Series A +5; data/AI PM +3; 96 apps; eng/AI-agent depth stretch | Stretch only |
+| Tourlane Strategy & Transformation | 64 | 44 | 52 | Org-transformation lane (weak Comp); Berlin hybrid; 92 apps | Skip unless spare time |
+| Empiric Sr IT PM | 58 | 42 | 48 | Contract IT infra / energy-utility PM; delivery +4 only | Skip |
+| **BetterMe Product Analyst** | DQ | — | — | B2C mobile analytics — wrong role family / domain mismatch | **Skip** |
+| **Rubrik Global SA** | DQ | — | — | 15y expert cloud architect / IaC — craft hard DQ | **Skip** |
+| **lemon.markets PM Investing** | DQ | — | — | Capital markets / investing product + fluent DE — domain hard DQ | **Skip** |
 
-### OSF — why 91 now
-| Factor | Detail |
-|--------|--------|
-| **Lane** | Grants Officer = `grants_admin` (+5) |
-| **Comp 80** | Asia Foundation + WEConnect grants/NGO ops depth &gt; product tenure |
-| **Fit 74** | Hybrid Berlin; foundation grants management match |
-| **Score** | Base 78 + funding +8 + lane +5 = **91** |
+### Workiva vs osapiens (both 100)
+| | Workiva | osapiens |
+|--|---------|----------|
+| **Why 100** | Contact +15 on a true Sr SC Sustainability seat | Contact +15 on SE seat in your ESG domain |
+| **Comp edge** | **86** — consultative SC, less POC/API-heavy | **74** — technical SE (APIs, cloud, integrations, POC ownership) |
+| **Friction** | Sweden / up to 30% travel | Munich or Mannheim hybrid; **outstanding German + English** |
+| **Play** | Reopen prior pipeline with HR; lead with Pulsora offer-path + OpenSC ESG | Reopen prior pipeline; position as discovery/scoping SE, not pure architect |
 
 ---
-## Next 10 (only 8 active below top 5)
-| # | Score | Comp | Fit | Bumps | Verdict | Role | Link |
-|--:|------:|-----:|----:|-------|---------|------|------|
-| 6 | **67** | 62 | 60 | lane +6 | 🟠 If time | Recyda — Solution Architect | https://www.recyda.com/careers |
-| 7 | **64** | 50 | 60 | fund +8, pm +3 | 🟠 Stretch | Cohere — PM Managed North | https://euremotejobs.com/job/product-manager-managed-north/ |
-| 8 | **62** | 48 | 52 | rec +10, fund +8, apps −5 | 🟠 Stretch | KWS — Procurement Risk & Sustainability | https://www.linkedin.com/jobs/view/4457353110/ |
-| 9 | **62** | 52 | 58 | fund +8 | 🟠 Stretch | Essity — Sr PM Digital Solutions | https://www.essity.com/careers/ |
-| 10 | **61** | 60 | 64 | — | 🟠 If time | KoRo — Sr PM Logistics & Returns | https://www.korodrogerie.de/karriere |
-| 11 | **60** | 58 | 52 | lane +4 | 🟠 Stretch | 360Dialog — PM EMEA | https://euremotejobs.com/job/project-manager-emea-remote/ |
-| 12 | **59** | 48 | 50 | rec +10 | 🟠 Stretch | Uvation — Marketplace PO | https://euremotejobs.com/job/product-owner-7/ |
-| 13 | **54** | 44 | 50 | fund +8 | 🟠 Low | RelationalAI — Solution Engineer | https://euremotejobs.com/job/solution-engineer/ |
+## Next 10
+| # | Score | Comp | Fit | Verdict | Role | Link |
+|--:|------:|-----:|----:|---------|------|------|
+| 6 | **74** | 54 | 62 | 🟠 If time | Talon.One — Product Manager | https://startup.jobs/product-manager-talonone-linkedin-10062706 |
+| 7 | **71** | 56 | 60 | 🟠 If time | Clay — Technical Project Manager | https://euremotejobs.com/job/technical-project-manager/ |
+| 8 | **69** | 52 | 55 | 🟠 Low | SupportYourApp — AI Solutions Specialist | https://euremotejobs.com/job/fluent-english-ai-solutions-specialist-global-remote/ |
+| 9 | **68** | 54 | 56 | 🟠 If time | Leapsome — CS Enablement Manager | https://www.linkedin.com/jobs/view/4454996405/ |
+| 10 | **68** | 48 | 56 | 🟠 Stretch | Otera — TPM Agentic AI | https://www.linkedin.com/jobs/view/4468390437/ |
+| 11 | **64** | 50 | 60 | 🟠 Stretch | Cohere — PM Managed North | https://euremotejobs.com/job/product-manager-managed-north/ |
+| 12 | **64** | 44 | 52 | 🟠 Low | Tourlane — Strategy & Transformation | https://www.linkedin.com/jobs/view/4466252607/ |
+| 13 | **62** | 48 | 52 | 🟠 Stretch | KWS — Procurement Risk & Sustainability | https://www.linkedin.com/jobs/view/4457353110/ |
+| 14 | **62** | 52 | 58 | 🟠 Stretch | Essity — Sr PM Digital Solutions | https://www.essity.com/careers/ |
+| 15 | **61** | 60 | 64 | 🟠 If time | KoRo — Sr PM Logistics & Returns | https://www.korodrogerie.de/karriere |
 
-### Next-10 scoring notes
-| Role | Why this score |
-|------|----------------|
-| **Recyda 67** | Solutions-adjacent architect title gets lane +6; Comp mid — recycling/SC SaaS OK but thinner than OpenSC impl proof |
-| **Cohere 64** | AI brand + funding + pm-domain +3; Comp 50 — infra/managed offering ≠ your PM CV (ESG SaaS AI features) |
-| **KWS 62** | Mature co + recency pad a weak base; Comp 48 — corporate procurement/LkSG maternity cover, not NGO/grants or SaaS solutions |
-| **Essity 62** | Profitable +8 only; Comp 52 — CPG digital Sr PM stretch vs Asia Foundation/WEConnect/OpenSC depth |
-| **KoRo 61** | Best raw PM Comp left (SC/logistics adjacent); no funding/lane bumps — pure base |
-| **360Dialog 60** | Delivery PM lane +4; WhatsApp onboarding contract / low-salary shape keeps Comp/Fit soft |
-| **Uvation 59** | Recency +10 on thin marketplace catalogue PO; Comp 48 — ops/governance stretch |
-| **RelationalAI 54** | Series B+ +8 can’t save coding-heavy SE Comp 44 — wrong craft vs solutions consulting |
-
+---
 ## Active full ranking
 | Rank | Score | Comp | Fit | Verdict | Role |
 |------|------:|-----:|----:|---------|------|
-| 1 | **100** | 78 | 74 | 🟢 Apply now | **IRC — SC Digitalization Sr Mgr** |
-| 2 | **91** | 80 | 74 | 🟢 Apply soon | **OSF — Grants Officer** |
+| 1 | **100** | 86 | 78 | 🟢 HR outreach | **Workiva — Sr SC Sustainability** |
+| 2 | **100** | 74 | 68 | 🟢 HR outreach | **osapiens — Sr Solution Engineer** |
 | 3 | **87** | 76 | 72 | 🟢 Apply soon | **Luvent — PM (French / donor)** |
-| 4 | 71 | 55 | 58 | 🟠 Apply if time | Whatnot — Category Associate (French) |
-| 5 | 68 | 54 | 56 | 🟠 Apply if time | Leapsome — CS Enablement |
-| 6 | 67 | 62 | 60 | 🟠 | Recyda — Solution Architect |
-| 7 | 64 | 50 | 60 | 🟠 | Cohere — PM Managed North |
-| 8 | 62 | 48 | 52 | 🟠 | KWS — Procurement Risk & Sustainability |
-| 9 | 62 | 52 | 58 | 🟠 | Essity — Sr PM Digital Solutions |
-| 10 | 61 | 60 | 64 | 🟠 | KoRo — Sr PM Logistics |
-| 11 | 60 | 58 | 52 | 🟠 | 360Dialog — PM EMEA |
-| 12 | 59 | 48 | 50 | 🟠 | Uvation — Marketplace PO |
-| 13 | 54 | 44 | 50 | 🟠 | RelationalAI — Solution Engineer |
+| 4 | 79 | 60 | 64 | 🟠 Apply if time | Constructor — Sr CSM DACH |
+| 5 | 78 | 56 | 60 | 🟠 Apply if time | Haiilo — Sr PM Analytics |
+| 6 | 74 | 54 | 62 | 🟠 | Talon.One — PM |
+| 7 | 71 | 56 | 60 | 🟠 | Clay — TPM |
+| 8 | 69 | 52 | 55 | 🟠 | SupportYourApp — AI Solutions Spec |
+| 9 | 68 | 54 | 56 | 🟠 | Leapsome — CS Enablement |
+| 10 | 68 | 48 | 56 | 🟠 | Otera — TPM Agentic AI |
+| 11 | 64 | 50 | 60 | 🟠 | Cohere — PM Managed North |
+| 12 | 64 | 44 | 52 | 🟠 | Tourlane — Strategy & Transformation |
+| 13 | 62 | 48 | 52 | 🟠 | KWS — Procurement Risk & Sustain |
+| 14 | 62 | 52 | 58 | 🟠 | Essity — Sr PM Digital |
+| 15 | 61 | 60 | 64 | 🟠 | KoRo — Sr PM Logistics |
+| 16 | 60 | 58 | 52 | 🟠 | 360Dialog — PM EMEA |
+| 17 | 59 | 48 | 50 | 🟠 | Uvation — Marketplace PO |
+| 18 | 58 | 42 | 48 | 🟠 | Empiric — Sr IT PM |
+| 19 | 54 | 44 | 50 | 🟠 | RelationalAI — Solution Engineer |
+
+## Skipped / hard DQ (this batch)
+| Role | Reason |
+|------|--------|
+| BetterMe — Product Analyst | B2C mobile analytics — wrong family |
+| Rubrik — Global Solutions Architect | 15y cloud architect / Terraform depth — craft DQ |
+| lemon.markets — PM Investing | Capital markets / investing + fluent DE — domain DQ |
+
+## Removed from active (user)
+| Role | Reason |
+|------|--------|
+| OSF — Grants Officer | Full German proficiency ask — drop |
+| Recyda — Solution Architect | Too technical |
+| Whatnot — Category Associate | Wrong domain (category expert) |
 
 ## Recently applied
 | Score | Role |
 |------:|------|
+| 100 | **IRC — Sr Manager, SC Digitalization Benchmarking & Pilots** |
 | 100 | Wellspring — Solutions Consultant |
 | 72 | Intellect — Senior Implementation Analyst |

@@ -4,9 +4,9 @@ A local web app for studying German vocabulary with flip cards, difficulty ratin
 
 ## Open on Android
 
-Use this link (full 83-word deck):
+Use this link (full 224-word deck):
 
-https://raw.githack.com/nicolasmpicard-gif/cursorRepo/4682c3b/index.html
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/index.html
 
 Backup CDN mirror:
 

@@ -1,11 +1,11 @@
 /* Network-first for vocabulary so phone caches pick up new words. */
-const CACHE = "wortkarte-v13";
+const CACHE = "wortkarte-v14";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css?v=224",
-  "./app.js?v=224",
-  "./words.js?v=224",
+  "./styles.css?v=246",
+  "./app.js?v=246",
+  "./words.js?v=246",
   "./manifest.webmanifest",
   "./icon-192.png",
   "./icon-512.png",

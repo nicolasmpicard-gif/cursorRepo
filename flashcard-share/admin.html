@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wortkarte — Profile tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-shell { display: grid; gap: 1rem; }
+    .admin-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+    .admin-item {
+      display: grid;
+      gap: 0.15rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+    }
+    .admin-name { font-weight: 700; color: var(--pine-deep); }
+    .admin-meta { color: var(--muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="./index.html" style="text-decoration:none">
+        <span class="brand-mark">W</span>
+        <span class="brand-name">Wortkarte Tracker</span>
+      </a>
+    </header>
+    <main class="panel admin-shell">
+      <h1 class="hero-brand" style="font-size:2rem;margin:0">Profiles created</h1>
+      <p class="meta-text" id="summary">Loading…</p>
+      <div class="cta-row" style="justify-content:flex-start">
+        <button type="button" class="btn btn-primary" id="refresh-btn">Refresh</button>
+        <button type="button" class="btn btn-secondary" id="export-btn">Export JSON</button>
+        <a class="btn btn-secondary" id="live-link" href="#" target="_blank" rel="noopener">Open live feed</a>
+      </div>
+      <ul class="admin-list" id="list"></ul>
+      <p class="hint">
+        New classroom profiles are sent to a free ntfy topic. This page merges the live feed into a list stored in your browser so you can keep a running log.
+      </p>
+    </main>
+  </div>
+  <script src="tracking-config.js"></script>
+  <script>
+    const STORE_KEY = "wortkarte.tracker.profiles.v1";
+    const cfg = window.WORTKARTE_TRACKING || {};
+    const topic = cfg.topic || "wortkarte-class-nicolaspicard";
+    const endpoint = cfg.endpoint || `https://ntfy.sh/${topic}`;
+
+    function loadLocal() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+        return Array.isArray(raw.profiles) ? raw.profiles : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveLocal(profiles) {
+      localStorage.setItem(STORE_KEY, JSON.stringify({ profiles }));
+    }
+
+    function mergeProfiles(existing, incoming) {
+      const byKey = new Map();
+      [...existing, ...incoming].forEach((p) => {
+        const key = `${(p.name || "").toLowerCase()}|${p.createdAt || p.time || ""}`;
+        if (!byKey.has(key)) byKey.set(key, p);
+      });
+      return [...byKey.values()].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    }
+
+    async function fetchRemote() {
+      const url = `${endpoint}/json?poll=1&since=1h`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Feed unavailable");
+      const text = await res.text();
+      const lines = text.trim() ? text.trim().split("\n") : [];
+      return lines.map((line) => {
+        try {
+          const msg = JSON.parse(line);
+          let name = msg.message || "";
+          let createdAt = (msg.time || 0) * 1000;
+          try {
+            const parsed = JSON.parse(msg.message);
+            if (parsed && parsed.name) {
+              name = parsed.name;
+              createdAt = parsed.createdAt || createdAt;
+            }
+          } catch (_) {}
+          return {
+            id: msg.id,
+            name: String(name).replace(/^Profile created:\s*/i, "").trim(),
+            createdAt,
+            source: "ntfy",
+          };
+        } catch {
+          return null;
+        }
+      }).filter(Boolean);
+    }
+
+    function render(profiles) {
+      document.getElementById("summary").textContent = `${profiles.length} profile${profiles.length === 1 ? "" : "s"} recorded`;
+      document.getElementById("list").innerHTML = profiles.length
+        ? profiles.map((p) => `
+            <li class="admin-item">
+              <div class="admin-name">${escapeHtml(p.name || "(unnamed)")}</div>
+              <div class="admin-meta">${p.createdAt ? new Date(p.createdAt).toLocaleString() : "unknown time"}</div>
+            </li>
+          `).join("")
+        : `<li class="admin-item"><div class="admin-meta">No profiles yet. When classmates create a deck, they show up here.</div></li>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    async function refresh() {
+      const local = loadLocal();
+      let remote = [];
+      try {
+        remote = await fetchRemote();
+      } catch (error) {
+        console.warn(error);
+      }
+      const merged = mergeProfiles(local, remote);
+      saveLocal(merged);
+      render(merged);
+    }
+
+    document.getElementById("live-link").href = `https://ntfy.sh/${topic}`;
+    document.getElementById("refresh-btn").addEventListener("click", refresh);
+    document.getElementById("export-btn").addEventListener("click", () => {
+      const profiles = loadLocal();
+      const blob = new Blob([JSON.stringify(profiles, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "wortkarte-profiles.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    refresh();
+    setInterval(refresh, 15000);
+  </script>
+</body>
+</html>

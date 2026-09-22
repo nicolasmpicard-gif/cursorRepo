@@ -1,0 +1,25 @@
+{
+  "name": "Wortkarte — German Flashcards",
+  "short_name": "Wortkarte",
+  "description": "Study German vocabulary with flip cards and difficulty ratings.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f3eee4",
+  "theme_color": "#1f4d3a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

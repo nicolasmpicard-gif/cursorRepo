@@ -6,11 +6,7 @@ A local web app for studying German vocabulary with flip cards, difficulty ratin
 
 Use this link (full 267-word deck):
 
-https://raw.githack.com/nicolasmpicard-gif/cursorRepo/1f33281/index.html
-
-Branch mirror (may cache briefly):
-
-https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/index.html
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/index.html?v=268
 
 Backup CDN mirror:
 

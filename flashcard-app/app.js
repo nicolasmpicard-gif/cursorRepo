@@ -81,11 +81,92 @@
   }
 
   function loadProgress() {
-    return safeParse(localStorage.getItem(STORAGE_KEY), {});
+    const parsed = safeParse(localStorage.getItem(STORAGE_KEY), {});
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
   }
 
   function saveProgress(progress) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  }
+
+  function normalizeGermanKey(german) {
+    return String(german || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ß/g, "ss")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function progressGermanKey(german) {
+    return `de:${normalizeGermanKey(german)}`;
+  }
+
+  function isStatusEntry(entry) {
+    return Boolean(entry && typeof entry === "object" && STATUS_ORDER.includes(entry.status));
+  }
+
+  function readStatusEntry(progress, word) {
+    if (!word) return null;
+    const byId = progress[word.id];
+    if (isStatusEntry(byId)) return byId;
+
+    if (word.german) {
+      const byGerman = progress[progressGermanKey(word.german)];
+      if (isStatusEntry(byGerman)) return byGerman;
+    }
+
+    const wanted = normalizeGermanKey(word.german);
+    if (!wanted) return null;
+    for (const entry of Object.values(progress)) {
+      if (!isStatusEntry(entry) || !entry.german) continue;
+      if (normalizeGermanKey(entry.german) === wanted) return entry;
+    }
+    return null;
+  }
+
+  function writeStatusEntry(progress, word, status) {
+    const entry = {
+      status,
+      lastReviewedAt: Date.now(),
+      id: word.id,
+      german: word.german,
+    };
+    progress[word.id] = entry;
+    if (word.german) progress[progressGermanKey(word.german)] = entry;
+    return entry;
+  }
+
+  function reconcileProgress(progress, words) {
+    let changed = false;
+    words.forEach((word) => {
+      const saved = readStatusEntry(progress, word);
+      if (!saved) return;
+      const current = progress[word.id];
+      if (
+        !isStatusEntry(current) ||
+        current.status !== saved.status ||
+        current.german !== word.german ||
+        current.id !== word.id
+      ) {
+        progress[word.id] = {
+          status: saved.status,
+          lastReviewedAt:
+            typeof saved.lastReviewedAt === "number" ? saved.lastReviewedAt : Date.now(),
+          id: word.id,
+          german: word.german,
+        };
+        changed = true;
+      }
+      const gKey = progressGermanKey(word.german);
+      if (!isStatusEntry(progress[gKey]) || progress[gKey].status !== saved.status) {
+        progress[gKey] = progress[word.id];
+        changed = true;
+      }
+    });
+    if (changed) saveProgress(progress);
+    return progress;
   }
 
   function loadDeleted() {
@@ -143,7 +224,7 @@
   }
 
   function buildCards() {
-    const progress = loadProgress();
+    let progress = loadProgress();
     const deleted = loadDeleted();
     const seeds = normalizeSeedWords();
     const custom = loadCustomWords()
@@ -156,9 +237,30 @@
       byId.set(word.id, word);
     });
 
-    return [...byId.values()]
+    // Prefer a rated/custom duplicate when the same German term appears twice.
+    const byGerman = new Map();
+    [...byId.values()].forEach((word) => {
+      const key = normalizeGermanKey(word.german);
+      const existing = byGerman.get(key);
+      if (!existing) {
+        byGerman.set(key, word);
+        return;
+      }
+      const existingRated = Boolean(readStatusEntry(progress, existing));
+      const wordRated = Boolean(readStatusEntry(progress, word));
+      if (wordRated && !existingRated) {
+        byGerman.set(key, word);
+      } else if (wordRated === existingRated && word.custom && !existing.custom) {
+        byGerman.set(key, word);
+      }
+    });
+
+    const words = [...byGerman.values()];
+    progress = reconcileProgress(progress, words);
+
+    return words
       .map((word) => {
-        const saved = progress[word.id] || {};
+        const saved = readStatusEntry(progress, word) || {};
         const status = STATUS_ORDER.includes(saved.status) ? saved.status : null;
         return {
           ...word,
@@ -173,12 +275,19 @@
     state.cards = buildCards();
   }
 
+  function findWordForStatus(cardId) {
+    return (
+      state.cards.find((card) => card.id === cardId) ||
+      state.studyQueue.find((card) => card.id === cardId) ||
+      null
+    );
+  }
+
   function setCardStatus(cardId, status) {
+    if (!STATUS_ORDER.includes(status)) return;
     const progress = loadProgress();
-    progress[cardId] = {
-      status,
-      lastReviewedAt: Date.now(),
-    };
+    const word = findWordForStatus(cardId) || { id: cardId, german: "" };
+    writeStatusEntry(progress, word, status);
     saveProgress(progress);
     refreshCards();
   }
@@ -225,10 +334,19 @@
     ids.forEach((id) => {
       if (customIds.has(id)) return;
       deleted.add(id);
+      const german = progress[id] && progress[id].german;
       delete progress[id];
+      if (german) delete progress[progressGermanKey(german)];
     });
 
     saveCustomWords(custom.filter((word) => !ids.includes(word.id)));
+    // Also drop german alias keys for removed custom words.
+    custom
+      .filter((word) => ids.includes(word.id))
+      .forEach((word) => {
+        delete progress[word.id];
+        if (word.german) delete progress[progressGermanKey(word.german)];
+      });
     saveDeleted(deleted);
     saveProgress(progress);
     ids.forEach((id) => state.selectedIds.delete(id));
@@ -255,11 +373,9 @@
     const progress = loadProgress();
     if (!statusKey || statusKey === "new") {
       delete progress[id];
+      if (existing.german) delete progress[progressGermanKey(existing.german)];
     } else if (STATUS_ORDER.includes(statusKey)) {
-      progress[id] = {
-        status: statusKey,
-        lastReviewedAt: Date.now(),
-      };
+      writeStatusEntry(progress, { id, german: updated.german }, statusKey);
     }
     saveProgress(progress);
     refreshCards();
@@ -794,6 +910,9 @@
     }
 
     setCardStatus(card.id, status);
+    // Keep the just-rated card's status visible if it remains referenced.
+    card.status = status;
+    card.lastReviewedAt = Date.now();
     state.sessionRated += 1;
     state.flipped = false;
 
@@ -1051,7 +1170,7 @@
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js?v=267").catch((error) => {
+      navigator.serviceWorker.register("./sw.js?v=268").catch((error) => {
         console.warn("Service worker registration failed:", error);
       });
     });

@@ -1,72 +1,65 @@
 # JD Ranking Results — active top 5 only
-_Date: 2026-09-28 (osapiens applied · batch of 13)_
+_Date: 2026-09-28 (voize + Trusted Shops closed · Kraken deprioritized · strength compare)_
 
 **Rubric:** `base = 0.7·Comp + 0.3·Fit`. Bumps → `bump_index` → `final = base ± ≤12`.  
 **Hard DQ:** German C2/native · non-Berlin DE onsite without hybrid · domain gap · seed/&lt;2y · US/UK-only.
 
-**Applied:** IRC, Workiva, Contentsquare, Luvent, Munich Re, Simon-Kucher, **osapiens Solution Expert**, …  
-**Dropped:** osapiens Sr SE (German bar), Personio (German bar)
+**Applied:** IRC, Workiva, Contentsquare, Luvent, Munich Re, Simon-Kucher, osapiens Solution Expert, …  
+**Dropped / closed:** voize (closed), Trusted Shops (closed), Kraken (200+ apps — user skip), osapiens Sr SE, Personio
 
 #    Score   Apps   Company — Role
 ------------------------------------------------------------------------------------------
-1    77     <25    voize — Founding Technical Account Manager (French)
-2    71     200+   Kraken — Client Delivery Lead (Berlin)
-3    67     <25    Trusted Shops — Technical Project Manager
-4    64     —      Constructor — Sr CSM DACH
-5    61     200+   Inverto (BCG) — Knowledge Infrastructure Manager
+1    64     —      Constructor — Sr CSM DACH
+2    61     200+   Inverto (BCG) — Knowledge Infrastructure Manager
+3    61     —      KoRo — Sr PM Logistics
+4    61     —      Haiilo — Sr PM Analytics
+5    61     —      Maltego — Sr Scaled Enablement
 
 ---
 ## Top 5 links
 | # | Score | Apps | Role | Link |
 |---|------:|-----:|------|------|
-| 1 | **77** | &lt;25 | **voize — Founding TAM (French)** | https://www.linkedin.com/jobs/view/4471112525/ |
-| 2 | **71** | 200+ | **Kraken — Client Delivery Lead** | https://www.linkedin.com/jobs/view/4450962106/ |
-| 3 | **67** | &lt;25 | **Trusted Shops — Technical Project Manager** | https://www.linkedin.com/jobs/view/4467390719/ |
-| 4 | 64 | — | Constructor — Sr CSM DACH | https://euremotejobs.com/job/senior-customer-success-manager-dach/ |
-| 5 | **61** | 200+ | **Inverto — Knowledge Infrastructure Manager** | https://www.linkedin.com/jobs/view/4374372683/ |
+| 1 | **64** | — | **Constructor — Sr CSM DACH** | https://euremotejobs.com/job/senior-customer-success-manager-dach/ |
+| 2 | **61** | 200+ | **Inverto — Knowledge Infrastructure Manager** | https://www.linkedin.com/jobs/view/4374372683/ |
+| 3 | 61 | — | KoRo — Sr PM Logistics | https://www.korodrogerie.de/karriere |
+| 4 | 61 | — | Haiilo — Sr PM Analytics | https://www.linkedin.com/jobs/view/4467509479/ |
+| 5 | 61 | — | Maltego — Sr Scaled Enablement | https://www.linkedin.com/jobs/view/4468207420/ |
 
 ---
-## This batch — scoring notes
-| Role | Score | Comp | Fit | Drivers | Action |
-|------|------:|-----:|----:|---------|--------|
-| **Inverto Knowledge Infra Mgr** | **61** | 58 | 56 | Internal knowledge/AI platform PO (`data_ai_internal` +4); English-only stated; Munich hybrid OK; BCG-backed profitable; **200+ apps −5** | **Apply — best of batch** |
-| Cohere — Rev Enablement PM EMEA | 59 | 54 | 56 | Series B+/remote-friendly Berlin; fresh +10; enablement ≠ priority lane (lane 0) | If time |
-| CEEZER — (Sr) CSM Berlin | 56 | 52 | 60 | Series A; DE plus only; Berlin hybrid; CS/ops not solutions lane | Stretch |
-| Deepgram — Sr Presales SE EMEA | 55 | 48 | 56 | Solutions +6; Series C; French languages plus; **POC/code/K8s bar soft-cuts Comp**; 200+ apps | Stretch |
-| Zendesk — Sr Product Sales Specialist DACH | 55 | 50 | 54 | Solutions-shaped + quota ownership; Berlin hybrid; ITSM/ServiceNow depth gap | Stretch |
-| Inverto — Knowledge Infra Specialist | 53 | 48 | 52 | Same stack as Manager but more junior/admin; 160 apps | Low |
-| AWS SA Retail (Haystack/Amazon) Hamburg | 49 | 42 | 50 | Solutions +6; hybrid Hamburg; deep cloud infra Comp miss | Low |
-| Inverto — Sr PM Procurement/SC | 47 | 38 | 52 | SC consulting adjacent; **business fluency DE+EN soft-cuts Comp**; Munich hybrid | Low / skip |
+## Strength compare — Constructor vs CEEZER vs Inverto
+| | Constructor Sr CSM | CEEZER (Sr) CSM | Inverto Knowledge Infra Mgr |
+|--|--------------------|-----------------|------------------------------|
+| **Score** | **64** | 56 | 61 |
+| **Job type** | Enterprise CSM: onboard → adopt → QBR → expand | Post-deal ops CS: retirements, invoicing, SFDC hygiene, light expansion | Internal PO for knowledge platforms + firmwide AI roadmap |
+| **Nic lane match** | **#2 Implementations / CS delivery** | Weak CS / account ops (not strategic CSM) | #5 Product — internal data/AI (shallower conversion) |
+| **Proof-point overlap** | **Strong:** OpenSC QBRs, renewals, onboarding 4×; LeanIX CS Onboarding 2nd | Partial: OpenSC climate/ESG adjacency; ops execution | Partial: data/AI platform PM only |
+| **Company history** | Fresh | **Prior CEEZER Builder PM: YES → YES → NO** | Fresh |
+| **Language** | DE advantage, not required | DE plus | English-only |
+| **Location** | Remote EMEA | Berlin hybrid | Munich hybrid |
+| **Apply priority** | **1st of these three** | Skip / last (same-co rejection + weaker role) | 2nd if you want internal PO |
 
-### Hard DQ this batch
-| Role | DQ |
-|------|-----|
-| Neurons Lab — AI Adoption Manager | **Seed** (also FS/capital-markets clients) |
-| Capco — Client Engagement Support Model Solution Lead | **`capital_markets`** (post-trade/client lifecycle design authority) + DE professional |
-| Intric — Customer Engagement Manager, AI Adoption | **Pre-seed** (€3.8M pre-seed; founded 2021 OK on age) |
-| Doodle Labs — Sales Engineer (EU) | **`defense` / RF-electronics** (mesh radios, UAV field eng) |
-| Planet — Strategic Solutions Manager (Payments) | **`fintech_payments`** + native DE/FR/ES; Dortmund/Munich/Paris/Madrid hybrid (not Berlin) |
+**Verdict:** Constructor plays most to your strengths. Same trusted-advisor / QBR / enterprise CS motion as OpenSC + LeanIX. Inverto is a credible internal data/AI PO stretch. CEEZER CSM is the weakest fit of the three and you already got a late NO there.
 
 ---
 ## Next 10
 | # | Score | Comp | Fit | Verdict | Role | Link |
 |--:|------:|-----:|----:|---------|------|------|
-| 6 | **61** | 60 | 64 | 🟠 If time | KoRo — Sr PM Logistics | https://www.korodrogerie.de/karriere |
-| 7 | **61** | 56 | 60 | 🟠 If time | Haiilo — Sr PM Analytics | https://www.linkedin.com/jobs/view/4467509479/ |
-| 8 | **61** | 56 | 58 | 🟠 If time | Maltego — Sr Scaled Enablement | https://www.linkedin.com/jobs/view/4468207420/ |
-| 9 | **61** | 54 | 62 | 🟠 If time | Appinio — Senior Product Manager | https://startup.jobs/senior-product-manager-appinio-10137772 |
-| 10 | **61** | 52 | 62 | 🟠 If time | brighter AI — Principal SA Presales AI | https://www.linkedin.com/jobs/view/4469742431/ |
-| 11 | **59** | 56 | 60 | 🟠 If time | Clay — Technical Project Manager | https://euremotejobs.com/job/technical-project-manager/ |
-| 12 | **59** | 54 | 62 | 🟠 If time | Talon.One — Product Manager | https://startup.jobs/product-manager-talonone-linkedin-10062706 |
-| 13 | **59** | 54 | 56 | 🟠 If time | **Cohere — Rev Enablement PM EMEA** | https://euremotejobs.com/job/revenue-enablement-program-manager-emea/ |
-| 14 | **58** | 58 | 52 | 🟠 Stretch | 360Dialog — PM EMEA | https://euremotejobs.com/job/project-manager-emea-remote/ |
-| 15 | **58** | 54 | 58 | 🟠 Stretch | Celonis — Sr App PM Procurement | https://www.linkedin.com/jobs/view/senior-application-product-manager-supply-chain-procurement-at-celonis-4459979250/ |
+| 6 | **61** | 54 | 62 | 🟠 If time | Appinio — Senior Product Manager | https://startup.jobs/senior-product-manager-appinio-10137772 |
+| 7 | **61** | 52 | 62 | 🟠 If time | brighter AI — Principal SA Presales AI | https://www.linkedin.com/jobs/view/4469742431/ |
+| 8 | **59** | 56 | 60 | 🟠 If time | Clay — Technical Project Manager | https://euremotejobs.com/job/technical-project-manager/ |
+| 9 | **59** | 54 | 62 | 🟠 If time | Talon.One — Product Manager | https://startup.jobs/product-manager-talonone-linkedin-10062706 |
+| 10 | **59** | 54 | 56 | 🟠 If time | Cohere — Rev Enablement PM EMEA | https://euremotejobs.com/job/revenue-enablement-program-manager-emea/ |
+| 11 | **58** | 58 | 52 | 🟠 Stretch | 360Dialog — PM EMEA | https://euremotejobs.com/job/project-manager-emea-remote/ |
+| 12 | **58** | 54 | 58 | 🟠 Stretch | Celonis — Sr App PM Procurement | https://www.linkedin.com/jobs/view/senior-application-product-manager-supply-chain-procurement-at-celonis-4459979250/ |
+| 13 | **56** | 52 | 60 | 🟠 Stretch | CEEZER — (Sr) CSM Berlin | https://jobs.ashbyhq.com/ceezer/0d08c468-4fd2-4174-80ee-bef708520571 |
+| 14 | **55** | 48 | 56 | 🟠 Stretch | Deepgram — Sr Presales SE Europe | https://www.linkedin.com/jobs/view/4386404886/ |
+| 15 | **55** | 50 | 54 | 🟠 Stretch | Zendesk — Sr Product Sales Spec DACH | https://www.stepstone.de/stellenangebote--Senior-Product-Sales-Specialist-DACH-Region-Berlin-Germany-Zendesk-GmbH--14528205-inline.html |
 
 ---
 ## Recently applied
 | Score | Role |
 |------:|------|
-| 83 | **osapiens — Solution Expert Supplier Intelligence** |
+| 83 | osapiens — Solution Expert Supplier Intelligence |
 | 85 | Contentsquare — Sr Strategic Consultant PS |
 | 81 | Luvent — PM (French / donor) |
 | 78 | Munich Re — Product Advisor |
@@ -74,8 +67,12 @@ _Date: 2026-09-28 (osapiens applied · batch of 13)_
 | 94 | Workiva — Sr SC Sustainability |
 | — | IRC / Wellspring / Intellect |
 
-## Dropped (user)
+## Dropped / closed (user)
 | Role | Reason |
 |------|--------|
+| voize — Founding TAM | Role closed |
+| Trusted Shops — Technical Project Manager | Role closed |
+| Kraken — Client Delivery Lead | Too many applicants |
 | Personio — Sr Engagement Manager PS | German business proficiency |
 | osapiens — Sr Solution Engineer | Outstanding German + English |
+| CEEZER — Builder PM | Interviewed → NO (tracker) |

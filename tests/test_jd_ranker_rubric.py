@@ -316,3 +316,81 @@ def test_profile_lane_precedence_protocol():
     assert "0.7 * competitiveness" in jd_ranker.SYSTEM_PROMPT
     assert "Do **NOT** penalize NGO" in jd_ranker.PROFILE or "Do NOT soft-penalize" in jd_ranker.SYSTEM_PROMPT or "do not soft-penalize" in jd_ranker.SYSTEM_PROMPT
     assert "MAX_BUMP_SHIFT" in jd_ranker.__doc__
+
+
+def test_uniquify_comp_fit_prefers_domain_then_lane():
+    """Same Comp/Fit → weaker domain/lane loses Comp points until unique."""
+    evaluations = {
+        "sc_esg": {
+            "competitiveness_score": 60,
+            "fit_score": 58,
+            "required_domain": "supply_chain_esg",
+            "domain_fit": "match",
+            "role_family": "solutions_pre_sales",
+        },
+        "pm_generic": {
+            "competitiveness_score": 60,
+            "fit_score": 58,
+            "required_domain": "product_management",
+            "domain_fit": "match",
+            "role_family": "product_manager",
+        },
+        "se_saas": {
+            "competitiveness_score": 60,
+            "fit_score": 58,
+            "required_domain": "general_b2b_saas",
+            "domain_fit": "match",
+            "role_family": "solutions_pre_sales",
+        },
+    }
+    adjusted = jd_ranker.uniquify_comp_fit(evaluations)
+    pairs = {
+        k: (evaluations[k]["competitiveness_score"], evaluations[k]["fit_score"])
+        for k in evaluations
+    }
+    assert len(set(pairs.values())) == 3
+    # Strongest domain (SC ESG + solutions) keeps 60/58
+    assert pairs["sc_esg"] == (60, 58)
+    # Weaker roles were adjusted
+    assert "pm_generic" in adjusted or "se_saas" in adjusted
+    assert pairs["sc_esg"][0] >= pairs["se_saas"][0] >= pairs["pm_generic"][0]
+
+
+def test_build_rankings_sorts_tied_finals_by_domain_then_lane():
+    # Cap both via hard DQ + failed language gate so lane bumps are 0 and finals match
+    evaluations = {
+        "a_pm": {
+            "company": "A", "title": "PM",
+            "competitiveness_score": 80, "fit_score": 80, "base_score": 80,
+            "required_domain": "product_management", "domain_fit": "match",
+            "role_family": "product_manager",
+            "german_requirement": "c2",
+            "hard_disqualifiers": ["German c2 required"],
+            "recommended_action": "skip",
+        },
+        "b_se": {
+            "company": "B", "title": "SE",
+            "competitiveness_score": 80, "fit_score": 80, "base_score": 80,
+            "required_domain": "solutions_impl", "domain_fit": "match",
+            "role_family": "solutions_pre_sales",
+            "german_requirement": "c2",
+            "hard_disqualifiers": ["German c2 required"],
+            "recommended_action": "skip",
+        },
+    }
+    metadata = {
+        "a_pm": {
+            "funding_stage": "unknown", "contact_status": "none",
+            "german_requirement": "c2", "role_family": "product_manager",
+            "required_domain": "product_management", "domain_fit": "match",
+        },
+        "b_se": {
+            "funding_stage": "unknown", "contact_status": "none",
+            "german_requirement": "c2", "role_family": "solutions_pre_sales",
+            "required_domain": "solutions_impl", "domain_fit": "match",
+        },
+    }
+    rankings = jd_ranker.build_rankings(evaluations, metadata)
+    assert rankings[0]["final_score"] == rankings[1]["final_score"]
+    assert rankings[0]["jd_key"] == "b_se"
+    assert rankings[1]["jd_key"] == "a_pm"

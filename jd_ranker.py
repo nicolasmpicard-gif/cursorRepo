@@ -56,6 +56,17 @@ base_score     = 0.7 * competitiveness_score + 0.3 * fit_score
   fit_score              : preference fit (product peer/supervisor, pace/culture, stage/age
                            gates) + workplace-style sustainability (structure/autonomy/feedback)
 
+BATCH UNIQUENESS (Sep 2026 — fewer ties)
+---------------------------------------
+Within a scoring batch, no two roles may share the same (Comp, Fit) pair.
+If a collision would occur, keep the stronger role's scores and lower Comp on the
+weaker role until the pair is unique. Strength order:
+  1. domain_overlap_rank (Nic proof-point overlap)
+  2. lane_rank (solutions/impl > intl-dev/grants > delivery PM > PM/CS > other)
+Identical finals are still allowed after bumps, but rankings sort by
+final DESC, then domain_overlap_rank DESC, then lane_rank DESC — so Top 5 is
+never a flat pile of identical ranks.
+
 Nominal bump points (interpretability — NOT added 1:1 to final):
 recency_bump   : 0-10 pts  (0-7d → +10, 8-14d → +6, 15-30d → +3, 31-60d → +1, >60d/unknown → 0)
 contact_bump   : 0-15 pts  (none → 0, positive_contact → +7, interview → +15)
@@ -566,6 +577,110 @@ def compute_base(comp, fit, hard_dq=False):
     return base
 
 
+# Domain overlap with Nic's proof points — higher = stronger Comp claim in a batch
+DOMAIN_OVERLAP_RANK = {
+    "supply_chain_esg": 5,
+    "climate_compliance": 5,
+    "solutions_impl": 5,
+    "international_development": 5,
+    "ngo_grants": 5,
+    "general_b2b_saas": 3,
+    "logistics_tech": 3,
+    "data_ai_internal": 3,
+    "product_management": 3,
+    "hr_enterprise_saas": 3,
+    "none": 2,
+    "unknown": 2,
+}
+# Hard-DQ / weak domains get 0–1
+for _d in DOMAIN_HARD_DQ:
+    DOMAIN_OVERLAP_RANK[_d] = 0
+
+LANE_RANK = {
+    "solutions_pre_sales": 5,
+    "implementations": 5,
+    "international_development": 4,
+    "grants_admin": 4,
+    "ngo_program": 4,
+    "project_management": 3,
+    "product_manager": 2,
+    "customer_success": 2,
+    "program_manager": 1,
+    "account_manager": 1,
+    "consulting_other": 1,
+    "other": 0,
+}
+
+
+def domain_overlap_rank(required_domain, domain_fit="unknown"):
+    """0–5 rank of how closely the JD domain matches Nic's proof points."""
+    if domain_fit == "mismatch":
+        return 0
+    base = DOMAIN_OVERLAP_RANK.get(required_domain, 1)
+    if domain_fit == "adjacent":
+        return max(0, base - 1)
+    return base
+
+
+def lane_rank(role_family):
+    """0–5 rank of role-family interview conversion for Nic."""
+    return LANE_RANK.get(role_family, 0)
+
+
+def uniquify_comp_fit(evaluations):
+    """Ensure no two roles in a batch share the same (Comp, Fit) pair.
+
+    Stronger domain overlap keeps its scores; ties break on lane rank.
+    Weaker colliding roles get Comp lowered by 1 until unique (then Fit if needed).
+    Mutates competitiveness_score / fit_score / base_score in place; returns list of keys adjusted.
+    """
+    items = []
+    for key, ev in evaluations.items():
+        if "competitiveness_score" not in ev or "fit_score" not in ev:
+            continue
+        req = ev.get("required_domain") or "unknown"
+        dfit = ev.get("domain_fit") or "unknown"
+        role = ev.get("role_family") or "other"
+        items.append({
+            "key": key,
+            "ev": ev,
+            "dom": domain_overlap_rank(req, dfit),
+            "lane": lane_rank(role),
+        })
+    items.sort(key=lambda x: (x["dom"], x["lane"], x["ev"]["competitiveness_score"]),
+               reverse=True)
+    used = set()
+    adjusted = []
+    for item in items:
+        ev = item["ev"]
+        c = int(ev["competitiveness_score"])
+        f = int(ev["fit_score"])
+        orig_c, orig_f = c, f
+        guard = 0
+        while (c, f) in used and guard < 200:
+            if c > 0:
+                c -= 1
+            elif f > 0:
+                f -= 1
+            else:
+                break
+            guard += 1
+        used.add((c, f))
+        if (c, f) != (orig_c, orig_f):
+            adjusted.append(item["key"])
+        ev["competitiveness_score"] = c
+        ev["fit_score"] = f
+        ev["domain_overlap_rank"] = item["dom"]
+        ev["lane_rank"] = item["lane"]
+        hard = bool(ev.get("hard_disqualifiers"))
+        ev["base_score"] = compute_base(c, f, hard_dq=hard)
+    # Stamp ranks even when no collision
+    for item in items:
+        item["ev"].setdefault("domain_overlap_rank", item["dom"])
+        item["ev"].setdefault("lane_rank", item["lane"])
+    return adjusted
+
+
 def passes_language_gate(german_req):
     """True unless German is C2 or native (hard DQ)."""
     return not german_is_hard_dq(german_req)
@@ -827,8 +942,25 @@ FUNDING_EMOJI = {
 }
 
 def build_rankings(evaluations, metadata):
-    results = []
+    # Merge metadata domain/lane onto evaluations before uniquify so ranks are accurate
+    prepared = {}
     for key, ev in evaluations.items():
+        meta = metadata.get(key, {})
+        merged = dict(ev)
+        for field, default in (
+            ("role_family", "other"),
+            ("required_domain", "unknown"),
+            ("domain_fit", "unknown"),
+            ("pm_domain", "unknown"),
+            ("german_requirement", "unknown"),
+            ("germany_work_mode", "unknown"),
+        ):
+            merged[field] = meta.get(field) or merged.get(field) or default
+        prepared[key] = merged
+    uniquify_comp_fit(prepared)
+
+    results = []
+    for key, ev in prepared.items():
         meta     = metadata.get(key, {})
         days       = meta.get("days_since_posted")
         contact    = meta.get("contact_status", "none")
@@ -880,6 +1012,8 @@ def build_rankings(evaluations, metadata):
         (final, r_pts, c_pts, f_pts, a_pts, fr_pts, lane_pts, pm_pts, lang_pts,
          r_label, c_label, f_label, a_label, fr_label, lane_label, pm_label, lang_label,
          raw_bumps, bump_contrib, bump_idx) = bump_result
+        dom_r = ev.get("domain_overlap_rank", domain_overlap_rank(req_domain, dom_fit))
+        lane_r = ev.get("lane_rank", lane_rank(role_family))
         results.append({**ev, "jd_key": key, "final_score": final,
                         "recency_pts": r_pts, "contact_pts": c_pts,
                         "funding_pts": f_pts, "applicant_pts": a_pts,
@@ -894,9 +1028,19 @@ def build_rankings(evaluations, metadata):
                         "german_requirement": german, "pm_domain": pm_domain,
                         "required_domain": req_domain, "domain_fit": dom_fit,
                         "germany_work_mode": gwm,
+                        "domain_overlap_rank": dom_r, "lane_rank": lane_r,
                         "language_gate_pass": passes_language_gate(german),
                         "funding_stage": funding, "employees": employees, "role_family": role_family})
-    results.sort(key=lambda x: x["final_score"], reverse=True)
+    # Final DESC, then domain overlap, then lane — fewer flat ties in Top 5
+    results.sort(
+        key=lambda x: (
+            x["final_score"],
+            x.get("domain_overlap_rank", 0),
+            x.get("lane_rank", 0),
+            x.get("competitiveness_score", 0),
+        ),
+        reverse=True,
+    )
     return results
 
 def format_results(rankings):

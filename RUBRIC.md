@@ -8,6 +8,15 @@ Use `jd_ranker.py` as the source of truth.
 `bump_index = map raw_bumps → 0–100` (raw 0 → 50; max ≈+55 → 100; min ≈−15 → 0)  
 `final = base + MAX_BUMP_SHIFT * (bump_index - 50) / 50` with `MAX_BUMP_SHIFT = 12`
 
+### Fewer ties (Sep 30 2026)
+Within a scoring batch, **no two roles share the same (Comp, Fit) pair**.  
+If they would collide: keep the stronger role; lower Comp on the weaker until unique.  
+Strength order: **1) domain overlap with Nic’s proof points → 2) lane rank** (solutions/impl > intl-dev/grants > delivery PM > PM/CS > other).  
+Identical `final`s are still allowed after bumps, but rankings sort `final DESC → domain → lane` so Top 5 is never a flat pile.
+
+### Top 5 display (always)
+For every Top 5 row: **JD link · applicant count · date first shared in chat for scoring**.
+
 ### Why not `clamp(base + bumps)` (Sep 2026 fix)
 Additive stacking (interview +15, fresh +10, lane +6, …) routinely blew past 100 and collapsed distinct roles into identical perfect scores.  
 

@@ -4,8 +4,8 @@ Local learning apps for this workspace.
 
 ## Wortkarte (German flashcards)
 
-**Personal deck (267 words):**  
-https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/index.html?v=268
+**Personal deck (310 words):**  
+https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/index.html?v=310
 
 **Blank / classroom deck:**  
 https://raw.githack.com/nicolasmpicard-gif/cursorRepo/gh-pages/share/index.html

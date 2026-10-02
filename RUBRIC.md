@@ -49,8 +49,6 @@ Set `required_domain` and `domain_fit`. **Hard DQ** when `domain_fit=mismatch` O
 
 | `required_domain` | Why DQ |
 |---|---|
-| `fintech_payments` | Payments/fraud/acquiring (ACI-shaped) |
-| `financial_services` | Deep finance/banking domain |
 | `electronics_semiconductor` | Electronics/MOM-MES (Siemens-shaped) |
 | `manufacturing_engineering` | Plant/manufacturing engineering depth |
 | `machining_hardware` | CNC/machining/industrial hardware |
@@ -61,7 +59,9 @@ Set `required_domain` and `domain_fit`. **Hard DQ** when `domain_fit=mismatch` O
 | `automotive_oem` | Automotive OEM engineering depth |
 | `agtech_farmer_product` | Farmer/grower-facing product design (Klim-shaped); enterprise SC/ESG ≠ on-farm UX |
 
-**Nic domain strengths (match/adjacent OK):** `international_development`, `ngo_grants`, `general_b2b_saas`, `solutions_impl`, `supply_chain_esg`, `climate_compliance`, `data_ai_internal`, `product_management`, `hr_enterprise_saas`, `logistics_tech`
+**Nic domain strengths (match/adjacent OK):** `international_development`, `ngo_grants`, `general_b2b_saas`, `solutions_impl`, `supply_chain_esg`, `climate_compliance`, `data_ai_internal`, `product_management`, `hr_enterprise_saas`, `logistics_tech`, `fintech_payments`, `financial_services` (AstroFinance — **not** hard DQ; soft-cut Comp when JD needs deep acquiring, brokerage/wealth infra, or IB product depth)
+
+**No longer hard DQ (Oct 2026):** `fintech_payments`, `financial_services` — Nic has AstroFinance fintech standing.
 
 **Interview Comp notes:** Solutions/impl lane Comp stays high after NinjaOne (craft miss, not lane miss). Builder/climate founding PM Comp stays low (CEEZER). Salary rejects (SumSub) do not lower SC Comp.
 

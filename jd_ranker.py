@@ -27,7 +27,7 @@ USAGE
    german_requirement    : "none" | "plus" | "b2" | "proficiency" | "business_professional" | "fluent" | "c1" | "c2" | "native" | "unknown"
                          — HARD DQ if proficiency, business_professional, fluent, c1, c2, native
    required_domain       : see REQUIRED_DOMAINS in jd_ranker.py — HARD DQ if domain_fit=mismatch
-                         or required domain outside Nic's experience (e.g. fintech_payments, electronics)
+                         or required domain outside Nic's experience (e.g. electronics, capital_markets)
    domain_fit            : "match" | "adjacent" | "mismatch" — mismatch = hard DQ
    pm_domain             : "none" | "data_ai_internal" | "data_ai_product" | "unknown"
                          — data_ai_internal = internal tooling / BI / data platform PM (Nic strength);
@@ -142,6 +142,7 @@ Nicolas Picard — French-American, based in Berlin (EU/US work auth).
 - Supply chain / agri-food traceability & ESG compliance (OpenSC; WEConnect supplier diversity)
 - B2B SaaS product management (IntegrityNext, OpenSC, Oracle Utilities) — **shallower than NGO/intl-dev & solutions**
 - AI-assisted prototyping & workflow design (AstroFinance, IntegrityNext AI feature) — differentiator inside solutions/impl/PM, not a standalone "AI builder" title
+- Fintech (AstroFinance) — enough domain signal that **fintech / financial-services roles are NOT hard DQs**; still soft-cut Comp when JD needs deep payments acquiring, brokerage/wealth infrastructure, or capital-markets product expertise Nic lacks
 - Product ops: KPI dashboards, Jira/Notion/Airtable, Agile/Kanban
 - Data tools: SQL, QuickSight, basic Python
 - Public-sector / donor proposals and stakeholder workshops (Asia Foundation, WEConnect)
@@ -196,10 +197,11 @@ HR enablement / growth PM.
   (they still pass the language gate for lane/pm bumps).
 - HARD DQ **non-Berlin Germany office without hybrid** — e.g. Hamburg/Munich listed and JD does not say
   hybrid / <5 days per week in office / remote. Berlin roles and explicit hybrid/remote OK.
-- HARD DQ **required domain expertise Nic does not have** — e.g. deep financial/payments/fintech,
-  electronics/semiconductor, manufacturing engineering, capital markets, oil & gas, machining/CNC,
+- HARD DQ **required domain expertise Nic does not have** — e.g. electronics/semiconductor,
+  manufacturing engineering, capital markets (IB/AM product), oil & gas, machining/CNC,
   defense, medical-device regulatory depth, **farmer/grower-facing product design** (Klim-shaped).
-  Set domain_fit=mismatch or required_domain accordingly.
+  **NOT hard DQ:** fintech_payments / financial_services (AstroFinance gives domain standing —
+  soft-cut Comp when depth exceeds his proof points). Set domain_fit=mismatch or required_domain accordingly.
 - NOT seed-stage (or pre-seed). Hard DQ regardless of mission.
 - NOT founded in the last 2 years. Hard DQ. Headcount does NOT matter — small teams OK past gates.
 - NOT US-only or UK-only remote/hire when Nic is Berlin-based EU/US (must be EU-eligible or global remote)
@@ -379,9 +381,10 @@ IMPORTANT RULES:
 - Hard DQs → cap base_score at 30, recommend skip:
   **German:** c2 or native only (proficiency/fluent/business/c1 are NOT hard DQs).
   **Location:** germany_work_mode=other_de_onsite (non-Berlin DE city, no hybrid/<5d office stated).
-  **Domain:** domain_fit=mismatch OR required_domain in fintech_payments, financial_services,
-  electronics_semiconductor, manufacturing_engineering, capital_markets, oil_gas, machining_hardware,
+  **Domain:** domain_fit=mismatch OR required_domain in electronics_semiconductor,
+  manufacturing_engineering, capital_markets, oil_gas, machining_hardware,
   defense, medical_devices_deep, automotive_oem, agtech_farmer_product (Klim-shaped farmer/grower UX).
+  **NOT hard DQ:** fintech_payments / financial_services (AstroFinance) — soft-cut Comp when depth exceeds proof.
   Solutions/impl Comp stays HIGH even if prior SE interviews failed on craft (NinjaOne-shaped).
   Also: seed/pre-seed; founded <2 years; US-only/UK-only without EU eligibility.
 - Language gate passes unless German is c2/native — eligible for lane/pm_domain bumps.
@@ -515,11 +518,13 @@ NIC_STRONG_DOMAINS = {
     "general_b2b_saas", "solutions_impl", "supply_chain_esg", "climate_compliance",
     "international_development", "ngo_grants",
     "data_ai_internal", "product_management", "hr_enterprise_saas", "logistics_tech",
+    "fintech_payments", "financial_services",  # AstroFinance — not hard DQ; soft-cut when deep
     "none", "unknown",
 }
 
 DOMAIN_HARD_DQ = {
-    "fintech_payments", "financial_services", "electronics_semiconductor",
+    # fintech_payments / financial_services REMOVED (Oct 2026) — AstroFinance domain standing
+    "electronics_semiconductor",
     "manufacturing_engineering", "capital_markets", "oil_gas", "machining_hardware",
     "defense", "medical_devices_deep", "automotive_oem", "agtech_farmer_product",
 }
@@ -589,6 +594,8 @@ DOMAIN_OVERLAP_RANK = {
     "data_ai_internal": 3,
     "product_management": 3,
     "hr_enterprise_saas": 3,
+    "fintech_payments": 3,      # AstroFinance — solid adjacent, soft-cut when deep acquiring
+    "financial_services": 3,    # AstroFinance — soft-cut when brokerage/wealth infra depth required
     "none": 2,
     "unknown": 2,
 }

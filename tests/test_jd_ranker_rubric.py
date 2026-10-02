@@ -143,8 +143,13 @@ def test_germany_location_onsite_hard_dq():
     assert not jd_ranker.germany_location_is_hard_dq("remote")
 
 
-def test_domain_fintech_is_hard_dq():
-    assert jd_ranker.domain_is_hard_dq("fintech_payments", "match")
+def test_domain_fintech_is_not_hard_dq():
+    """AstroFinance gives fintech standing — soft-cut Comp, not hard DQ."""
+    assert not jd_ranker.domain_is_hard_dq("fintech_payments", "match")
+    assert not jd_ranker.domain_is_hard_dq("financial_services", "adjacent")
+    assert "fintech_payments" not in jd_ranker.DOMAIN_HARD_DQ
+    assert "financial_services" not in jd_ranker.DOMAIN_HARD_DQ
+    assert "fintech_payments" in jd_ranker.NIC_STRONG_DOMAINS
     assert jd_ranker.domain_is_hard_dq("general_b2b_saas", "mismatch")
     assert not jd_ranker.domain_is_hard_dq("supply_chain_esg", "match")
 

@@ -326,7 +326,7 @@ def build():
                 {"size": 10, "bold": True},
             ),
             (
-                "one retainer plus one blueprint, or two retainers. Ten to twelve writing days a month is the cap; the other days are for outreach, revisions, and the rest of your life. Months one and two will miss €2,500 net. Dialectica calls, a paid AstroFinance package, and cash you already have cover that gap. Judge the year on the run-rate you hold from month six, and pull this calendar forward if the master’s starts before October 2027.",
+                "two monthly retainers inside one niche. A blueprint is a single document, and the job ends. A retainer is the same client, the same fee, every month. Ten to twelve writing days a month is the cap. AstroFinance and Dialectica can pay while the niche is forming. Judge the year on whether two supply-chain climate clients have hired you more than once. Pull the calendar forward if the master’s starts before October 2027.",
                 {"size": 10},
             ),
         ],
@@ -358,7 +358,7 @@ def build():
                 {"size": 10, "bold": True},
             ),
             (
-                "“I write the explainers, solution briefs, and litepapers that climate, supply-chain, and real-asset teams use to sell and implement complex products.” The seven CV variants stay in the job-search folder. Clients hire the sentence, and they will check it on nicolaspicard.carrd.co.",
+                "“I write the explainers and implementation pieces that supply-chain climate software teams use to sell and roll out their products.” The seven CV variants stay in the job-search folder. Clients hire the sentence, and they will check it on nicolaspicard.carrd.co.",
                 {"size": 10},
             ),
         ],
@@ -366,26 +366,31 @@ def build():
         align="justify",
     )
 
-    heading(doc, "3.  Three lanes, in the order to work them")
+    heading(doc, "3.  One niche, and what sits beside it")
     bullet(
         doc,
-        "1. Supply-chain climate compliance and carbon accounting. ",
-        "Highest potential, and the lane the roundtable opens. You have shipped the unglamorous part: traceability with Nespresso in DR Congo, a carbon feature for users across eight regions, CBAM-related upstream gaps, multi-tier supplier action, and current expert calls on which ESG platform fits which use case. Buyers are climate and supply-chain software firms (Berlin is full of them: Plan A, Cozero, Climatiq, Vaayu, carbmee, and their EU peers) and the sustainability leads who must explain this to procurement. Write as the person who sat with operators and specified the product. Emissions factors, audit opinions, and legal conclusions stay with the client’s specialists. Your name on a piece means the workflow is right.",
+        "The niche is supply-chain climate software. ",
+        "This is the repeat business. Vendors that sell supplier compliance, traceability, and carbon data need a new explainer whenever the rule or the product moves, which is often. Your long proof is here: Nespresso traceability in DR Congo, OpenSC playbooks, IntegrityNext’s supplier tool and carbon feature, and Dialectica calls on which ESG platform fits which use case. Buyers are those vendors and the sustainability leads who explain them to procurement. Berlin examples include Plan A, Cozero, Climatiq, Vaayu, and carbmee.",
     )
     bullet(
         doc,
-        "2. Real-asset finance narratives. ",
-        "Fastest cash, thinner market. AstroFinance can commission you now, and Tesseract Academy (Stylianos and Linas Stankevicius) has already seen your standard on the litepaper. Stay on how a real asset is structured, explained, and implemented: aerospace, infrastructure, climate-related assets. The client’s counsel reviews anything that touches token structure. A one-line footer states that the piece is a product explanation, and that investment and securities advice sit with regulated advisors.",
+        "Carbon accounting is the front door of that niche. ",
+        "Lead with it. The roundtable, the search demand, and the IntegrityNext feature make it the topic a content lead already understands. The pieces you can repeat are workflow pieces: missing supplier data, CBAM upstream gaps, what the screen has to show, how a rollout goes. A practice that explains GHG Protocol chapters for a living is a weaker fit, because those clients will ask you to be the accountant. Emissions factors, audits, and legal conclusions stay with their specialists.",
     )
     bullet(
         doc,
-        "3. B2B solution and implementation writing, English and French. ",
-        "The craft under the other two, and the one content teams cannot fake. Oracle scoping, RFP responses, onboarding playbooks, QBRs, a RACI rollout. Sell it as the document an account executive sends, or the playbook an implementation lead runs. French is a premium when an EU vendor asks; it is priced as its own delivery, at about 25% above the English fee. German is for coffees in Berlin.",
+        "Real-asset finance is a client. ",
+        "Take the AstroFinance package. It pays, and it becomes a sample. Have the one conversation with Tesseract Academy, since Stylianos and Linas Stankevicius already know the litepaper. Then stop hunting that market. A company buys a litepaper once, the buyer pool is small, and the work follows crypto sentiment. If a second real-asset project would crowd out a supply-chain climate retainer, decline it. Counsel reviews anything on token structure, and the footer says the piece is a product explanation.",
+    )
+    bullet(
+        doc,
+        "English and French are the craft inside the niche. ",
+        "Oracle scoping, RFP responses, onboarding playbooks, QBRs, a RACI rollout. Sell the document an account executive sends, or the playbook an implementation lead runs. French is its own delivery, at about 25% above the English fee, when an EU vendor asks. German is for coffees in Berlin.",
         space_after=2,
     )
     para(
         doc,
-        "AI belongs inside lane 1 as the roundtable subject, and as the tool you draft with. A general “AI writer” shop is a crowded, lower-paid market. Leave it closed.",
+        "AI is the roundtable subject inside carbon accounting, and the tool you draft with. A general AI-writing offer stays closed.",
         size=10,
         space_before=1,
         space_after=2,
@@ -431,11 +436,11 @@ def build():
         doc,
         [
             (
-                "The month, in combinations. ",
+                "What the words mean. ",
                 {"size": 10, "bold": True},
             ),
             (
-                "Retainer at €2,600 plus one blueprint at €2,800. Or two retainers. Or, while the retainer is still forming: AstroFinance’s package plus two outside briefs plus one expert-network month. Sell a retainer after one paid project with that client. AstroFinance is the exception, because the relationship is already there.",
+                "A blueprint is one document, then the engagement ends: 6–12 pages on how a product solves a problem or how a rollout works. Your litepaper sections and deal blueprints are this format. It wins a first yes and leaves a sample. A retainer is the practice you are trying to build: the same client pays the same fee every month, for three months at a minimum, for an agreed set of pieces. You interview them once a month and write from that. Two retainers in the niche are the stable shape. Sell a retainer after one paid project with that client. The AstroFinance package is ramp income, and it does not get a standing claim on the calendar.",
                 {"size": 10},
             ),
         ],
@@ -488,8 +493,8 @@ def build():
             ],
             [
                 "Weeks 3–8",
-                "Two warm asks first. Tesseract: you wrote AstroFinance’s product and strategy sections, you are taking a few litepaper commissions, where do their clients get stuck, and do they subcontract. AstroFinance: the €2,100 package with topics and price in the same note. Then a list of 40: 15 climate SaaS content leads, 10 compliance vendors, 8 real-asset studios, 7 implementation firms. Eight personal notes a week. Each note names a page on their site and proposes one title.",
-                "AstroFinance has said yes or no. Two intro calls are booked.",
+                "Two warm asks, then the niche list. AstroFinance: the €2,100 package, topics and price in the same note. Tesseract: one note about subcontracted litepaper sections, then stop. The list of 40 is supply-chain climate and compliance firms only: content leads and founders. Eight personal notes a week. Each note names a page on their site and proposes one title.",
+                "AstroFinance has said yes or no. Two niche intro calls are booked.",
             ],
             [
                 "Month 3\nearly Jan 2027",
@@ -498,12 +503,12 @@ def build():
             ],
             [
                 "Months 4–6\nJan–Mar",
-                "Convert the first happy client into a three-month retainer. The paid piece, with permission, becomes sample four. Lift the brief floor to €1,100 once two paid clips exist. Invoice about €2,000, then €3,500, then €5,200. Decline work under €800.",
-                "A €5,200 invoiced month.",
+                "Convert the first niche client into a three-month retainer. A second real-asset project waits if it would fill days you need for that pursuit. The paid piece, with permission, becomes sample four. Lift the brief floor to €1,100 once two paid clips exist. Decline work under €800.",
+                "One supply-chain climate retainer is signed.",
             ],
             [
                 "Months 7–12",
-                "Hold two anchors. One public piece a quarter, always in a lane. In month 9, write the degree-time offer on a single page: one retainer, about four days a month, €2,200–2,500, calendar told to the client in advance. Therapy marketing is a separate name and a separate site. This practice stays on climate, supply chain, and real assets, and it is the one you reopen after the degree.",
+                "Hold two niche retainers. One public piece a quarter, on supplier carbon, traceability, or compliance rollout. In month 9, write the degree-time offer on a single page: one retainer, about four days a month, €2,200–2,500, calendar told to the client in advance. Therapy marketing is a separate name and a separate site. This practice stays on supply-chain climate software, and it is the one you reopen after the degree.",
                 "The lighter offer is signed, or ready to sign, before classes start.",
             ],
         ],
@@ -542,7 +547,7 @@ def build():
     bullet(
         doc,
         "About, five lines. ",
-        "Climate and supply-chain products, real-asset narratives, French and English as the languages you write in, part-time from Berlin. Set German and Spanish to the level on your CVs, and keep them off the list of delivery languages. If the community role is still active, one clause is enough, and it does not lead.",
+        "Supply-chain climate software, French and English as the languages you write in, part-time from Berlin. AstroFinance can appear as proof. It does not lead the page. Set German and Spanish to the level on your CVs, and keep them off the list of delivery languages. If the community role is still active, one clause is enough, and it does not lead.",
     )
     bullet(
         doc,
@@ -583,7 +588,7 @@ def build():
     )
 
     heading(doc, "10.  Rules that keep the year intact")
-    bullet(doc, "One sentence in public. ", "If a fourth lane appears before month six, it waits. Open it only after the €5,200 month is real.")
+    bullet(doc, "One sentence in public. ", "If another lane appears before a supply-chain climate retainer is signed, it waits.")
     bullet(doc, "Price floor €800, and €900 is the real brief. ", "Under that, the month becomes a volume job and the master’s year gets harder, not easier.")
     bullet(doc, "Your name stays clean. ", "No client numbers without permission. No technical piece without the footer. No litepaper that reads like an offer of securities.")
     bullet(doc, "Shrink on purpose. ", "Month 9 is when you design the four-day retainer and tell clients the calendar. That same offer is what you pick back up after the degree, while the therapy roster is still small. The two practices stay separate: different name, different site, different promise.", space_after=3)

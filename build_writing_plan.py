@@ -326,7 +326,7 @@ def build():
                 {"size": 10, "bold": True},
             ),
             (
-                "two paper retainers inside one niche. A white paper is a single sales asset, and that project ends. A paper retainer is the same client, the same monthly fee, funding one paper a quarter plus a short briefing each month. Ten to twelve writing days a month is the cap. AstroFinance and Dialectica can pay while the niche is forming. Judge the year on whether two supply-chain climate clients have hired you for a second paper. Pull the calendar forward if the master’s starts before October 2027.",
+                "two paper retainers inside one niche. A white paper is a single sales asset, and that project ends. A paper retainer is the same client, the same monthly fee, funding one paper a quarter plus one case study or regulatory briefing each month. Ten to twelve writing days a month is the cap. AstroFinance and Dialectica can pay while the niche is forming. Judge the year on whether two supply-chain climate clients have hired you for a second paper. Pull the calendar forward if the master’s starts before October 2027.",
                 {"size": 10},
             ),
         ],
@@ -397,7 +397,7 @@ def build():
         align="justify",
     )
 
-    heading(doc, "4.  Three formats, and what to charge in year one")
+    heading(doc, "4.  The white paper, and two parallel short pieces")
     para(
         doc,
         "Published specialists already charge about €85 an hour and about €3,000 for a researched 1,500-word sustainability essay; clean-energy white papers often start near $6,000. Your year-one prices sit under those, so the first yes is reachable, and well above mill rates, which cannot fund €5,200 months.",
@@ -417,14 +417,20 @@ def build():
                 "5–8 days",
             ],
             [
-                "Briefing",
-                "800–1,200 words cut from the same research: one chapter, one regulatory point, or the public essay that points at the paper.",
+                "Case study",
+                "800–1,200 words from one customer interview. Sales uses it for a year. Same buyer as the paper. A French version is a second delivery, about 25% above the English fee.",
+                "€1,000–1,800",
+                "1.5–2 days",
+            ],
+            [
+                "Regulatory briefing",
+                "One to two pages on what a CBAM, CSRD, or supplier-data change means for the product and the buyer. Written to be forwarded by sales. Their counsel owns the legal reading.",
                 "€700–1,100",
                 "About 1 day",
             ],
             [
                 "Paper retainer",
-                "Billed monthly. One white paper a quarter, plus one briefing a month from the same interviews. Six-month start is ideal; three months is the minimum.",
+                "Billed monthly. One white paper a quarter, plus one case study or one regulatory briefing a month. Six-month start is ideal; three months is the minimum.",
                 "€2,200–2,800 / month",
                 "About 4 days",
             ],
@@ -440,7 +446,7 @@ def build():
                 {"size": 10, "bold": True},
             ),
             (
-                "The white paper is the offer you are known for. It is one document, then that project ends, which is why a paper-only practice stays lumpy: most companies want one or two a year. The retainer is how the same client gets the next paper without a new sale every time. Two paper retainers are the stable shape. Sell the retainer after the first paper with that client. The AstroFinance package is ramp income, and it does not get a standing claim on the calendar.",
+                "The white paper is the offer you are known for. The case study and the regulatory briefing are parallel offers for the same product-marketing buyer, in English or French, in Berlin or elsewhere. They are the work you sell in the months between papers. A paper-only practice stays lumpy, because most companies want one or two papers a year. The retainer bundles the next paper with one of those short pieces each month. Sell it after the first paid piece with that client. The AstroFinance package is ramp income, and it does not get a standing claim on the calendar.",
                 {"size": 10},
             ),
         ],
@@ -465,7 +471,7 @@ def build():
     )
     para(
         doc,
-        "Leave on the shelf for this year: blog posts under €800, social-only ghostwriting under €1,500 a month, and full sustainability reports (a real market at €7,000 and up, and only sane once a client arrives with the data). Two trade-press bylines in the year, pitched from the roundtable essay, are marketing. They are part of the pipeline, and they are not the business.",
+        "Leave on the shelf for this year: SEO calendars, configuration and onboarding guides (customer success owns those), social-only ghostwriting under €1,500 a month, and full sustainability reports (a real market at €7,000 and up, and only sane once a client arrives with the data). Two trade-press bylines in the year, pitched from the roundtable essay, are marketing for the pipeline.",
         size=10,
         space_after=2,
         align="justify",
@@ -483,7 +489,7 @@ def build():
             ],
             [
                 "Weeks 2–4",
-                "Three samples, live as links. (1) A 1,400-word essay drafted before you moderate: what AI can and cannot do inside carbon-accounting software, from the product side. (2) A short public white paper, about six pages, on where supplier-carbon programs break, using your method and public facts only. (3) A redacted AstroFinance product-and-strategy excerpt, after written permission. If permission lags, label a sample paper as a sample.",
+                "Three samples, live as links. (1) The regulatory-briefing sample: a 1,400-word essay, drafted before you moderate, on what AI can and cannot do inside carbon-accounting software. (2) A short public white paper, about six pages, on where supplier-carbon programs break, from public facts only. (3) A redacted AstroFinance excerpt, after written permission. The case-study sample is the first paid one, published only with the customer’s yes.",
                 "Featured section on LinkedIn holds all three.",
             ],
             [
@@ -503,7 +509,7 @@ def build():
             ],
             [
                 "Months 4–6\nJan–Mar",
-                "Convert the first niche white paper into a paper retainer. A second real-asset project waits if it would fill days you need for that pursuit. The paid paper, with permission, becomes sample four. After two paid papers, the next one starts at €4,500. Decline briefings under €700 and papers under €3,500.",
+                "Convert the first niche piece, paper or case study, into a paper retainer. A second real-asset project waits if it would fill days you need for that pursuit. The paid paper, with permission, becomes a sample. After two paid papers, the next one starts at €4,500. Decline case studies under €1,000, briefings under €700, and papers under €3,500.",
                 "One supply-chain climate client is on a paper retainer.",
             ],
             [
@@ -542,7 +548,7 @@ def build():
     bullet(
         doc,
         "First screen. ",
-        "The one sentence, the three writing products with the fees in section 4, and Schedule a chat. Proof you can link today: the AstroFinance Loom and the asset-hub page already on the site, plus the Nespresso supply-chain note you already cite. FIBE and the roundtable join as soon as you can name them in one line. The litepaper excerpt joins when AstroFinance agrees.",
+        "The one sentence, then the white paper, the case study, and the regulatory briefing, with the fees in section 4, and Schedule a chat. Proof you can link today: the AstroFinance Loom and the asset-hub page already on the site, plus the Nespresso supply-chain note you already cite. FIBE and the roundtable join as soon as you can name them in one line. The litepaper excerpt joins when AstroFinance agrees.",
     )
     bullet(
         doc,
@@ -562,15 +568,15 @@ def build():
     )
 
     heading(doc, "7.  What to have in hand before you pitch")
-    bullet(doc, "Samples on the Carrd. ", "The roundtable essay, the public solution brief, and the permitted AstroFinance excerpt, each as a link on the page. The Loom and the asset-hub demo stay next to them, so a buyer sees that you have shipped the thing you are explaining.")
-    bullet(doc, "The offer sheet and the contract. ", "Three products, the ranges above, two revisions, half to start, and a portfolio clause. A lawyer-drafted novel is unnecessary; a clear one-pager your Steuerberater has seen is enough.")
+    bullet(doc, "Samples on the Carrd. ", "The regulatory briefing, the short white paper, and the permitted AstroFinance excerpt, each as a link. The first paid case study joins when the customer agrees. The Loom and the asset-hub demo stay next to them.")
+    bullet(doc, "The offer sheet and the contract. ", "The white paper, the case study, the regulatory briefing, and the retainer, with the ranges above. Two revisions, half to start, and a portfolio clause. A clear one-pager your Steuerberater has seen is enough.")
     bullet(doc, "A source rule and a claims footer. ", "Every number comes from a public source or the client’s file. The footer on technical pieces: practitioner explanation; carbon-accounting, legal, and investment advice remain with the client’s specialists.")
     bullet(doc, "Written permission. ", "Nespresso, the coffee trader, IntegrityNext, Walmart, J&J, and AstroFinance details appear only when already public or cleared in writing. Role, method, and results you already state on LinkedIn are the safe set.")
     bullet(doc, "A swipe file. ", "Five pieces you wish you had written, one folder per lane. Match their structure. The sentences stay yours.", space_after=1)
 
     heading(doc, "8.  Where the commissions come from")
     bullet(doc, "1. People who already trust you. ", "AstroFinance, Tesseract, the roundtable speakers, FIBE contacts, Dialectica’s team, and former colleagues now at climate startups. This is the whole first quarter.")
-    bullet(doc, "2. Direct notes, then a coffee. ", "Heads of content, product marketing, and founders. Berlin’s climate and supply-chain scene is dense enough that a 30-minute coffee is a normal next step. Lead with a title you would write for their site.")
+    bullet(doc, "2. Direct notes, in English and French. ", "Product-marketing leads and founders, in Berlin and beyond. A 30-minute call is the next step. Lead with a white-paper title or a case-study angle, and mention the French version when they sell in France.")
     bullet(doc, "3. Expert networks, as bridge cash. ", "Stay active on Dialectica. Apply to GLG, AlphaSights, and Guidepoint. A few calls in a thin month cover rent pressure and hand you anonymized problems you can later turn into briefs. The calls support the writing practice. They do not replace the retainer.")
     bullet(doc, "4. Studios that already sell the format. ", "Tesseract is the model: they win the client, you write the specialist sections, you know your minimum before you accept their rate. Ask them who else they respect.")
     bullet(doc, "5. Talent lists, only after two public clips. ", "A niche roster, Contently if the door opens, and one Upwork profile that lists only the three products and a high minimum. General freelance boards pull the rate card down. Use them late, or leave them.", space_after=1)
@@ -589,7 +595,7 @@ def build():
 
     heading(doc, "10.  Rules that keep the year intact")
     bullet(doc, "One sentence in public. ", "If another lane appears before a supply-chain climate retainer is signed, it waits.")
-    bullet(doc, "Price floor. ", "No briefing under €700, and no white paper under €3,500. Under that, the month becomes a volume job and the master’s year gets harder.")
+    bullet(doc, "Price floor. ", "No case study under €1,000, no regulatory briefing under €700, and no white paper under €3,500. Under that, the month becomes a volume job and the master’s year gets harder.")
     bullet(doc, "Your name stays clean. ", "No client numbers without permission. No technical piece without the footer. No litepaper that reads like an offer of securities.")
     bullet(doc, "Shrink on purpose. ", "Month 9 is when you design the four-day retainer and tell clients the calendar. That same offer is what you pick back up after the degree, while the therapy roster is still small. The two practices stay separate: different name, different site, different promise.", space_after=3)
 

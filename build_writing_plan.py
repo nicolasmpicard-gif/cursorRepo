@@ -1,0 +1,619 @@
+#!/usr/bin/env python3
+"""Build a 4-page domain-writing income plan for Nicolas Picard."""
+
+from docx import Document
+from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Cm, Pt, RGBColor, Twips
+
+GREEN = RGBColor(0x1B, 0x3A, 0x2F)
+GREEN_MID = RGBColor(0x2D, 0x6A, 0x4F)
+INK = RGBColor(0x1A, 0x1A, 0x1A)
+MUTED = RGBColor(0x3D, 0x4A, 0x45)
+WHITE = RGBColor(0xFF, 0xFF, 0xFF)
+RULE = "1B3A2F"
+ZEBRA = "F3F6F4"
+HEAD_FILL = "1B3A2F"
+
+
+def shade(cell, hex_color):
+    tc = cell._tc
+    tcPr = tc.get_or_add_tcPr()
+    shd = tcPr.find(qn("w:shd"))
+    if shd is None:
+        shd = OxmlElement("w:shd")
+        tcPr.append(shd)
+    shd.set(qn("w:fill"), hex_color)
+    shd.set(qn("w:val"), "clear")
+
+
+def set_cell_margins(cell, top=40, bottom=40, left=70, right=70):
+    tc = cell._tc
+    tcPr = tc.get_or_add_tcPr()
+    tcMar = tcPr.find(qn("w:tcMar"))
+    if tcMar is None:
+        tcMar = OxmlElement("w:tcMar")
+        tcPr.append(tcMar)
+    for m, val in (("top", top), ("bottom", bottom), ("left", left), ("right", right)):
+        node = tcMar.find(qn(f"w:{m}"))
+        if node is None:
+            node = OxmlElement(f"w:{m}")
+            tcMar.append(node)
+        node.set(qn("w:w"), str(val))
+        node.set(qn("w:type"), "dxa")
+
+
+def set_table_widths(table, widths_cm):
+    table.autofit = False
+    table.allow_autofit = False
+    tbl = table._tbl
+    tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement("w:tblPr")
+    tblW = tblPr.find(qn("w:tblW"))
+    if tblW is None:
+        tblW = OxmlElement("w:tblW")
+        tblPr.append(tblW)
+    total = int(sum(widths_cm) * 567)
+    tblW.set(qn("w:w"), str(total))
+    tblW.set(qn("w:type"), "dxa")
+    grid = tbl.find(qn("w:tblGrid"))
+    if grid is not None:
+        for child in list(grid):
+            grid.remove(child)
+    else:
+        grid = OxmlElement("w:tblGrid")
+        tblPr.addnext(grid)
+    for w in widths_cm:
+        gc = OxmlElement("w:gridCol")
+        gc.set(qn("w:w"), str(int(w * 567)))
+        grid.append(gc)
+    for row in table.rows:
+        for i, cell in enumerate(row.cells):
+            tc = cell._tc
+            tcPr = tc.get_or_add_tcPr()
+            tcW = tcPr.find(qn("w:tcW"))
+            if tcW is None:
+                tcW = OxmlElement("w:tcW")
+                tcPr.append(tcW)
+            tcW.set(qn("w:w"), str(int(widths_cm[i] * 567)))
+            tcW.set(qn("w:type"), "dxa")
+
+
+def prevent_row_split(row):
+    tr = row._tr
+    trPr = tr.get_or_add_trPr()
+    cant = OxmlElement("w:cantSplit")
+    trPr.append(cant)
+
+
+def set_run_font(run, name="Calibri", size=10, bold=False, color=INK, italic=False):
+    run.font.name = name
+    run._element.rPr.rFonts.set(qn("w:eastAsia"), name)
+    run.font.size = Pt(size)
+    run.bold = bold
+    run.italic = italic
+    run.font.color.rgb = color
+
+
+def add_text(p, text, **kwargs):
+    r = p.add_run(text)
+    set_run_font(r, **kwargs)
+    return r
+
+
+def para(doc, text="", size=10, bold=False, color=INK, space_before=0, space_after=4,
+         italic=False, align="left"):
+    p = doc.add_paragraph()
+    pf = p.paragraph_format
+    pf.space_before = Pt(space_before)
+    pf.space_after = Pt(space_after)
+    pf.line_spacing = 1.02
+    if align == "justify":
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    elif align == "center":
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    if text:
+        add_text(p, text, size=size, bold=bold, color=color, italic=italic)
+    return p
+
+
+def rich(doc, runs, space_before=0, space_after=4, align="left"):
+    """runs: list of (text, kwargs)"""
+    p = doc.add_paragraph()
+    pf = p.paragraph_format
+    pf.space_before = Pt(space_before)
+    pf.space_after = Pt(space_after)
+    pf.line_spacing = 1.02
+    if align == "justify":
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    for text, kwargs in runs:
+        add_text(p, text, **kwargs)
+    return p
+
+
+def heading(doc, text):
+    p = para(doc, text, size=12, bold=True, color=GREEN, space_before=8, space_after=2)
+    pPr = p._p.get_or_add_pPr()
+    pPr.append(OxmlElement("w:keepNext"))
+    pBdr = OxmlElement("w:pBdr")
+    bottom = OxmlElement("w:bottom")
+    bottom.set(qn("w:val"), "single")
+    bottom.set(qn("w:sz"), "6")
+    bottom.set(qn("w:space"), "1")
+    bottom.set(qn("w:color"), RULE)
+    pBdr.append(bottom)
+    pPr.append(pBdr)
+    return p
+
+
+def bullet(doc, lead, rest, space_after=2):
+    p = doc.add_paragraph()
+    pf = p.paragraph_format
+    pf.space_before = Pt(0)
+    pf.space_after = Pt(space_after)
+    pf.line_spacing = 1.02
+    pf.left_indent = Cm(0.35)
+    pf.first_line_indent = Cm(-0.35)
+    add_text(p, "•  ", size=10, color=GREEN_MID, bold=True)
+    if lead:
+        add_text(p, lead, size=10, bold=True, color=INK)
+    add_text(p, rest, size=10, color=INK)
+    return p
+
+
+def fill_cell(cell, text, bold=False, size=8.5, color=INK, fill=None, center=False):
+    cell.text = ""
+    p = cell.paragraphs[0]
+    p.paragraph_format.space_before = Pt(0)
+    p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.line_spacing = 1.0
+    if center:
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    add_text(p, text, size=size, bold=bold, color=color)
+    set_cell_margins(cell)
+    if fill:
+        shade(cell, fill)
+    # vertical align
+    tc = cell._tc
+    tcPr = tc.get_or_add_tcPr()
+    vAlign = tcPr.find(qn("w:vAlign"))
+    if vAlign is None:
+        vAlign = OxmlElement("w:vAlign")
+        tcPr.append(vAlign)
+    vAlign.set(qn("w:val"), "center")
+
+
+def fill_cell_runs(cell, runs, fill=None):
+    cell.text = ""
+    p = cell.paragraphs[0]
+    p.paragraph_format.space_before = Pt(0)
+    p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.line_spacing = 1.0
+    for text, kwargs in runs:
+        add_text(p, text, **kwargs)
+    set_cell_margins(cell)
+    if fill:
+        shade(cell, fill)
+    tc = cell._tc
+    tcPr = tc.get_or_add_tcPr()
+    vAlign = tcPr.find(qn("w:vAlign"))
+    if vAlign is None:
+        vAlign = OxmlElement("w:vAlign")
+        tcPr.append(vAlign)
+    vAlign.set(qn("w:val"), "center")
+
+
+def make_table(doc, headers, rows, widths):
+    table = doc.add_table(rows=1 + len(rows), cols=len(headers))
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.style = "Table Grid"
+    set_table_widths(table, widths)
+    for i, h in enumerate(headers):
+        fill_cell(table.rows[0].cells[i], h, bold=True, size=8, color=WHITE, fill=HEAD_FILL)
+    prevent_row_split(table.rows[0])
+    for r_i, row in enumerate(rows):
+        fill = ZEBRA if r_i % 2 == 0 else "FFFFFF"
+        for c_i, val in enumerate(row):
+            fill_cell(table.rows[r_i + 1].cells[c_i], val, size=8, color=INK, fill=fill)
+        prevent_row_split(table.rows[r_i + 1])
+    # tighten borders
+    tbl = table._tbl
+    tblPr = tbl.tblPr
+    borders = OxmlElement("w:tblBorders")
+    for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
+        el = OxmlElement(f"w:{edge}")
+        el.set(qn("w:val"), "single")
+        el.set(qn("w:sz"), "4")
+        el.set(qn("w:space"), "0")
+        el.set(qn("w:color"), "D5DDD8")
+        borders.append(el)
+    tblPr.append(borders)
+    return table
+
+
+def add_footer(doc):
+    section = doc.sections[0]
+    footer = section.footer
+    footer.is_linked_to_previous = False
+    p = footer.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.space_before = Pt(2)
+    add_text(
+        p,
+        "Domain writing plan  ·  Nicolas Picard  ·  Berlin  ·  October 2026     ",
+        size=8,
+        color=MUTED,
+    )
+    # page number field
+    run = p.add_run()
+    set_run_font(run, size=8, color=MUTED)
+    fldChar1 = OxmlElement("w:fldChar")
+    fldChar1.set(qn("w:fldCharType"), "begin")
+    instr = OxmlElement("w:instrText")
+    instr.set(qn("xml:space"), "preserve")
+    instr.text = " PAGE "
+    fldChar2 = OxmlElement("w:fldChar")
+    fldChar2.set(qn("w:fldCharType"), "end")
+    run._r.append(fldChar1)
+    run._r.append(instr)
+    run._r.append(fldChar2)
+    add_text(p, " / ", size=8, color=MUTED)
+    run2 = p.add_run()
+    set_run_font(run2, size=8, color=MUTED)
+    fld1 = OxmlElement("w:fldChar")
+    fld1.set(qn("w:fldCharType"), "begin")
+    instr2 = OxmlElement("w:instrText")
+    instr2.set(qn("xml:space"), "preserve")
+    instr2.text = " NUMPAGES "
+    fld2 = OxmlElement("w:fldChar")
+    fld2.set(qn("w:fldCharType"), "end")
+    run2._r.append(fld1)
+    run2._r.append(instr2)
+    run2._r.append(fld2)
+
+
+def build():
+    doc = Document()
+    section = doc.sections[0]
+    section.page_width = Cm(21.0)
+    section.page_height = Cm(29.7)
+    section.left_margin = Cm(1.35)
+    section.right_margin = Cm(1.35)
+    section.top_margin = Cm(1.15)
+    section.bottom_margin = Cm(1.2)
+    section.header_distance = Cm(0.4)
+    section.footer_distance = Cm(0.4)
+
+    normal = doc.styles["Normal"]
+    normal.font.name = "Calibri"
+    normal.font.size = Pt(10)
+    normal.font.color.rgb = INK
+    normal._element.rPr.rFonts.set(qn("w:eastAsia"), "Calibri")
+
+    # Title
+    para(doc, "Domain writing as income", size=18, bold=True, color=GREEN, space_after=0)
+    para(
+        doc,
+        "A one-year test before the psychotherapy master’s  ·  Nicolas Picard  ·  Berlin  ·  October 2026 – September 2027",
+        size=9,
+        color=MUTED,
+        space_before=1,
+        space_after=4,
+    )
+
+    heading(doc, "1.  The number you are actually chasing")
+    rich(
+        doc,
+        [
+            (
+                "€2,500 net is about €5,200 invoiced per month",
+                {"size": 10, "bold": True},
+            ),
+            (
+                " (€62,000 a year). For a single filer in Berlin with no church tax and ordinary expenses, that is the level at which income tax plus health and care insurance leave roughly €2,500 in pocket. The Künstlersozialkasse, if it accepts you as a writer, charges about half the insurance rate and also builds a pension, so take-home stays similar and the coverage is better. A Steuerberater confirms this in week one, including whether 2025 fractional invoices already pushed you over the Kleinunternehmer line (prior-year turnover under €25,000, and this year under €100,000). Above that line, invoices carry VAT.",
+                {"size": 10},
+            ),
+        ],
+        space_after=3,
+        align="justify",
+    )
+    rich(
+        doc,
+        [
+            (
+                "How a €5,200 month is built: ",
+                {"size": 10, "bold": True},
+            ),
+            (
+                "two paper retainers inside one niche. A white paper is a single sales asset, and that project ends. A paper retainer is the same client, the same monthly fee, funding one paper a quarter plus one case study or regulatory briefing each month. Ten to twelve writing days a month is the cap. AstroFinance and Dialectica can pay while the niche is forming. Judge the year on whether two supply-chain climate clients have hired you for a second paper. Pull the calendar forward if the master’s starts before October 2027.",
+                {"size": 10},
+            ),
+        ],
+        space_after=2,
+        align="justify",
+    )
+
+    heading(doc, "2.  One offer, from seven CVs")
+    rich(
+        doc,
+        [
+            (
+                "The overlap is specific. ",
+                {"size": 10, "bold": True},
+            ),
+            (
+                "You turn complex B2B products in climate, supply chain, and real-asset finance into documents a buyer, an investor, or an implementation team can use. That is already how you have been paid: Opower recognized you as the team’s best writer on large SaaS scopes; The Asia Foundation proposals; OpenSC playbooks and the Nespresso ESG business case; the IntegrityNext carbon-accounting flow, including upstream data gaps; the AstroFinance litepaper (product, strategy, three offerings, and the financial models), plus the exit memo and deal blueprints; a FIBE talk; the Carbon Accounting Alliance roundtable you are about to moderate; and Dialectica, which already pays for your judgment on supply-chain risk platforms.",
+                {"size": 10},
+            ),
+        ],
+        space_after=3,
+        align="justify",
+    )
+    rich(
+        doc,
+        [
+            (
+                "Public sentence, on LinkedIn and on the offer sheet: ",
+                {"size": 10, "bold": True},
+            ),
+            (
+                "“I write practitioner white papers for supply-chain climate software teams.” The seven CV variants stay in the job-search folder. Clients hire the sentence, and they will check it on nicolaspicard.carrd.co.",
+                {"size": 10},
+            ),
+        ],
+        space_after=2,
+        align="justify",
+    )
+
+    heading(doc, "3.  One niche, and what sits beside it")
+    bullet(
+        doc,
+        "The niche is supply-chain climate software. ",
+        "Vendors that sell supplier compliance, traceability, and carbon data are the buyers. Your long proof is here: Nespresso traceability in DR Congo, OpenSC playbooks, IntegrityNext’s supplier tool and carbon feature, and Dialectica calls on which ESG platform fits which use case. The person who hires you is product marketing or the founder, not the implementation team. Berlin examples include Plan A, Cozero, Climatiq, Vaayu, and carbmee.",
+    )
+    bullet(
+        doc,
+        "Carbon accounting is the front door of that niche. ",
+        "Lead with it in the title of the paper. The roundtable, the search demand, and the IntegrityNext feature make it the topic a marketing lead already understands. The paper itself is about the workflow: missing supplier data, CBAM upstream gaps, what the product has to show a buyer. A practice that explains GHG Protocol chapters for a living is a weaker fit, because those clients will ask you to be the accountant. Emissions factors, audits, and legal conclusions stay with their specialists.",
+    )
+    bullet(
+        doc,
+        "Real-asset finance is a client. ",
+        "Take the AstroFinance package. It pays, and it becomes a sample. Have the one conversation with Tesseract Academy, since Stylianos and Linas Stankevicius already know the litepaper. Then stop hunting that market. A company buys a litepaper once, the buyer pool is small, and the work follows crypto sentiment. If a second real-asset project would crowd out a supply-chain climate retainer, decline it. Counsel reviews anything on token structure, and the footer says the piece is a product explanation.",
+    )
+    bullet(
+        doc,
+        "English and French are the craft inside the niche. ",
+        "The paper an account executive can send. French is its own delivery, at about 25% above the English fee, when an EU vendor asks. German is for coffees in Berlin.",
+        space_after=2,
+    )
+    para(
+        doc,
+        "Help-center articles, release notes, onboarding emails, and internal implementation docs are written by marketing, product, or customer success. Leave that work to them. The document they pay an outsider for is the white paper: long enough that a generalist marketer will not draft it, and specific enough that the founder will not sit down for it. Your litepaper sections are the proof. AI is the roundtable subject inside the paper, and the tool you draft with. A general AI-writing offer stays closed.",
+        size=10,
+        space_before=1,
+        space_after=2,
+        align="justify",
+    )
+
+    heading(doc, "4.  The white paper, and two parallel short pieces")
+    para(
+        doc,
+        "Published specialists already charge about €85 an hour and about €3,000 for a researched 1,500-word sustainability essay; clean-energy white papers often start near $6,000. Your year-one prices sit under those, so the first yes is reachable, and well above mill rates, which cannot fund €5,200 months.",
+        size=10,
+        space_after=3,
+        align="justify",
+    )
+
+    make_table(
+        doc,
+        ["Format", "What the client gets", "Year-1 fee", "Your time"],
+        [
+            [
+                "White paper",
+                "2,500–4,000 words, one argument, one or two interviews with their expert. A sales asset, not a help article. They supply the expert and the legal review. Two revision rounds.",
+                "€3,500–6,000",
+                "5–8 days",
+            ],
+            [
+                "Case study",
+                "800–1,200 words from one customer interview. Sales uses it for a year. Same buyer as the paper. A French version is a second delivery, about 25% above the English fee.",
+                "€1,000–1,800",
+                "1.5–2 days",
+            ],
+            [
+                "Regulatory briefing",
+                "One to two pages on what a CBAM, CSRD, or supplier-data change means for the product and the buyer. Written to be forwarded by sales. Their counsel owns the legal reading.",
+                "€700–1,100",
+                "About 1 day",
+            ],
+            [
+                "Paper retainer",
+                "Billed monthly. One white paper a quarter, plus one case study or one regulatory briefing a month. Six-month start is ideal; three months is the minimum.",
+                "€2,200–2,800 / month",
+                "About 4 days",
+            ],
+        ],
+        [2.6, 8.6, 3.5, 2.6],
+    )
+    para(doc, "", size=4, space_after=2)
+    rich(
+        doc,
+        [
+            (
+                "What the words mean. ",
+                {"size": 10, "bold": True},
+            ),
+            (
+                "The white paper is the offer you are known for. The case study and the regulatory briefing are parallel offers for the same product-marketing buyer, in English or French, in Berlin or elsewhere. They are the work you sell in the months between papers. A paper-only practice stays lumpy, because most companies want one or two papers a year. The retainer bundles the next paper with one of those short pieces each month. Sell it after the first paid piece with that client. The AstroFinance package is ramp income, and it does not get a standing claim on the calendar.",
+                {"size": 10},
+            ),
+        ],
+        space_before=2,
+        space_after=2,
+        align="justify",
+    )
+    rich(
+        doc,
+        [
+            (
+                "AstroFinance, priced on purpose. ",
+                {"size": 10, "bold": True},
+            ),
+            (
+                "Propose three short pieces for €2,100 total (€700 each), half up front, topics you choose: how the asset hub works, what an aerospace asset needs before it can be offered, and the security-token versus utility-token brief you have already had to write for a live prospect. That price is the floor of the public briefing rate, on purpose.",
+                {"size": 10},
+            ),
+        ],
+        space_after=2,
+        align="justify",
+    )
+    para(
+        doc,
+        "Leave on the shelf for this year: SEO calendars, configuration and onboarding guides (customer success owns those), social-only ghostwriting under €1,500 a month, and full sustainability reports (a real market at €7,000 and up, and only sane once a client arrives with the data). Two trade-press bylines in the year, pitched from the roundtable essay, are marketing for the pipeline.",
+        size=10,
+        space_after=2,
+        align="justify",
+    )
+
+    heading(doc, "5.  The year, step by step")
+    make_table(
+        doc,
+        ["When", "Do this", "Finished when"],
+        [
+            [
+                "Week 1\nby 11 Oct",
+                "Steuerberater: Freiberufler, KSK application, Kleinunternehmer, invoice line. Rewrite LinkedIn and the Carrd to the same sentence (section 6). One-page offer. One-page contract: scope, two revisions, 50% to start, kill fee, confidentiality, right to show a redacted sample.",
+                "Carrd, LinkedIn, an offer, and an invoice all match.",
+            ],
+            [
+                "Weeks 2–4",
+                "Three samples, live as links. (1) The regulatory-briefing sample: a 1,400-word essay, drafted before you moderate, on what AI can and cannot do inside carbon-accounting software. (2) A short public white paper, about six pages, on where supplier-carbon programs break, from public facts only. (3) A redacted AstroFinance excerpt, after written permission. The case-study sample is the first paid one, published only with the customer’s yes.",
+                "Featured section on LinkedIn holds all three.",
+            ],
+            [
+                "Roundtable week",
+                "Moderate. Within 72 hours publish a short point-of-view recap, with quotes from others only where you have a yes. Send it to each speaker and to 15 climate founders, with one line on what you write and the fee range.",
+                "The essay is public and 15 people have it.",
+            ],
+            [
+                "Weeks 3–8",
+                "Two warm asks, then the niche list. AstroFinance: the €2,100 package, topics and price in the same note. Tesseract: one note about subcontracted litepaper sections, then stop. The list of 40 is supply-chain climate and compliance firms only: content leads and founders. Eight personal notes a week. Each note names a page on their site and proposes one title.",
+                "AstroFinance has said yes or no. Two niche intro calls are booked.",
+            ],
+            [
+                "Month 3\nearly Jan 2027",
+                "Checkpoint. One paid delivery, or a signed AstroFinance package. If neither has happened, change the sample or the price. Another lane will not fix an offer that is not landing.",
+                "A written yes, or a revised offer.",
+            ],
+            [
+                "Months 4–6\nJan–Mar",
+                "Convert the first niche piece, paper or case study, into a paper retainer. A second real-asset project waits if it would fill days you need for that pursuit. The paid paper, with permission, becomes a sample. After two paid papers, the next one starts at €4,500. Decline case studies under €1,000, briefings under €700, and papers under €3,500.",
+                "One supply-chain climate client is on a paper retainer.",
+            ],
+            [
+                "Months 7–12",
+                "Hold two niche retainers. One public piece a quarter, on supplier carbon, traceability, or compliance rollout. In month 9, write the degree-time offer on a single page: one retainer, about four days a month, €2,200–2,500, calendar told to the client in advance. Therapy marketing is a separate name and a separate site. This practice stays on supply-chain climate software, and it is the one you reopen after the degree.",
+                "The lighter offer is signed, or ready to sign, before classes start.",
+            ],
+        ],
+        [2.7, 11.5, 3.1],
+    )
+
+    heading(doc, "6.  The Carrd, before the first email")
+    rich(
+        doc,
+        [
+            (
+                "nicolaspicard.carrd.co is the right container. ",
+                {"size": 10, "bold": True},
+            ),
+            (
+                "It is one page, it already has a Calendly (calendly.com/nicolas-m-picard/30min), and it already says you work part-time, on flexible hours, from Berlin. Keep that line. The page is aimed at a different buyer. The headline is “Product Manager & Startup Builder | Climate & Web3,” and the menu is product-market fit, MVPs, startup operations, and applied AI. The About still pairs community work at an LGBT+ social enterprise with a current fractional Head of Product seat. This autumn the product role is advisory, and the live proof is Dialectica plus the roundtable. A content lead who clicks through meets a product consultant whose About still describes last year’s roles.",
+                {"size": 10},
+            ),
+        ],
+        space_after=2,
+        align="justify",
+    )
+    para(
+        doc,
+        "Rewrite that same URL in week 1. A new site can wait.",
+        size=10,
+        bold=True,
+        space_before=1,
+        space_after=2,
+    )
+    bullet(
+        doc,
+        "First screen. ",
+        "The one sentence, then the white paper, the case study, and the regulatory briefing, with the fees in section 4, and Schedule a chat. Proof you can link today: the AstroFinance Loom and the asset-hub page already on the site, plus the Nespresso supply-chain note you already cite. FIBE and the roundtable join as soon as you can name them in one line. The litepaper excerpt joins when AstroFinance agrees.",
+    )
+    bullet(
+        doc,
+        "About, five lines. ",
+        "Supply-chain climate software, French and English as the languages you write in, part-time from Berlin. AstroFinance can appear as proof. It does not lead the page. Set German and Spanish to the level on your CVs, and keep them off the list of delivery languages. If the community role is still active, one clause is enough, and it does not lead.",
+    )
+    bullet(
+        doc,
+        "An “Also” line, with its own fees. ",
+        "Product consulting, dashboards, lead scoring, and clickable prototypes stay available, because you have shipped them. They sit below the writing menu. The custom GPT that drafts funding proposals comes off this page: beside a writing offer, it tells the buyer the writing can be a prompt.",
+    )
+    bullet(
+        doc,
+        "Two cleanups. ",
+        "The therapy-access hackathon comes off this URL. It is a real build, and it belongs later, with the master’s, under its own name. The footer icon labeled Substack currently points at github.com. Point it at the roundtable essay once that essay has a home, or remove the icon until then.",
+        space_after=1,
+    )
+
+    heading(doc, "7.  What to have in hand before you pitch")
+    bullet(doc, "Samples on the Carrd. ", "The regulatory briefing, the short white paper, and the permitted AstroFinance excerpt, each as a link. The first paid case study joins when the customer agrees. The Loom and the asset-hub demo stay next to them.")
+    bullet(doc, "The offer sheet and the contract. ", "The white paper, the case study, the regulatory briefing, and the retainer, with the ranges above. Two revisions, half to start, and a portfolio clause. A clear one-pager your Steuerberater has seen is enough.")
+    bullet(doc, "A source rule and a claims footer. ", "Every number comes from a public source or the client’s file. The footer on technical pieces: practitioner explanation; carbon-accounting, legal, and investment advice remain with the client’s specialists.")
+    bullet(doc, "Written permission. ", "Nespresso, the coffee trader, IntegrityNext, Walmart, J&J, and AstroFinance details appear only when already public or cleared in writing. Role, method, and results you already state on LinkedIn are the safe set.")
+    bullet(doc, "A swipe file. ", "Five pieces you wish you had written, one folder per lane. Match their structure. The sentences stay yours.", space_after=1)
+
+    heading(doc, "8.  Where the commissions come from")
+    bullet(doc, "1. People who already trust you. ", "AstroFinance, Tesseract, the roundtable speakers, FIBE contacts, Dialectica’s team, and former colleagues now at climate startups. This is the whole first quarter.")
+    bullet(doc, "2. Direct notes, in English and French. ", "Product-marketing leads and founders, in Berlin and beyond. A 30-minute call is the next step. Lead with a white-paper title or a case-study angle, and mention the French version when they sell in France.")
+    bullet(doc, "3. Expert networks, as bridge cash. ", "Stay active on Dialectica. Apply to GLG, AlphaSights, and Guidepoint. A few calls in a thin month cover rent pressure and hand you anonymized problems you can later turn into briefs. The calls support the writing practice. They do not replace the retainer.")
+    bullet(doc, "4. Studios that already sell the format. ", "Tesseract is the model: they win the client, you write the specialist sections, you know your minimum before you accept their rate. Ask them who else they respect.")
+    bullet(doc, "5. Talent lists, only after two public clips. ", "A niche roster, Contently if the door opens, and one Upwork profile that lists only the three products and a high minimum. General freelance boards pull the rate card down. Use them late, or leave them.", space_after=1)
+
+    heading(doc, "9.  What is worth learning")
+    bullet(doc, "Carbon vocabulary, two weeks of evenings. ", "GHG Protocol scopes, spend-based versus activity-based factors, and what CBAM and CSRD actually ask of supplier data. You have specified this product. The goal is a draft a sustainability lead can trust.")
+    bullet(doc, "B2B search intent, one week. ", "How a content manager writes a brief, what a single keyword is for, how internal links work. Enough to deliver the AstroFinance pieces and to talk fees with a head of content.")
+    bullet(doc, "The practice itself. ", "KSK application, what you can deduct, invoice wording, and the difference between Freiberufler and a trade. That afternoon with a Steuerberater returns more than another certificate.", space_after=2)
+    para(
+        doc,
+        "Skip a further product-management certificate, a generic copywriting course, and anything about growing a web3 audience. The gap is packaging and a pipeline, and the samples close it.",
+        size=10,
+        space_after=2,
+        align="justify",
+    )
+
+    heading(doc, "10.  Rules that keep the year intact")
+    bullet(doc, "One sentence in public. ", "If another lane appears before a supply-chain climate retainer is signed, it waits.")
+    bullet(doc, "Price floor. ", "No case study under €1,000, no regulatory briefing under €700, and no white paper under €3,500. Under that, the month becomes a volume job and the master’s year gets harder.")
+    bullet(doc, "Your name stays clean. ", "No client numbers without permission. No technical piece without the footer. No litepaper that reads like an offer of securities.")
+    bullet(doc, "Shrink on purpose. ", "Month 9 is when you design the four-day retainer and tell clients the calendar. That same offer is what you pick back up after the degree, while the therapy roster is still small. The two practices stay separate: different name, different site, different promise.", space_after=3)
+
+    para(
+        doc,
+        "Planning note. Specialist rates cited from public pages as of early 2026: The EcoWriter (€85/hour; €3,000 for a 1,500–2,000 word sustainability article) and Renewable Writing (white papers from $6,000). German thresholds used here: Kleinunternehmer prior-year turnover under €25,000 and current-year under €100,000; KSK health-insurance contributions assessed from a 2026 minimum income of €7,910 a year, with the insured paying roughly half. The €5,200 figure is a planning estimate, not tax advice.",
+        size=8,
+        italic=True,
+        color=MUTED,
+        space_before=2,
+        space_after=0,
+    )
+
+    add_footer(doc)
+    out = "/workspace/Nicolas-Picard-Domain-Writing-Plan.docx"
+    doc.save(out)
+    print(out)
+
+
+if __name__ == "__main__":
+    build()

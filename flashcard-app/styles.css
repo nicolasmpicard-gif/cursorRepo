@@ -300,10 +300,11 @@ button {
 .face-word {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  line-height: 1.15;
+  font-size: clamp(1.15rem, 3.6vw, 2.1rem);
+  line-height: 1.25;
   color: var(--pine-deep);
   letter-spacing: -0.02em;
+  white-space: pre-line;
 }
 
 .face-meaning {
@@ -320,8 +321,13 @@ button {
   color: var(--muted);
 }
 
-.face-example strong {
+.face-example strong,
+.face-example span {
   display: block;
+  white-space: pre-line;
+}
+
+.face-example strong {
   color: var(--pine);
   font-weight: 600;
   margin-bottom: 0.15rem;
@@ -591,9 +597,15 @@ button {
 .word-de {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   color: var(--pine-deep);
   font-weight: 700;
+  line-height: 1.35;
+  white-space: pre-line;
+}
+
+.word-example {
+  white-space: pre-line;
 }
 
 .word-en {

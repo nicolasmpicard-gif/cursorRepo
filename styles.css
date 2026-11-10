@@ -413,6 +413,11 @@ button {
   font-weight: 500;
 }
 
+.build-stamp {
+  opacity: 0.55;
+  font-size: 0.75rem;
+}
+
 .hint {
   margin: 0;
   text-align: center;

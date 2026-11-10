@@ -3,12 +3,9 @@
  * Progress (status / lastReviewedAt) is stored separately in localStorage.
  * Custom/imported words are stored under wortkarte.custom.v1.
  *
- * Near-synonyms share one card. Format (newline-separated):
- *   term A (nuance)
- *   term B (nuance)
- * with one example sentence per term (also newline-separated).
- * When adding new vocabulary, check whether a new word belongs on an
- * existing near-synonym card before creating a separate entry.
+ * Near-synonyms share one card via a terms[] array:
+ *   { de, en, enFront, exampleDe, exampleEn }
+ * Front shows only bare terms; back shows each DE + translation + examples.
  */
 window.SEED_WORDS = [
   {
@@ -2169,226 +2166,801 @@ window.SEED_WORDS = [
   },
   {
     id: "kriegen-bekommen-erhalten",
-    german: "kriegen (informal \"to get\")\nbekommen (neutral everyday \"to get / receive\")\nerhalten (more formal \"to receive / obtain\")",
-    english: "to get / receive",
+    german: "kriegen\nbekommen\nerhalten",
+    english: "to get\nto get / receive\nto receive / obtain",
     exampleDe: "Kriegst du das bis morgen hin?\nIch bekomme morgen die Unterlagen.\nHaben Sie meine E-Mail erhalten?",
     exampleEn: "Can you get that done by tomorrow?\nI will get the documents tomorrow.\nDid you receive my email?",
+    terms: [
+      {
+        de: "kriegen",
+        en: "informal \"to get\"",
+        enFront: "to get",
+        exampleDe: "Kriegst du das bis morgen hin?",
+        exampleEn: "Can you get that done by tomorrow?"
+      },
+      {
+        de: "bekommen",
+        en: "neutral everyday \"to get / receive\"",
+        enFront: "to get / receive",
+        exampleDe: "Ich bekomme morgen die Unterlagen.",
+        exampleEn: "I will get the documents tomorrow."
+      },
+      {
+        de: "erhalten",
+        en: "more formal \"to receive / obtain\"",
+        enFront: "to receive / obtain",
+        exampleDe: "Haben Sie meine E-Mail erhalten?",
+        exampleEn: "Did you receive my email?"
+      }
+    ],
   },
   {
     id: "anstellen-einstellen",
-    german: "anstellen (everyday \"to hire\")\neinstellen (formal/HR \"to hire\"; also \"to adjust / set\")",
-    english: "to hire / employ (einstellen also: adjust / set)",
+    german: "anstellen\neinstellen",
+    english: "to hire\nto hire",
     exampleDe: "Wir wollen zwei neue Kollegen anstellen.\nWir stellen nächstes Jahr neue Mitarbeiter ein.",
     exampleEn: "We want to hire two new colleagues.\nWe are hiring new employees next year.",
+    terms: [
+      {
+        de: "anstellen",
+        en: "everyday \"to hire\"",
+        enFront: "to hire",
+        exampleDe: "Wir wollen zwei neue Kollegen anstellen.",
+        exampleEn: "We want to hire two new colleagues."
+      },
+      {
+        de: "einstellen",
+        en: "formal/HR \"to hire\"; also \"to adjust / set\"",
+        enFront: "to hire",
+        exampleDe: "Wir stellen nächstes Jahr neue Mitarbeiter ein.",
+        exampleEn: "We are hiring new employees next year."
+      }
+    ],
   },
   {
     id: "noetig-notwendig-unverzichtbar",
-    german: "nötig (necessary)\nnotwendig (necessary)\nunverzichtbar (indispensable / essential)",
-    english: "necessary / essential",
+    german: "nötig\nnotwendig\nunverzichtbar",
+    english: "necessary\nnecessary\nindispensable / essential",
     exampleDe: "Ist das wirklich nötig?\nEine schnelle Antwort ist notwendig.\nGute Kommunikation ist unverzichtbar.",
     exampleEn: "Is that really necessary?\nA quick reply is necessary.\nGood communication is indispensable.",
+    terms: [
+      {
+        de: "nötig",
+        en: "necessary",
+        enFront: "necessary",
+        exampleDe: "Ist das wirklich nötig?",
+        exampleEn: "Is that really necessary?"
+      },
+      {
+        de: "notwendig",
+        en: "necessary",
+        enFront: "necessary",
+        exampleDe: "Eine schnelle Antwort ist notwendig.",
+        exampleEn: "A quick reply is necessary."
+      },
+      {
+        de: "unverzichtbar",
+        en: "indispensable / essential",
+        enFront: "indispensable / essential",
+        exampleDe: "Gute Kommunikation ist unverzichtbar.",
+        exampleEn: "Good communication is indispensable."
+      }
+    ],
   },
   {
     id: "ausfuehrlich-detailliert-eingehend",
-    german: "ausführlich (detailed / thorough)\ndetailliert (detailed)\neingehend (in-depth / thorough)",
-    english: "detailed / thorough",
+    german: "ausführlich\ndetailliert\neingehend",
+    english: "detailed / thorough\ndetailed\nin-depth / thorough",
     exampleDe: "Bitte beschreiben Sie das Problem ausführlich.\nBitte senden Sie mir eine detaillierte Übersicht.\nWir brauchen eine eingehende Prüfung.",
     exampleEn: "Please describe the problem in detail.\nPlease send me a detailed overview.\nWe need a thorough review.",
+    terms: [
+      {
+        de: "ausführlich",
+        en: "detailed / thorough",
+        enFront: "detailed / thorough",
+        exampleDe: "Bitte beschreiben Sie das Problem ausführlich.",
+        exampleEn: "Please describe the problem in detail."
+      },
+      {
+        de: "detailliert",
+        en: "detailed",
+        enFront: "detailed",
+        exampleDe: "Bitte senden Sie mir eine detaillierte Übersicht.",
+        exampleEn: "Please send me a detailed overview."
+      },
+      {
+        de: "eingehend",
+        en: "in-depth / thorough",
+        enFront: "in-depth / thorough",
+        exampleDe: "Wir brauchen eine eingehende Prüfung.",
+        exampleEn: "We need a thorough review."
+      }
+    ],
   },
   {
     id: "verlaesslich-zuverlaessig",
-    german: "verlässlich (reliable)\nzuverlässig (reliable / trustworthy)",
-    english: "reliable",
+    german: "verlässlich\nzuverlässig",
+    english: "reliable\nreliable / trustworthy",
     exampleDe: "Wir brauchen verlässliche Informationen.\nEr ist ein zuverlässiger Kollege.",
     exampleEn: "We need reliable information.\nHe is a reliable colleague.",
+    terms: [
+      {
+        de: "verlässlich",
+        en: "reliable",
+        enFront: "reliable",
+        exampleDe: "Wir brauchen verlässliche Informationen.",
+        exampleEn: "We need reliable information."
+      },
+      {
+        de: "zuverlässig",
+        en: "reliable / trustworthy",
+        enFront: "reliable / trustworthy",
+        exampleDe: "Er ist ein zuverlässiger Kollege.",
+        exampleEn: "He is a reliable colleague."
+      }
+    ],
   },
   {
     id: "kundschaft-stammkundschaft",
-    german: "die Kundschaft (customers / clientele)\ndie Stammkundschaft (regular customers)",
-    english: "customers / clientele",
+    german: "die Kundschaft\ndie Stammkundschaft",
+    english: "customers / clientele\nregular customers",
     exampleDe: "Unsere Kundschaft schätzt guten Service.\nDie Stammkundschaft kommt jede Woche.",
     exampleEn: "Our customers appreciate good service.\nThe regular customers come every week.",
+    terms: [
+      {
+        de: "die Kundschaft",
+        en: "customers / clientele",
+        enFront: "customers / clientele",
+        exampleDe: "Unsere Kundschaft schätzt guten Service.",
+        exampleEn: "Our customers appreciate good service."
+      },
+      {
+        de: "die Stammkundschaft",
+        en: "regular customers",
+        enFront: "regular customers",
+        exampleDe: "Die Stammkundschaft kommt jede Woche.",
+        exampleEn: "The regular customers come every week."
+      }
+    ],
   },
   {
     id: "besprechen-diskutieren",
-    german: "besprechen (to discuss)\ndiskutieren über (to discuss / debate)",
-    english: "to discuss",
+    german: "besprechen\ndiskutieren über",
+    english: "to discuss\nto discuss / debate",
     exampleDe: "Können wir das morgen besprechen?\nWir diskutieren über den neuen Zeitplan.",
     exampleEn: "Can we discuss that tomorrow?\nWe are discussing the new schedule.",
+    terms: [
+      {
+        de: "besprechen",
+        en: "to discuss",
+        enFront: "to discuss",
+        exampleDe: "Können wir das morgen besprechen?",
+        exampleEn: "Can we discuss that tomorrow?"
+      },
+      {
+        de: "diskutieren über",
+        en: "to discuss / debate",
+        enFront: "to discuss / debate",
+        exampleDe: "Wir diskutieren über den neuen Zeitplan.",
+        exampleEn: "We are discussing the new schedule."
+      }
+    ],
   },
   {
     id: "aussuchen-auswaehlen",
-    german: "aussuchen (to pick out / choose)\nauswählen (to select / choose)",
-    english: "to choose / select",
+    german: "aussuchen\nauswählen",
+    english: "to pick out / choose\nto select / choose",
     exampleDe: "Such dir bitte ein Geschenk aus.\nBitte wählen Sie eine Option aus.",
     exampleEn: "Please pick out a gift.\nPlease select an option.",
+    terms: [
+      {
+        de: "aussuchen",
+        en: "to pick out / choose",
+        enFront: "to pick out / choose",
+        exampleDe: "Such dir bitte ein Geschenk aus.",
+        exampleEn: "Please pick out a gift."
+      },
+      {
+        de: "auswählen",
+        en: "to select / choose",
+        enFront: "to select / choose",
+        exampleDe: "Bitte wählen Sie eine Option aus.",
+        exampleEn: "Please select an option."
+      }
+    ],
   },
   {
     id: "zuversichtlich-selbstbewusst",
-    german: "zuversichtlich (confident / optimistic about an outcome)\nselbstbewusst (self-confident)",
-    english: "confident",
+    german: "zuversichtlich\nselbstbewusst",
+    english: "confident / optimistic about an outcome\nself-confident",
     exampleDe: "Ich bin zuversichtlich, dass wir das schaffen.\nSie wirkt sehr selbstbewusst.",
     exampleEn: "I am confident that we can do it.\nShe seems very self-confident.",
+    terms: [
+      {
+        de: "zuversichtlich",
+        en: "confident / optimistic about an outcome",
+        enFront: "confident / optimistic about an outcome",
+        exampleDe: "Ich bin zuversichtlich, dass wir das schaffen.",
+        exampleEn: "I am confident that we can do it."
+      },
+      {
+        de: "selbstbewusst",
+        en: "self-confident",
+        enFront: "self-confident",
+        exampleDe: "Sie wirkt sehr selbstbewusst.",
+        exampleEn: "She seems very self-confident."
+      }
+    ],
   },
   {
     id: "unbedingt-auf-jeden-fall",
-    german: "unbedingt (definitely / by all means)\nauf jeden Fall (in any case / definitely)",
-    english: "definitely",
+    german: "unbedingt\nauf jeden Fall",
+    english: "definitely / by all means\nin any case / definitely",
     exampleDe: "Du musst unbedingt Bescheid sagen.\nAuf jeden Fall komme ich morgen.",
     exampleEn: "You must definitely let us know.\nI am definitely coming tomorrow.",
+    terms: [
+      {
+        de: "unbedingt",
+        en: "definitely / by all means",
+        enFront: "definitely / by all means",
+        exampleDe: "Du musst unbedingt Bescheid sagen.",
+        exampleEn: "You must definitely let us know."
+      },
+      {
+        de: "auf jeden Fall",
+        en: "in any case / definitely",
+        enFront: "in any case / definitely",
+        exampleDe: "Auf jeden Fall komme ich morgen.",
+        exampleEn: "I am definitely coming tomorrow."
+      }
+    ],
   },
   {
     id: "zeitnah-umgehend-rechtzeitig",
-    german: "zeitnah (promptly / in a timely manner)\numgehend (immediately)\nrechtzeitig (on time / in good time)",
-    english: "promptly / on time / immediately",
+    german: "zeitnah\numgehend\nrechtzeitig",
+    english: "promptly / in a timely manner\nimmediately\non time / in good time",
     exampleDe: "Bitte antworten Sie zeitnah auf die Anfrage.\nBitte antworten Sie umgehend.\nBitte kommen Sie rechtzeitig.",
     exampleEn: "Please reply to the request promptly.\nPlease reply immediately.\nPlease arrive on time.",
+    terms: [
+      {
+        de: "zeitnah",
+        en: "promptly / in a timely manner",
+        enFront: "promptly / in a timely manner",
+        exampleDe: "Bitte antworten Sie zeitnah auf die Anfrage.",
+        exampleEn: "Please reply to the request promptly."
+      },
+      {
+        de: "umgehend",
+        en: "immediately",
+        enFront: "immediately",
+        exampleDe: "Bitte antworten Sie umgehend.",
+        exampleEn: "Please reply immediately."
+      },
+      {
+        de: "rechtzeitig",
+        en: "on time / in good time",
+        enFront: "on time / in good time",
+        exampleDe: "Bitte kommen Sie rechtzeitig.",
+        exampleEn: "Please arrive on time."
+      }
+    ],
   },
   {
     id: "ich-vermute-gehe-davon-aus",
-    german: "ich vermute (I suspect / I guess)\nich gehe davon aus (I assume / I'm proceeding on the assumption that)",
-    english: "I assume / I suspect",
+    german: "ich vermute\nich gehe davon aus",
+    english: "I suspect / I guess\nI assume / I'm proceeding on the assumption that",
     exampleDe: "Ich vermute, dass er später kommt.\nIch gehe davon aus, dass der Plan funktioniert.",
     exampleEn: "I suspect that he will come later.\nI assume that the plan will work.",
+    terms: [
+      {
+        de: "ich vermute",
+        en: "I suspect / I guess",
+        enFront: "I suspect / I guess",
+        exampleDe: "Ich vermute, dass er später kommt.",
+        exampleEn: "I suspect that he will come later."
+      },
+      {
+        de: "ich gehe davon aus",
+        en: "I assume / I'm proceeding on the assumption that",
+        enFront: "I assume / I'm proceeding on the assumption that",
+        exampleDe: "Ich gehe davon aus, dass der Plan funktioniert.",
+        exampleEn: "I assume that the plan will work."
+      }
+    ],
   },
   {
     id: "entschaedigung-wiedergutmachung-erstattung",
-    german: "die Entschädigung (compensation)\ndie Wiedergutmachung (reparation / making amends)\ndie Erstattung (refund / reimbursement)",
-    english: "compensation / refund",
+    german: "die Entschädigung\ndie Wiedergutmachung\ndie Erstattung",
+    english: "compensation\nreparation / making amends\nrefund / reimbursement",
     exampleDe: "Die Kunden fordern eine Entschädigung.\nEr hat Wiedergutmachung für den Fehler angeboten.\nIch bitte um eine Erstattung des Kaufpreises.",
     exampleEn: "The customers are demanding compensation.\nHe offered to make amends for the mistake.\nI am requesting a refund of the purchase price.",
+    terms: [
+      {
+        de: "die Entschädigung",
+        en: "compensation",
+        enFront: "compensation",
+        exampleDe: "Die Kunden fordern eine Entschädigung.",
+        exampleEn: "The customers are demanding compensation."
+      },
+      {
+        de: "die Wiedergutmachung",
+        en: "reparation / making amends",
+        enFront: "reparation / making amends",
+        exampleDe: "Er hat Wiedergutmachung für den Fehler angeboten.",
+        exampleEn: "He offered to make amends for the mistake."
+      },
+      {
+        de: "die Erstattung",
+        en: "refund / reimbursement",
+        enFront: "refund / reimbursement",
+        exampleDe: "Ich bitte um eine Erstattung des Kaufpreises.",
+        exampleEn: "I am requesting a refund of the purchase price."
+      }
+    ],
   },
   {
     id: "zwischenzeitlich-mittlerweile",
-    german: "zwischenzeitlich (in the meantime / interim)\nmittlerweile (meanwhile / by now)",
-    english: "meanwhile / in the meantime",
+    german: "zwischenzeitlich\nmittlerweile",
+    english: "in the meantime / interim\nmeanwhile / by now",
     exampleDe: "Zwischenzeitlich haben wir eine Lösung gefunden.\nMittlerweile ist das Problem gelöst.",
     exampleEn: "In the meantime we have found a solution.\nBy now the problem is solved.",
+    terms: [
+      {
+        de: "zwischenzeitlich",
+        en: "in the meantime / interim",
+        enFront: "in the meantime / interim",
+        exampleDe: "Zwischenzeitlich haben wir eine Lösung gefunden.",
+        exampleEn: "In the meantime we have found a solution."
+      },
+      {
+        de: "mittlerweile",
+        en: "meanwhile / by now",
+        enFront: "meanwhile / by now",
+        exampleDe: "Mittlerweile ist das Problem gelöst.",
+        exampleEn: "By now the problem is solved."
+      }
+    ],
   },
   {
     id: "auffallen-herausstechen",
-    german: "auffallen (to be noticeable / catch one's attention)\nherausstechen (to stand out)",
-    english: "to stand out / be noticeable",
+    german: "auffallen\nherausstechen",
+    english: "to be noticeable / catch one's attention\nto stand out",
     exampleDe: "Sein Akzent ist mir sofort aufgefallen.\nIhre Ideen stechen aus der Menge heraus.",
     exampleEn: "I noticed his accent immediately.\nHer ideas stand out from the crowd.",
+    terms: [
+      {
+        de: "auffallen",
+        en: "to be noticeable / catch one's attention",
+        enFront: "to be noticeable / catch one's attention",
+        exampleDe: "Sein Akzent ist mir sofort aufgefallen.",
+        exampleEn: "I noticed his accent immediately."
+      },
+      {
+        de: "herausstechen",
+        en: "to stand out",
+        enFront: "to stand out",
+        exampleDe: "Ihre Ideen stechen aus der Menge heraus.",
+        exampleEn: "Her ideas stand out from the crowd."
+      }
+    ],
   },
   {
     id: "beteiligen-teilnehmen",
-    german: "sich beteiligen an (to take part / be involved in)\nteilnehmen an (to participate in)",
-    english: "to take part in / participate in",
+    german: "sich beteiligen an\nteilnehmen an",
+    english: "to take part / be involved in\nto participate in",
     exampleDe: "Möchten Sie sich an dem Projekt beteiligen?\nMöchten Sie an dem Kurs teilnehmen?",
     exampleEn: "Would you like to take part in the project?\nWould you like to take part in the course?",
+    terms: [
+      {
+        de: "sich beteiligen an",
+        en: "to take part / be involved in",
+        enFront: "to take part / be involved in",
+        exampleDe: "Möchten Sie sich an dem Projekt beteiligen?",
+        exampleEn: "Would you like to take part in the project?"
+      },
+      {
+        de: "teilnehmen an",
+        en: "to participate in",
+        enFront: "to participate in",
+        exampleDe: "Möchten Sie an dem Kurs teilnehmen?",
+        exampleEn: "Would you like to take part in the course?"
+      }
+    ],
   },
   {
     id: "aufpassen-achten",
-    german: "aufpassen auf (to watch out for / look after)\nachten auf (to pay attention to)",
-    english: "to watch out for / pay attention to",
+    german: "aufpassen auf\nachten auf",
+    english: "to watch out for / look after\nto pay attention to",
     exampleDe: "Pass auf die Kinder auf.\nBitte achten Sie auf die Deadline.",
     exampleEn: "Look after the children.\nPlease pay attention to the deadline.",
+    terms: [
+      {
+        de: "aufpassen auf",
+        en: "to watch out for / look after",
+        enFront: "to watch out for / look after",
+        exampleDe: "Pass auf die Kinder auf.",
+        exampleEn: "Look after the children."
+      },
+      {
+        de: "achten auf",
+        en: "to pay attention to",
+        enFront: "to pay attention to",
+        exampleDe: "Bitte achten Sie auf die Deadline.",
+        exampleEn: "Please pay attention to the deadline."
+      }
+    ],
   },
   {
     id: "erlebnis-erleben",
-    german: "das Erlebnis (a memorable experience / event)\nerleben (to experience / live through)",
-    english: "experience / to experience",
+    german: "das Erlebnis\nerleben",
+    english: "a memorable experience / event\nto experience / live through",
     exampleDe: "Der Ausflug war ein schönes Erlebnis.\nDas habe ich noch nie erlebt.",
     exampleEn: "The trip was a lovely experience.\nI have never experienced that.",
+    terms: [
+      {
+        de: "das Erlebnis",
+        en: "a memorable experience / event",
+        enFront: "a memorable experience / event",
+        exampleDe: "Der Ausflug war ein schönes Erlebnis.",
+        exampleEn: "The trip was a lovely experience."
+      },
+      {
+        de: "erleben",
+        en: "to experience / live through",
+        enFront: "to experience / live through",
+        exampleDe: "Das habe ich noch nie erlebt.",
+        exampleEn: "I have never experienced that."
+      }
+    ],
   },
   {
     id: "nachvollziehen-nachvollziehbarkeit",
-    german: "nachvollziehen (to understand / follow logically)\ndie Nachvollziehbarkeit (comprehensibility / traceability)",
-    english: "to understand / comprehensibility",
+    german: "nachvollziehen\ndie Nachvollziehbarkeit",
+    english: "to understand / follow logically\ncomprehensibility / traceability",
     exampleDe: "Ihre Entscheidung kann ich gut nachvollziehen.\nFür die Nachvollziehbarkeit dokumentieren wir jeden Schritt.",
     exampleEn: "I can understand your decision well.\nFor traceability, we document every step.",
+    terms: [
+      {
+        de: "nachvollziehen",
+        en: "to understand / follow logically",
+        enFront: "to understand / follow logically",
+        exampleDe: "Ihre Entscheidung kann ich gut nachvollziehen.",
+        exampleEn: "I can understand your decision well."
+      },
+      {
+        de: "die Nachvollziehbarkeit",
+        en: "comprehensibility / traceability",
+        enFront: "comprehensibility / traceability",
+        exampleDe: "Für die Nachvollziehbarkeit dokumentieren wir jeden Schritt.",
+        exampleEn: "For traceability, we document every step."
+      }
+    ],
   },
   {
     id: "foerdern-gefoerdert-foerderungen",
-    german: "fördern (to promote / support / fund)\ngefördert (funded / supported)\ndie Förderungen (funding / grants)",
-    english: "to promote / fund / funding",
+    german: "fördern\ngefördert\ndie Förderungen",
+    english: "to promote / support / fund\nfunded / supported\nfunding / grants",
     exampleDe: "Das Programm soll junge Talente fördern.\nDas ist ein gefördertes Projekt.\nEs gibt neue Förderungen für Start-ups.",
     exampleEn: "The program is meant to promote young talent.\nThat is a funded project.\nThere is new funding for start-ups.",
+    terms: [
+      {
+        de: "fördern",
+        en: "to promote / support / fund",
+        enFront: "to promote / support / fund",
+        exampleDe: "Das Programm soll junge Talente fördern.",
+        exampleEn: "The program is meant to promote young talent."
+      },
+      {
+        de: "gefördert",
+        en: "funded / supported",
+        enFront: "funded / supported",
+        exampleDe: "Das ist ein gefördertes Projekt.",
+        exampleEn: "That is a funded project."
+      },
+      {
+        de: "die Förderungen",
+        en: "funding / grants",
+        enFront: "funding / grants",
+        exampleDe: "Es gibt neue Förderungen für Start-ups.",
+        exampleEn: "There is new funding for start-ups."
+      }
+    ],
   },
   {
     id: "aergern-nervig-aergernis",
-    german: "sich ärgern über (to get annoyed about)\nnervig (annoying)\ndas Ärgernis (nuisance / annoyance)",
-    english: "annoyance / to get annoyed",
+    german: "sich ärgern über\nnervig\ndas Ärgernis",
+    english: "to get annoyed about\nannoying\nnuisance / annoyance",
     exampleDe: "Ich ärgere mich über den Stau.\nDer Alarmton ist echt nervig.\nDer Lärm ist ein großes Ärgernis.",
     exampleEn: "I get annoyed about the traffic jam.\nThe alarm sound is really annoying.\nThe noise is a big nuisance.",
+    terms: [
+      {
+        de: "sich ärgern über",
+        en: "to get annoyed about",
+        enFront: "to get annoyed about",
+        exampleDe: "Ich ärgere mich über den Stau.",
+        exampleEn: "I get annoyed about the traffic jam."
+      },
+      {
+        de: "nervig",
+        en: "annoying",
+        enFront: "annoying",
+        exampleDe: "Der Alarmton ist echt nervig.",
+        exampleEn: "The alarm sound is really annoying."
+      },
+      {
+        de: "das Ärgernis",
+        en: "nuisance / annoyance",
+        enFront: "nuisance / annoyance",
+        exampleDe: "Der Lärm ist ein großes Ärgernis.",
+        exampleEn: "The noise is a big nuisance."
+      }
+    ],
   },
   {
     id: "benoetigen-bedarf",
-    german: "benötigen (to need / require)\nder Bedarf (need / demand)\nder Bedarf an (need for / demand for)",
-    english: "to need / need / demand",
+    german: "benötigen\nder Bedarf\nder Bedarf an",
+    english: "to need / require\nneed / demand\nneed for / demand for",
     exampleDe: "Wir benötigen mehr Informationen.\nDer Bedarf ist gestiegen.\nDer Bedarf an Fachkräften steigt.",
     exampleEn: "We need more information.\nDemand has risen.\nThe need for skilled workers is rising.",
+    terms: [
+      {
+        de: "benötigen",
+        en: "to need / require",
+        enFront: "to need / require",
+        exampleDe: "Wir benötigen mehr Informationen.",
+        exampleEn: "We need more information."
+      },
+      {
+        de: "der Bedarf",
+        en: "need / demand",
+        enFront: "need / demand",
+        exampleDe: "Der Bedarf ist gestiegen.",
+        exampleEn: "Demand has risen."
+      },
+      {
+        de: "der Bedarf an",
+        en: "need for / demand for",
+        enFront: "need for / demand for",
+        exampleDe: "Der Bedarf an Fachkräften steigt.",
+        exampleEn: "The need for skilled workers is rising."
+      }
+    ],
   },
   {
     id: "erstellen-entwerfen-gestalten",
-    german: "erstellen (to create / produce)\nentwerfen (to design / draft)\ngestalten (to shape / design)",
-    english: "to create / design",
+    german: "erstellen\nentwerfen\ngestalten",
+    english: "to create / produce\nto design / draft\nto shape / design",
     exampleDe: "Ich erstelle gerade eine Präsentation.\nSie entwirft ein neues Logo für die Firma.\nWir wollen den Prozess neu gestalten.",
     exampleEn: "I am creating a presentation right now.\nShe is designing a new logo for the company.\nWe want to reshape the process.",
+    terms: [
+      {
+        de: "erstellen",
+        en: "to create / produce",
+        enFront: "to create / produce",
+        exampleDe: "Ich erstelle gerade eine Präsentation.",
+        exampleEn: "I am creating a presentation right now."
+      },
+      {
+        de: "entwerfen",
+        en: "to design / draft",
+        enFront: "to design / draft",
+        exampleDe: "Sie entwirft ein neues Logo für die Firma.",
+        exampleEn: "She is designing a new logo for the company."
+      },
+      {
+        de: "gestalten",
+        en: "to shape / design",
+        enFront: "to shape / design",
+        exampleDe: "Wir wollen den Prozess neu gestalten.",
+        exampleEn: "We want to reshape the process."
+      }
+    ],
   },
   {
     id: "erlaeutern-eingehen",
-    german: "erläutern (to explain / clarify)\neingehen auf (to address / go into)",
-    english: "to explain / address",
+    german: "erläutern\neingehen auf",
+    english: "to explain / clarify\nto address / go into",
     exampleDe: "Können Sie den Vorschlag bitte näher erläutern?\nKönnen wir näher auf Ihre Frage eingehen?",
     exampleEn: "Can you please explain the suggestion in more detail?\nCan we go into your question in more detail?",
+    terms: [
+      {
+        de: "erläutern",
+        en: "to explain / clarify",
+        enFront: "to explain / clarify",
+        exampleDe: "Können Sie den Vorschlag bitte näher erläutern?",
+        exampleEn: "Can you please explain the suggestion in more detail?"
+      },
+      {
+        de: "eingehen auf",
+        en: "to address / go into",
+        enFront: "to address / go into",
+        exampleDe: "Können wir näher auf Ihre Frage eingehen?",
+        exampleEn: "Can we go into your question in more detail?"
+      }
+    ],
   },
   {
     id: "geschehen-entstehen",
-    german: "geschehen (to happen / occur)\nentstehen (to arise / come into being)",
-    english: "to happen / arise",
+    german: "geschehen\nentstehen",
+    english: "to happen / occur\nto arise / come into being",
     exampleDe: "Wie konnte das geschehen?\nSo können Missverständnisse entstehen.",
     exampleEn: "How could that happen?\nThat is how misunderstandings can arise.",
+    terms: [
+      {
+        de: "geschehen",
+        en: "to happen / occur",
+        enFront: "to happen / occur",
+        exampleDe: "Wie konnte das geschehen?",
+        exampleEn: "How could that happen?"
+      },
+      {
+        de: "entstehen",
+        en: "to arise / come into being",
+        enFront: "to arise / come into being",
+        exampleDe: "So können Missverständnisse entstehen.",
+        exampleEn: "That is how misunderstandings can arise."
+      }
+    ],
   },
   {
     id: "derzeitig-zurzeit",
-    german: "derzeitig (current / present)\nzurzeit (currently / at the moment)",
-    english: "current / currently",
+    german: "derzeitig\nzurzeit",
+    english: "current / present\ncurrently / at the moment",
     exampleDe: "Das ist unsere derzeitige Situation.\nZurzeit arbeite ich von zu Hause.",
     exampleEn: "That is our current situation.\nI am currently working from home.",
+    terms: [
+      {
+        de: "derzeitig",
+        en: "current / present",
+        enFront: "current / present",
+        exampleDe: "Das ist unsere derzeitige Situation.",
+        exampleEn: "That is our current situation."
+      },
+      {
+        de: "zurzeit",
+        en: "currently / at the moment",
+        enFront: "currently / at the moment",
+        exampleDe: "Zurzeit arbeite ich von zu Hause.",
+        exampleEn: "I am currently working from home."
+      }
+    ],
   },
   {
     id: "voraussichtlich-vermutlich",
-    german: "voraussichtlich (expected / presumably)\nvermutlich (probably / presumably)",
-    english: "presumably / probably",
+    german: "voraussichtlich\nvermutlich",
+    english: "expected / presumably\nprobably / presumably",
     exampleDe: "Voraussichtlich kommt er morgen an.\nVermutlich kommt er später.",
     exampleEn: "He is expected to arrive tomorrow.\nHe will probably come later.",
+    terms: [
+      {
+        de: "voraussichtlich",
+        en: "expected / presumably",
+        enFront: "expected / presumably",
+        exampleDe: "Voraussichtlich kommt er morgen an.",
+        exampleEn: "He is expected to arrive tomorrow."
+      },
+      {
+        de: "vermutlich",
+        en: "probably / presumably",
+        enFront: "probably / presumably",
+        exampleDe: "Vermutlich kommt er später.",
+        exampleEn: "He will probably come later."
+      }
+    ],
   },
   {
     id: "wecken-aufwachen",
-    german: "jmdn. wecken (to wake someone up)\naufwachen (to wake up)",
-    english: "to wake (someone) up",
+    german: "jmdn. wecken\naufwachen",
+    english: "to wake someone up\nto wake up",
     exampleDe: "Kannst du mich um 7 Uhr wecken?\nIch wache jeden Tag um sechs Uhr auf.",
     exampleEn: "Can you wake me up at 7?\nI wake up at six every day.",
+    terms: [
+      {
+        de: "jmdn. wecken",
+        en: "to wake someone up",
+        enFront: "to wake someone up",
+        exampleDe: "Kannst du mich um 7 Uhr wecken?",
+        exampleEn: "Can you wake me up at 7?"
+      },
+      {
+        de: "aufwachen",
+        en: "to wake up",
+        enFront: "to wake up",
+        exampleDe: "Ich wache jeden Tag um sechs Uhr auf.",
+        exampleEn: "I wake up at six every day."
+      }
+    ],
   },
   {
     id: "einbeziehen-umfassen",
-    german: "einbeziehen in (to include / involve in)\numfassen (to include / comprise)",
-    english: "to include",
+    german: "einbeziehen in\numfassen",
+    english: "to include / involve in\nto include / comprise",
     exampleDe: "Bitte beziehen Sie alle Kollegen in die Planung ein.\nDas Angebot umfasst drei Module.",
     exampleEn: "Please include all colleagues in the planning.\nThe offer includes three modules.",
+    terms: [
+      {
+        de: "einbeziehen in",
+        en: "to include / involve in",
+        enFront: "to include / involve in",
+        exampleDe: "Bitte beziehen Sie alle Kollegen in die Planung ein.",
+        exampleEn: "Please include all colleagues in the planning."
+      },
+      {
+        de: "umfassen",
+        en: "to include / comprise",
+        enFront: "to include / comprise",
+        exampleDe: "Das Angebot umfasst drei Module.",
+        exampleEn: "The offer includes three modules."
+      }
+    ],
   },
   {
     id: "anbieten-angebot-unterbreiten",
-    german: "anbieten (to offer)\nein Angebot unterbreiten (to make / submit an offer)",
-    english: "to offer",
+    german: "anbieten\nein Angebot unterbreiten",
+    english: "to offer\nto make / submit an offer",
     exampleDe: "Darf ich Ihnen etwas zu trinken anbieten?\nDarf ich Ihnen ein Angebot unterbreiten?",
     exampleEn: "May I offer you something to drink?\nMay I submit an offer to you?",
+    terms: [
+      {
+        de: "anbieten",
+        en: "to offer",
+        enFront: "to offer",
+        exampleDe: "Darf ich Ihnen etwas zu trinken anbieten?",
+        exampleEn: "May I offer you something to drink?"
+      },
+      {
+        de: "ein Angebot unterbreiten",
+        en: "to make / submit an offer",
+        enFront: "to make / submit an offer",
+        exampleDe: "Darf ich Ihnen ein Angebot unterbreiten?",
+        exampleEn: "May I submit an offer to you?"
+      }
+    ],
   },
   {
     id: "unterstuetzen-betreuung",
-    german: "unterstützen bei (to support with)\ndie Betreuung (care / support / supervision)",
-    english: "to support / support",
+    german: "unterstützen bei\ndie Betreuung",
+    english: "to support with\ncare / support / supervision",
     exampleDe: "Ich unterstütze dich bei der Vorbereitung.\nDie Betreuung der Kunden ist sehr gut.",
     exampleEn: "I support you with the preparation.\nThe customer support is very good.",
+    terms: [
+      {
+        de: "unterstützen bei",
+        en: "to support with",
+        enFront: "to support with",
+        exampleDe: "Ich unterstütze dich bei der Vorbereitung.",
+        exampleEn: "I support you with the preparation."
+      },
+      {
+        de: "die Betreuung",
+        en: "care / support / supervision",
+        enFront: "care / support / supervision",
+        exampleDe: "Die Betreuung der Kunden ist sehr gut.",
+        exampleEn: "The customer support is very good."
+      }
+    ],
   },
   {
     id: "zeitplan-ablauf",
-    german: "der Zeitplan (schedule / timetable)\nder Ablauf (process / sequence / course of events)",
-    english: "schedule / process",
+    german: "der Zeitplan\nder Ablauf",
+    english: "schedule / timetable\nprocess / sequence / course of events",
     exampleDe: "Der Zeitplan ist sehr eng.\nKönnen Sie mir den Ablauf erklären?",
     exampleEn: "The schedule is very tight.\nCan you explain the process to me?",
+    terms: [
+      {
+        de: "der Zeitplan",
+        en: "schedule / timetable",
+        enFront: "schedule / timetable",
+        exampleDe: "Der Zeitplan ist sehr eng.",
+        exampleEn: "The schedule is very tight."
+      },
+      {
+        de: "der Ablauf",
+        en: "process / sequence / course of events",
+        enFront: "process / sequence / course of events",
+        exampleDe: "Können Sie mir den Ablauf erklären?",
+        exampleEn: "Can you explain the process to me?"
+      }
+    ],
   },
 ];

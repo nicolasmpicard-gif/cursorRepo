@@ -280,6 +280,12 @@ button {
   background: var(--card);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  overflow-y: auto;
+}
+
+.face:has(.term-list),
+.face:has(.face-word-multi) {
+  align-content: start;
 }
 
 .face-back {
@@ -307,6 +313,11 @@ button {
   white-space: pre-line;
 }
 
+.face-word-multi {
+  font-size: clamp(1.25rem, 4vw, 2.2rem);
+  line-height: 1.35;
+}
+
 .face-meaning {
   margin: 0;
   font-size: 1.15rem;
@@ -331,6 +342,75 @@ button {
   color: var(--pine);
   font-weight: 600;
   margin-bottom: 0.15rem;
+}
+
+.term-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  text-align: left;
+}
+
+.term-block {
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.term-block:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.term-pair {
+  margin: 0 0 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.term-de {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--pine-deep);
+}
+
+.term-en {
+  font-size: 0.98rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.term-example {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.term-example strong,
+.term-example span {
+  display: block;
+  white-space: pre-line;
+}
+
+.term-example strong {
+  color: var(--pine);
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+
+.term-list-browse {
+  margin-top: 0.35rem;
+}
+
+.term-list-browse .term-de {
+  font-size: 1rem;
+}
+
+.term-list-browse .term-en {
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .hint {

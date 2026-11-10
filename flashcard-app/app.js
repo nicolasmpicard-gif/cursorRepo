@@ -198,9 +198,19 @@
       .slice(0, 60) || `word-${Date.now()}`;
   }
 
+  const APP_BUILD = "v343";
+
+  function stripParenGloss(text) {
+    return String(text || "")
+      .split("\n")
+      .map((line) => line.replace(/\s*\([^)]*\)\s*$/g, "").trim())
+      .filter(Boolean)
+      .join("\n");
+  }
+
   function parseSynonymTerms(german, english, exampleDe, exampleEn) {
     const lines = String(german || "")
-      .split("\n")
+      .split(/\n|(?:\s+\/\s+)/)
       .map((line) => line.trim())
       .filter(Boolean);
     if (lines.length < 2) return null;
@@ -210,15 +220,15 @@
 
     const terms = lines.map((line, index) => {
       const match = line.match(/^(.+?)\s*\((.+)\)\s*$/);
-      const de = match ? match[1].trim() : line;
+      const de = (match ? match[1] : line).trim();
       let en = match ? match[2].trim() : "";
       // Prefer quoted English gloss when present: informal "to get"
       const quoted = en.match(/"([^"]+)"/);
       const enFront = quoted ? quoted[1] : en;
       return {
-        de,
+        de: stripParenGloss(de),
         en: en || String(english || "").trim(),
-        enFront: enFront || String(english || "").trim(),
+        enFront: stripParenGloss(enFront || String(english || "").trim()),
         exampleDe: String(exampleDeLines[index] || "").trim(),
         exampleEn: String(exampleEnLines[index] || "").trim(),
       };
@@ -229,22 +239,37 @@
 
   function normalizeWord(word, fallbackId) {
     if (!word || typeof word !== "object") return null;
-    const german = String(word.german || word.de || word.front || "").trim();
-    const english = String(word.english || word.en || word.back || word.definition || "").trim();
+    let german = String(word.german || word.de || word.front || "").trim();
+    let english = String(word.english || word.en || word.back || word.definition || "").trim();
     if (!german || !english) return null;
     const id = String(word.id || fallbackId || slugify(german));
     const exampleDe = String(word.exampleDe || word.example_de || word.example || german).trim();
     const exampleEn = String(word.exampleEn || word.example_en || english).trim();
-    const terms = Array.isArray(word.terms) && word.terms.length > 1
-      ? word.terms
-      : parseSynonymTerms(german, english, exampleDe, exampleEn);
+    let terms = null;
+    if (Array.isArray(word.terms) && word.terms.length > 1) {
+      terms = word.terms.map((term) => ({
+        de: stripParenGloss(term.de || term.german || ""),
+        en: String(term.en || term.english || "").trim(),
+        enFront: stripParenGloss(term.enFront || term.en || term.english || ""),
+        exampleDe: String(term.exampleDe || "").trim(),
+        exampleEn: String(term.exampleEn || "").trim(),
+      }));
+    } else {
+      terms = parseSynonymTerms(german, english, exampleDe, exampleEn);
+    }
+    if (terms && terms.length > 1) {
+      german = terms.map((term) => term.de).join("\n");
+      english = terms.map((term) => term.enFront || term.en).join("\n");
+    } else {
+      german = stripParenGloss(german);
+    }
     return {
       id,
       german,
       english,
       exampleDe,
       exampleEn,
-      terms: terms || null,
+      terms: terms && terms.length > 1 ? terms : null,
       custom: Boolean(word.custom || fallbackId),
     };
   }
@@ -693,7 +718,10 @@
     let backHtml;
     if (multiTerms) {
       const frontTerms = multiTerms
-        .map((term) => escapeHtml(direction === "en-de" ? term.enFront || term.en : term.de))
+        .map((term) => {
+          const raw = direction === "en-de" ? term.enFront || term.en : term.de;
+          return escapeHtml(stripParenGloss(raw));
+        })
         .join("\n");
       frontHtml = `<h2 class="face-word face-word-multi">${frontTerms}</h2>`;
       backHtml = `
@@ -736,6 +764,7 @@
         <div class="study-meta">
           <p class="meta-text">Karte ${escapeHtml(progressLabel)}</p>
           <p class="meta-text">${escapeHtml(DIRECTION_LABELS[direction === "mixed" ? state.studyDirection : direction])}</p>
+          <p class="meta-text build-stamp">${escapeHtml(APP_BUILD)}</p>
         </div>
 
         ${controls}
@@ -1269,7 +1298,7 @@
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js?v=342").catch((error) => {
+      navigator.serviceWorker.register("./sw.js?v=343").catch((error) => {
         console.warn("Service worker registration failed:", error);
       });
     });

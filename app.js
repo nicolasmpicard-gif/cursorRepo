@@ -198,18 +198,53 @@
       .slice(0, 60) || `word-${Date.now()}`;
   }
 
+  function parseSynonymTerms(german, english, exampleDe, exampleEn) {
+    const lines = String(german || "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (lines.length < 2) return null;
+
+    const exampleDeLines = String(exampleDe || "").split("\n");
+    const exampleEnLines = String(exampleEn || "").split("\n");
+
+    const terms = lines.map((line, index) => {
+      const match = line.match(/^(.+?)\s*\((.+)\)\s*$/);
+      const de = match ? match[1].trim() : line;
+      let en = match ? match[2].trim() : "";
+      // Prefer quoted English gloss when present: informal "to get"
+      const quoted = en.match(/"([^"]+)"/);
+      const enFront = quoted ? quoted[1] : en;
+      return {
+        de,
+        en: en || String(english || "").trim(),
+        enFront: enFront || String(english || "").trim(),
+        exampleDe: String(exampleDeLines[index] || "").trim(),
+        exampleEn: String(exampleEnLines[index] || "").trim(),
+      };
+    });
+
+    return terms.every((term) => term.de) ? terms : null;
+  }
+
   function normalizeWord(word, fallbackId) {
     if (!word || typeof word !== "object") return null;
     const german = String(word.german || word.de || word.front || "").trim();
     const english = String(word.english || word.en || word.back || word.definition || "").trim();
     if (!german || !english) return null;
     const id = String(word.id || fallbackId || slugify(german));
+    const exampleDe = String(word.exampleDe || word.example_de || word.example || german).trim();
+    const exampleEn = String(word.exampleEn || word.example_en || english).trim();
+    const terms = Array.isArray(word.terms) && word.terms.length > 1
+      ? word.terms
+      : parseSynonymTerms(german, english, exampleDe, exampleEn);
     return {
       id,
       german,
       english,
-      exampleDe: String(word.exampleDe || word.example_de || word.example || german).trim(),
-      exampleEn: String(word.exampleEn || word.example_en || english).trim(),
+      exampleDe,
+      exampleEn,
+      terms: terms || null,
       custom: Boolean(word.custom || fallbackId),
     };
   }
@@ -652,8 +687,49 @@
     const direction = active.direction || "de-en";
     const frontLabel = direction === "en-de" ? "Englisch" : "Deutsch";
     const backLabel = direction === "en-de" ? "Deutsch" : "Bedeutung";
-    const frontText = direction === "en-de" ? active.english : active.german;
-    const backMeaning = direction === "en-de" ? active.german : active.english;
+    const multiTerms = Array.isArray(active.terms) && active.terms.length > 1 ? active.terms : null;
+
+    let frontHtml;
+    let backHtml;
+    if (multiTerms) {
+      const frontTerms = multiTerms
+        .map((term) => escapeHtml(direction === "en-de" ? term.enFront || term.en : term.de))
+        .join("\n");
+      frontHtml = `<h2 class="face-word face-word-multi">${frontTerms}</h2>`;
+      backHtml = `
+        <div class="term-list">
+          ${multiTerms
+            .map(
+              (term) => `
+            <div class="term-block">
+              <p class="term-pair">
+                <span class="term-de">${escapeHtml(term.de)}</span>
+                <span class="term-en">${escapeHtml(term.en)}</span>
+              </p>
+              ${
+                term.exampleDe
+                  ? `<p class="term-example"><strong>${escapeHtml(term.exampleDe)}</strong>${
+                      term.exampleEn ? `<span>${escapeHtml(term.exampleEn)}</span>` : ""
+                    }</p>`
+                  : ""
+              }
+            </div>`
+            )
+            .join("")}
+        </div>
+      `;
+    } else {
+      const frontText = direction === "en-de" ? active.english : active.german;
+      const backMeaning = direction === "en-de" ? active.german : active.english;
+      frontHtml = `<h2 class="face-word">${escapeHtml(frontText)}</h2>`;
+      backHtml = `
+        <p class="face-meaning">${escapeHtml(backMeaning)}</p>
+        <div class="face-example">
+          <strong>${escapeHtml(active.exampleDe)}</strong>
+          <span>${escapeHtml(active.exampleEn)}</span>
+        </div>
+      `;
+    }
 
     return `
       <section class="panel study-shell">
@@ -673,15 +749,11 @@
           <div class="flashcard-inner">
             <div class="face face-front">
               <p class="face-label">${escapeHtml(frontLabel)}</p>
-              <h2 class="face-word">${escapeHtml(frontText)}</h2>
+              ${frontHtml}
             </div>
             <div class="face face-back">
               <p class="face-label">${escapeHtml(backLabel)}</p>
-              <p class="face-meaning">${escapeHtml(backMeaning)}</p>
-              <div class="face-example">
-                <strong>${escapeHtml(active.exampleDe)}</strong>
-                <span>${escapeHtml(active.exampleEn)}</span>
-              </div>
+              ${backHtml}
             </div>
           </div>
         </button>
@@ -753,6 +825,35 @@
           `;
         }
 
+        const multiTerms = Array.isArray(card.terms) && card.terms.length > 1 ? card.terms : null;
+        const browseBody = multiTerms
+          ? `
+              <h3 class="word-de">${escapeHtml(multiTerms.map((term) => term.de).join("\n"))}</h3>
+              <div class="term-list term-list-browse">
+                ${multiTerms
+                  .map(
+                    (term) => `
+                  <div class="term-block">
+                    <p class="term-pair">
+                      <span class="term-de">${escapeHtml(term.de)}</span>
+                      <span class="term-en">${escapeHtml(term.en)}</span>
+                    </p>
+                    ${
+                      term.exampleDe
+                        ? `<p class="term-example"><strong>${escapeHtml(term.exampleDe)}</strong></p>`
+                        : ""
+                    }
+                  </div>`
+                  )
+                  .join("")}
+              </div>
+            `
+          : `
+              <h3 class="word-de">${escapeHtml(card.german)}</h3>
+              <p class="word-en">${escapeHtml(card.english)}</p>
+              <p class="word-example">${escapeHtml(card.exampleDe)}</p>
+            `;
+
         return `
           <li class="word-item ${selectedClass}" style="animation-delay: ${Math.min(index, 12) * 25}ms">
             <input
@@ -761,12 +862,10 @@
               data-action="toggle-select"
               data-id="${escapeHtml(card.id)}"
               ${checked}
-              aria-label="${escapeHtml(card.german)} auswählen"
+              aria-label="${escapeHtml(multiTerms ? multiTerms.map((term) => term.de).join(", ") : card.german)} auswählen"
             >
             <div class="word-main">
-              <h3 class="word-de">${escapeHtml(card.german)}</h3>
-              <p class="word-en">${escapeHtml(card.english)}</p>
-              <p class="word-example">${escapeHtml(card.exampleDe)}</p>
+              ${browseBody}
               <div class="word-actions">
                 <button type="button" class="btn btn-secondary btn-small" data-action="start-edit" data-id="${escapeHtml(card.id)}">Bearbeiten</button>
                 <button type="button" class="btn btn-danger btn-small" data-action="delete-one" data-id="${escapeHtml(card.id)}">Löschen</button>
@@ -1170,7 +1269,7 @@
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js?v=341").catch((error) => {
+      navigator.serviceWorker.register("./sw.js?v=342").catch((error) => {
         console.warn("Service worker registration failed:", error);
       });
     });
